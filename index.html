@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QDM 큐디엠 | 기계설계 · 구조해석 · 프레스 금형설계</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans KR", sans-serif;
+      color: #111827;
+      background: #f5f7fb;
+    }
+    header {
+      padding: 24px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+    }
+    .logo {
+      font-size: 34px;
+      font-weight: 800;
+      color: #0b2f6b;
+    }
+    nav a {
+      margin-left: 24px;
+      text-decoration: none;
+      color: #111827;
+      font-weight: 600;
+    }
+    .hero {
+      padding: 90px 8%;
+      background: linear-gradient(120deg, #eef4ff, #ffffff);
+    }
+    .hero h1 {
+      font-size: 52px;
+      line-height: 1.2;
+      margin: 0 0 24px;
+      color: #0b2f6b;
+    }
+    .hero p {
+      font-size: 21px;
+      line-height: 1.7;
+      max-width: 780px;
+    }
+    .buttons {
+      margin-top: 36px;
+    }
+    .buttons a {
+      display: inline-block;
+      margin-right: 12px;
+      padding: 14px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .primary {
+      background: #0b2f6b;
+      color: white;
+    }
+    .secondary {
+      border: 1px solid #0b2f6b;
+      color: #0b2f6b;
+      background: white;
+    }
+    .services {
+      padding: 64px 8%;
+      background: white;
+    }
+    .services h2 {
+      font-size: 32px;
+      margin-bottom: 28px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .card {
+      padding: 26px;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      background: #ffffff;
+    }
+    .card h3 {
+      color: #0b2f6b;
+      margin-top: 0;
+    }
+    footer {
+      padding: 32px 8%;
+      background: #0b2f6b;
+      color: white;
+      line-height: 1.8;
+    }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      nav { display: none; }
+      .hero h1 { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">QDM</div>
+    <nav>
+      <a href="#about">회사소개</a>
+      <a href="#services">사업영역</a>
+      <a href="https://blog.naver.com/meteor_822" target="_blank">기술블로그</a>
+      <a href="#contact">문의하기</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="about">
+    <h1>설계부터 제작까지,<br />최적의 엔지니어링 솔루션</h1>
+    <p>
+      큐디엠(QDM)은 기계·기구설계, 구조해석, 프레스 금형설계, 역설계를 기반으로
+      제작 가능한 제품 설계와 실무 중심의 엔지니어링 서비스를 제공합니다.
+    </p>
+    <div class="buttons">
+      <a class="primary" href="#services">사업영역 보기</a>
+      <a class="secondary" href="#contact">문의하기</a>
+    </div>
+  </section>
+
+  <section class="services" id="services">
+    <h2>QDM 핵심 사업영역</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>기계·기구설계</h3>
+        <p>제품 구조 설계, 2D/3D CAD 설계, 제작성을 고려한 설계 검토를 수행합니다.</p>
+      </div>
+      <div class="card">
+        <h3>구조해석</h3>
+        <p>선형·비선형 구조해석, 기구해석, 강도 검토 및 설계 개선을 지원합니다.</p>
+      </div>
+      <div class="card">
+        <h3>프레스 금형설계</h3>
+        <p>프레스 금형 구조 설계, 성형성 검토, 금형 최적화 서비스를 제공합니다.</p>
+      </div>
+      <div class="card">
+        <h3>역설계 / CAD 대행</h3>
+        <p>실물, 사진, 스케치, 측정 데이터를 기반으로 3D 모델링과 도면화를 수행합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <strong>QDM 큐디엠</strong><br />
+    경남 창원시 의창구 금강로 367, 지하1층<br />
+    전화: 070-8064-6621<br />
+    이메일: ryopho@naver.com
+  </footer>
+</body>
+</html>
