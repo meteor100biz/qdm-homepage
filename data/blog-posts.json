@@ -1,0 +1,30 @@
+[
+  {
+    "category": "기계설계",
+    "title": "기계설계 기술자료",
+    "description": "기구설계, 2D/3D CAD 설계, 제작성을 고려한 설계 사례",
+    "url": "https://blog.naver.com/meteor_822/223829402349",
+    "image": "assets/service-design.jpg"
+  },
+  {
+    "category": "구조해석",
+    "title": "구조해석·기구해석 사례",
+    "description": "하중 조건, 응력, 변형 검토 및 설계 개선 관련 자료",
+    "url": "https://blog.naver.com/meteor_822/224201514103",
+    "image": "assets/service-analysis.jpg"
+  },
+  {
+    "category": "프레스 금형",
+    "title": "프레스 금형설계 기술자료",
+    "description": "금형 구조 설계, 성형성 검토, 양산성 관련 자료",
+    "url": "https://blog.naver.com/meteor_822/223631728621",
+    "image": "assets/service-press-die.jpg"
+  },
+  {
+    "category": "역설계",
+    "title": "역설계 및 CAD 대행",
+    "description": "실물, 사진, 스케치 기반 3D 모델링 및 도면화 자료",
+    "url": "https://blog.naver.com/meteor_822/224200351959",
+    "image": "assets/service-reverse.jpg"
+  }
+]
