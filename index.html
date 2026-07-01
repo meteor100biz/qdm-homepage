@@ -24,7 +24,7 @@
 <body>
 <header class="topbar">
   <div class="wrap nav">
-    <a href="#home" class="brand" aria-label="QDM home"><div class="logo">QDM</div><div class="tagline">설계 · 해석 · 금형설계 · 역설계 전문<br>TOTAL ENGINEERING SOLUTION</div></a>
+    <a href="/" class="brand" aria-label="QDM home"><div class="logo">QDM</div><div class="tagline">설계 · 해석 · 금형설계 · 역설계 전문<br>TOTAL ENGINEERING SOLUTION</div></a>
     <nav class="menu" aria-label="주요 메뉴">
       <a class="hide-sm" href="#about">회사소개</a><a href="#services">사업영역</a><a class="hide-sm" href="#portfolio">포트폴리오</a><a class="hide-sm" href="#blog">기술블로그</a><a href="#contact">문의하기</a><a class="phone" href="tel:07080646621">☎ 070-8064-6621</a>
     </nav>
@@ -71,11 +71,8 @@
     </div></div>
   </section>
   <section id="blog" class="about">
-    <div class="wrap"><div class="section-head"><div><div class="section-kicker">Technical Blog</div><h2 class="section-title">최신 기술자료</h2></div><p class="section-desc">기술자료는 네이버 블로그에서 관리합니다. 아래 글을 클릭하면 QDM 기술블로그로 이동합니다.</p></div><div class="blog-grid">
-      <a class="blog-card" href="https://blog.naver.com/meteor_822/223829402349" target="_blank" rel="noopener"><div class="blog-img" style="background-image:url('assets/service-design.jpg')"></div><div class="blog-body"><span class="badge">기계설계</span><h3>기계설계 기술자료</h3><p>기구설계, 2D/3D CAD 설계, 제작성을 고려한 설계 사례</p></div></a>
-      <a class="blog-card" href="https://blog.naver.com/meteor_822/224201514103" target="_blank" rel="noopener"><div class="blog-img" style="background-image:url('assets/service-analysis.jpg')"></div><div class="blog-body"><span class="badge">구조해석</span><h3>구조해석·기구해석 사례</h3><p>하중 조건, 응력, 변형 검토 및 설계 개선 관련 자료</p></div></a>
-      <a class="blog-card" href="https://blog.naver.com/meteor_822/223631728621" target="_blank" rel="noopener"><div class="blog-img" style="background-image:url('assets/service-press-die.jpg')"></div><div class="blog-body"><span class="badge">프레스 금형</span><h3>프레스 금형설계 기술자료</h3><p>금형 구조 설계, 성형성 검토, 양산성 관련 자료</p></div></a>
-      <a class="blog-card" href="https://blog.naver.com/meteor_822/224200351959" target="_blank" rel="noopener"><div class="blog-img" style="background-image:url('assets/service-reverse.jpg')"></div><div class="blog-body"><span class="badge">역설계</span><h3>역설계 및 CAD 대행</h3><p>실물, 사진, 스케치 기반 3D 모델링 및 도면화 자료</p></div></a>
+    <div class="wrap"><div class="section-head"><div><div class="section-kicker">Technical Blog</div><h2 class="section-title">최신 기술자료</h2></div><p class="section-desc">기술자료는 네이버 블로그에서 관리합니다. 아래 글을 클릭하면 QDM 기술블로그로 이동합니다.</p></div><div class="blog-grid" id="blogGrid" aria-live="polite">
+      <noscript>최신 기술자료 목록을 보려면 브라우저의 JavaScript를 활성화해 주세요.</noscript>
     </div></div>
   </section>
   <section id="contact" class="contact">
@@ -83,5 +80,34 @@
   </section>
 </main>
 <footer class="footer"><div class="wrap footer-inner"><div><strong>QDM 큐디엠</strong> · 기계설계 · 구조해석 · 프레스 금형설계 · 역설계</div><div>© QDM. All rights reserved.</div></div></footer>
+
+<script>
+  const fallbackBlogPosts = [
+    { category: "기계설계", title: "기계설계 기술자료", description: "기구설계, 2D/3D CAD 설계, 제작성을 고려한 설계 사례", url: "https://blog.naver.com/meteor_822/223829402349", image: "assets/service-design.jpg" },
+    { category: "구조해석", title: "구조해석·기구해석 사례", description: "하중 조건, 응력, 변형 검토 및 설계 개선 관련 자료", url: "https://blog.naver.com/meteor_822/224201514103", image: "assets/service-analysis.jpg" },
+    { category: "프레스 금형", title: "프레스 금형설계 기술자료", description: "금형 구조 설계, 성형성 검토, 양산성 관련 자료", url: "https://blog.naver.com/meteor_822/223631728621", image: "assets/service-press-die.jpg" },
+    { category: "역설계", title: "역설계 및 CAD 대행", description: "실물, 사진, 스케치 기반 3D 모델링 및 도면화 자료", url: "https://blog.naver.com/meteor_822/224200351959", image: "assets/service-reverse.jpg" }
+  ];
+
+  function renderBlogPosts(posts) {
+    const grid = document.getElementById('blogGrid');
+    if (!grid) return;
+    grid.innerHTML = posts.map(post => `
+      <a class="blog-card" href="${post.url}" target="_blank" rel="noopener">
+        <div class="blog-img" style="background-image:url('${post.image}')"></div>
+        <div class="blog-body">
+          <span class="badge">${post.category}</span>
+          <h3>${post.title}</h3>
+          <p>${post.description}</p>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  fetch('data/blog-posts.json')
+    .then(response => response.ok ? response.json() : Promise.reject())
+    .then(renderBlogPosts)
+    .catch(() => renderBlogPosts(fallbackBlogPosts));
+</script>
 </body>
 </html>
