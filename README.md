@@ -1,1 +1,0 @@
-# qdm-homepage
