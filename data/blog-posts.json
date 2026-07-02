@@ -2,14 +2,14 @@
   {
     "category": "기계설계",
     "title": "기계설계 기술자료",
-    "description": "기구설계, 2D/3D CAD 설계, 제작성을 고려한 설계 사례",
+    "description": "기구설계, CAD 설계, 제작성을 고려한 설계 사례",
     "url": "https://blog.naver.com/meteor_822/223829402349",
     "image": "assets/service-design.jpg"
   },
   {
     "category": "구조해석",
     "title": "구조해석·기구해석 사례",
-    "description": "하중 조건, 응력, 변형 검토 및 설계 개선 관련 자료",
+    "description": "응력, 변형, 하중조건 검토 및 설계 개선 자료",
     "url": "https://blog.naver.com/meteor_822/224201514103",
     "image": "assets/service-analysis.jpg"
   },
