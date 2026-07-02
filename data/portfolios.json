@@ -1,0 +1,34 @@
+[
+  {
+    "order": 1,
+    "category": "mechanical",
+    "categoryName": "기계·기구설계",
+    "title": "SiC 코어드릴 장비 스트로크 개선",
+    "url": "portfolio-core-drill.html",
+    "featured": true
+  },
+  {
+    "order": 2,
+    "category": "analysis",
+    "categoryName": "구조해석",
+    "title": "양면 웨이퍼 드릴링 장비 구조 검토",
+    "url": "portfolio-double-drill.html",
+    "featured": true
+  },
+  {
+    "order": 3,
+    "category": "press-die",
+    "categoryName": "프레스 금형설계",
+    "title": "자동차 부품 프레스 금형설계",
+    "url": "portfolio-press-die-seat.html",
+    "featured": true
+  },
+  {
+    "order": 4,
+    "category": "reverse",
+    "categoryName": "역설계",
+    "title": "금속 부품 역설계 및 3D 모델링",
+    "url": "portfolio-reverse-nozzle.html",
+    "featured": true
+  }
+]

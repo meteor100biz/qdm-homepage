@@ -5,109 +5,69 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QDM 큐디엠 | 기계설계 · 구조해석 · 프레스 금형설계 · 역설계</title>
   <meta name="description" content="경남 창원시 QDM 큐디엠은 기계·기구설계, 구조해석, 프레스 금형설계, 역설계와 CAD 대행을 수행하는 엔지니어링 서비스입니다." />
-  <meta name="keywords" content="QDM, 큐디엠, 기계설계, 기구설계, 구조해석, 기구해석, 프레스 금형설계, 역설계, CAD 대행, 캐드 대행, 창원 기계설계" />
+  <meta name="keywords" content="QDM, 큐디엠, 기계설계, 기구설계, 구조해석, 기구해석, 프레스 금형설계, 역설계, CAD 대행, 창원 기계설계" />
   <meta property="og:title" content="QDM 큐디엠 | Total Engineering Solution" />
   <meta property="og:description" content="설계부터 제작까지, 최적의 엔지니어링 솔루션" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="assets/hero-main.jpg" />
   <style>
-    :root{--blue:#06306f;--blue2:#0b4fb3;--ink:#111827;--muted:#586174;--line:#e2e8f0;--bg:#f5f8fc;--card:#fff;}
-    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Arial,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:var(--ink);background:#fff;line-height:1.55} a{text-decoration:none;color:inherit} .wrap{max-width:1200px;margin:0 auto;padding:0 28px}
-    .topbar{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(226,232,240,.8)}
-    .nav{height:64px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:16px}.logo{font-size:34px;font-weight:900;letter-spacing:-1px;color:var(--blue);font-style:italic}.tagline{font-size:13px;font-weight:800;color:#0f2344;line-height:1.25;border-left:1px solid #cbd5e1;padding-left:14px}.menu{display:flex;align-items:center;gap:38px;font-weight:800}.phone{padding:12px 22px;border-radius:999px;background:var(--blue);color:#fff;box-shadow:0 8px 18px rgba(6,48,111,.18)}
-    .hero{background:linear-gradient(110deg,#fff 0%,#f4f8ff 48%,#edf3fb 100%);overflow:hidden}.hero-inner{min-height:460px;display:grid;grid-template-columns:1fr 1.18fr;align-items:center;gap:20px;padding:26px 0}.hero-copy{z-index:1}.eyebrow{font-size:14px;font-weight:900;color:var(--blue2);letter-spacing:.08em;text-transform:uppercase}.hero h1{font-size:50px;line-height:1.1;margin:12px 0 16px;letter-spacing:-2.2px;color:#0b234b}.hero h1 .accent{color:var(--blue2)}.hero p{font-size:20px;font-weight:700;margin:0 0 20px;color:#22304a}.feature-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:24px 0}.feature{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#34415a}.icon{width:34px;height:34px;border:2px solid var(--blue);border-radius:10px;display:grid;place-items:center;color:var(--blue);font-weight:900;flex:0 0 auto}.actions{display:flex;gap:14px}.btn{display:inline-flex;align-items:center;gap:10px;border-radius:7px;padding:15px 28px;font-weight:900;border:1px solid var(--blue)}.btn.primary{background:var(--blue);color:#fff}.btn.secondary{background:#fff;color:var(--blue)}.hero-art{position:relative;min-height:400px}.hero-art:before{content:"";position:absolute;inset:0;background:url('assets/hero-main.jpg') center/cover no-repeat;border-radius:0 0 0 70px;box-shadow:0 30px 80px rgba(25,55,90,.15)}.hero-art:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(244,248,255,.95) 0%,rgba(244,248,255,.25) 25%,rgba(255,255,255,0) 70%)}
-    section{padding:52px 0}.section-head{display:flex;justify-content:space-between;gap:40px;align-items:end;margin-bottom:24px}.section-kicker{font-size:13px;font-weight:900;color:var(--blue2);letter-spacing:.08em;text-transform:uppercase}.section-title{font-size:34px;line-height:1.2;margin:6px 0 0;letter-spacing:-1px}.section-desc{max-width:520px;color:var(--muted);font-weight:700}.service-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.service-card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 10px 25px rgba(15,35,68,.05);transition:.25s}.service-card:hover{transform:translateY(-4px);box-shadow:0 18px 35px rgba(15,35,68,.12)}.service-img{height:145px;background:#eef2f7 center/cover no-repeat}.service-body{padding:22px 20px 24px}.num{font-size:28px;color:var(--blue2);font-weight:900;margin-right:10px}.service-card h3{display:flex;align-items:center;margin:0 0 12px;color:#0b234b;font-size:21px}.service-card ul{padding-left:18px;margin:0 0 18px;color:#2d3748}.more{color:var(--blue2);font-weight:900}.about{background:#f8fafc}.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}.stat{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff}.stat strong{display:block;font-size:28px;color:var(--blue)}.portfolio-grid,.blog-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.project,.blog-card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}.project-img,.blog-img{height:150px;background:#eef2f7 center/cover no-repeat}.project-body,.blog-body{padding:18px}.badge{display:inline-block;padding:4px 9px;border-radius:999px;background:#eaf2ff;color:var(--blue);font-size:12px;font-weight:900;margin-bottom:10px}.project h3,.blog-card h3{margin:0 0 8px;font-size:18px;color:#0b234b}.project p,.blog-card p{margin:0;color:#596274;font-size:14px}.contact{background:#061f49;color:#fff}.contact .section-kicker,.contact .section-title{color:#fff}.contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:36px}.contact-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:24px}.contact-list{padding:0;margin:0;list-style:none}.contact-list li{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.12)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid .full{grid-column:1/-1} input,textarea,select{width:100%;padding:14px 15px;border:1px solid #dbe3ef;border-radius:9px;font:inherit}textarea{min-height:130px;resize:vertical}.submit{width:100%;border:0;border-radius:9px;background:#fff;color:var(--blue);padding:15px;font-weight:900;font-size:16px;cursor:pointer}.footer{padding:26px 0;background:#041735;color:#cbd5e1;font-size:14px}.footer-inner{display:flex;justify-content:space-between;gap:20px;align-items:center}.footer strong{color:#fff}
-    @media(max-width:1050px){.menu{gap:18px}.hero-inner{grid-template-columns:1fr}.hero-art{min-height:320px}.service-grid,.portfolio-grid,.blog-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:720px){.wrap{padding:0 18px}.nav{height:auto;padding:14px 0;align-items:flex-start}.tagline,.menu .hide-sm{display:none}.menu{gap:12px;font-size:14px}.phone{padding:9px 12px}.hero-inner{padding:28px 0}.hero h1{font-size:38px}.hero p{font-size:18px}.feature-row{grid-template-columns:1fr 1fr}.actions{flex-direction:column}.section-head{display:block}.service-grid,.portfolio-grid,.blog-grid,.about-grid,.contact-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.footer-inner{display:block}.hero-art{min-height:260px}}
+    :root{--blue:#06306f;--blue2:#0b4fb3;--ink:#111827;--muted:#586174;--line:#e2e8f0;--bg:#f5f8fc;--card:#fff;--deep:#061f49}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Arial,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:var(--ink);background:#fff;line-height:1.55} a{text-decoration:none;color:inherit}.wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+    .topbar{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(226,232,240,.8)}.nav{height:66px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:16px}.logo{font-size:34px;font-weight:900;letter-spacing:-1px;color:var(--blue);font-style:italic}.tagline{font-size:12px;font-weight:800;color:#0f2344;line-height:1.25;border-left:1px solid #cbd5e1;padding-left:14px}.menu{display:flex;align-items:center;gap:32px;font-weight:800}.phone{padding:10px 20px;border-radius:999px;background:var(--blue);color:#fff;box-shadow:0 8px 18px rgba(6,48,111,.18)}
+    .hero{background:linear-gradient(110deg,#fff 0%,#f4f8ff 48%,#edf3fb 100%);overflow:hidden}.hero-inner{min-height:480px;display:grid;grid-template-columns:1fr 1.18fr;align-items:center;gap:20px;padding:38px 0}.eyebrow{font-size:14px;font-weight:900;color:var(--blue2);letter-spacing:.08em;text-transform:uppercase}.hero h1{font-size:52px;line-height:1.09;margin:14px 0 18px;letter-spacing:-2.2px;color:#0b234b}.hero h1 .accent{color:var(--blue2)}.hero p{font-size:21px;font-weight:700;margin:0 0 22px;color:#22304a}.feature-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:28px 0}.feature{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:#34415a}.icon{width:32px;height:32px;border:2px solid var(--blue);border-radius:10px;display:grid;place-items:center;color:var(--blue);font-weight:900;flex:0 0 auto}.actions{display:flex;gap:14px}.btn{display:inline-flex;align-items:center;gap:10px;border-radius:7px;padding:14px 26px;font-weight:900;border:1px solid var(--blue)}.btn.primary{background:var(--blue);color:#fff}.btn.secondary{background:#fff;color:var(--blue)}.hero-art{position:relative;min-height:410px}.hero-art:before{content:"";position:absolute;inset:0;background:url('assets/hero-main.jpg') center/cover no-repeat;border-radius:0 0 0 70px;box-shadow:0 30px 80px rgba(25,55,90,.15)}.hero-art:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(244,248,255,.95) 0%,rgba(244,248,255,.25) 25%,rgba(255,255,255,0) 70%)}
+    section{padding:58px 0}.section-head{display:flex;justify-content:space-between;gap:40px;align-items:end;margin-bottom:26px}.section-kicker{font-size:13px;font-weight:900;color:var(--blue2);letter-spacing:.08em;text-transform:uppercase}.section-title{font-size:34px;line-height:1.2;margin:6px 0 0;letter-spacing:-1px}.section-desc{max-width:540px;color:var(--muted);font-weight:700}.service-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.service-card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 10px 25px rgba(15,35,68,.05);transition:.25s}.service-card:hover,.project:hover,.blog-card:hover{transform:translateY(-4px);box-shadow:0 18px 35px rgba(15,35,68,.12)}.service-img{height:150px;background:#eef2f7 center/cover no-repeat}.service-body{padding:20px 19px 22px}.num{font-size:26px;color:var(--blue2);font-weight:900;margin-right:10px}.service-card h3{display:flex;align-items:center;margin:0 0 12px;color:#0b234b;font-size:20px}.service-card ul{padding-left:18px;margin:0 0 18px;color:#2d3748}.more{color:var(--blue2);font-weight:900}
+    .about{background:#f8fafc}.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}.stat{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff}.stat strong{display:block;font-size:28px;color:var(--blue)}.portfolio-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}.blog-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.project,.blog-card{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff;transition:.25s}.project-img{height:260px;background:#eef2f7 center/cover no-repeat}.blog-img{height:150px;background:#eef2f7 center/cover no-repeat}.project-body,.blog-body{padding:20px}.badge{display:inline-block;padding:4px 9px;border-radius:999px;background:#eaf2ff;color:var(--blue);font-size:12px;font-weight:900;margin-bottom:10px}.project h3,.blog-card h3{margin:0 0 8px;color:#0b234b}.project h3{font-size:22px}.blog-card h3{font-size:18px}.project p,.blog-card p{margin:0;color:#596274;font-size:14px}.project .more{display:inline-block;margin-top:16px}
+    .contact{background:var(--deep);color:#fff}.contact .section-kicker,.contact .section-title{color:#fff}.contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:36px}.contact-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:24px}.contact-list{padding:0;margin:0;list-style:none}.contact-list li{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.12)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid .full{grid-column:1/-1}input,textarea,select{width:100%;padding:14px 15px;border:1px solid #dbe3ef;border-radius:9px;font:inherit}textarea{min-height:130px;resize:vertical}.submit{width:100%;border:0;border-radius:9px;background:#fff;color:var(--blue);padding:15px;font-weight:900;font-size:16px;cursor:pointer}.footer{padding:26px 0;background:#041735;color:#cbd5e1;font-size:14px}.footer-inner{display:flex;justify-content:space-between;gap:20px;align-items:center}.footer strong{color:#fff}
+    @media(max-width:1050px){.menu{gap:18px}.hero-inner{grid-template-columns:1fr}.hero-art{min-height:360px}.service-grid,.blog-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:720px){.wrap{padding:0 18px}.nav{height:auto;padding:16px 0;align-items:flex-start}.tagline,.menu .hide-sm{display:none}.menu{gap:12px;font-size:14px}.phone{padding:9px 12px}.hero-inner{padding:32px 0}.hero h1{font-size:36px}.hero p{font-size:18px}.feature-row{grid-template-columns:1fr 1fr}.actions{flex-direction:column}.section-head{display:block}.service-grid,.portfolio-grid,.blog-grid,.about-grid,.contact-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.footer-inner{display:block}.hero-art{min-height:300px}.project-img{height:210px}}
   </style>
 </head>
 <body>
-<header class="topbar">
-  <div class="wrap nav">
-    <a href="/" class="brand" aria-label="QDM home"><div class="logo">QDM</div><div class="tagline">설계 · 해석 · 금형설계 · 역설계 전문<br>TOTAL ENGINEERING SOLUTION</div></a>
-    <nav class="menu" aria-label="주요 메뉴">
-      <a class="hide-sm" href="#about">회사소개</a><a href="#services">사업영역</a><a class="hide-sm" href="#portfolio">포트폴리오</a><a class="hide-sm" href="#blog">기술블로그</a><a href="#contact">문의하기</a><a class="phone" href="tel:07080646621">☎ 070-8064-6621</a>
-    </nav>
-  </div>
-</header>
+<header class="topbar"><div class="wrap nav"><a href="/" class="brand" aria-label="QDM home"><div class="logo">QDM</div><div class="tagline">설계 · 해석 · 금형설계 · 역설계 전문<br>TOTAL ENGINEERING SOLUTION</div></a><nav class="menu" aria-label="주요 메뉴"><a class="hide-sm" href="#about">회사소개</a><a href="#services">사업영역</a><a class="hide-sm" href="#contact">포트폴리오</a><a class="hide-sm" href="#blog">기술블로그</a><a href="#contact">문의하기</a><a class="phone" href="tel:07080646621">☎ 070-8064-6621</a></nav></div></header>
 <main id="home">
-  <section class="hero">
-    <div class="wrap hero-inner">
-      <div class="hero-copy">
-        <div class="eyebrow">QDM Total Engineering Solution</div>
-        <h1>설계부터 제작까지,<br>최적의 <span class="accent">엔지니어링 솔루션</span></h1>
-        <p>기계설계 · 구조해석 · 프레스 금형설계 · 역설계</p>
-        <div class="feature-row">
-          <div class="feature"><span class="icon">◎</span><span><b>정확한 설계</b><br>실무 경험 기반의 정밀한 설계</span></div>
-          <div class="feature"><span class="icon">◇</span><span><b>신뢰성 해석</b><br>구조해석으로 성능 검증</span></div>
-          <div class="feature"><span class="icon">▣</span><span><b>금형설계 전문</b><br>성형성 검토와 구조 최적화</span></div>
-          <div class="feature"><span class="icon">⌕</span><span><b>역설계 / CAD 대행</b><br>실물 기반 3D 모델링 구현</span></div>
-        </div>
-        <div class="actions"><a class="btn primary" href="#services">사업영역 보기 →</a><a class="btn secondary" href="#contact">문의하기 →</a></div>
-      </div>
-      <div class="hero-art" aria-label="CAD, 구조해석, 금형설계 이미지"></div>
-    </div>
-  </section>
-  <section id="services">
-    <div class="wrap">
-      <div class="section-head"><div><div class="section-kicker">Our Services</div><h2 class="section-title">QDM의 핵심 사업영역</h2></div><p class="section-desc">풍부한 경험과 전문 기술로 고객의 아이디어를 현실로 구현합니다. 설계 · 해석 · 금형설계 · 역설계까지 원스톱 엔지니어링 서비스를 제공합니다.</p></div>
-      <div class="service-grid">
-        <a class="service-card" href="#portfolio"><div class="service-img" style="background-image:url('assets/service-design.jpg')"></div><div class="service-body"><h3><span class="num">01</span>기계설계 / 기구설계</h3><ul><li>2D / 3D CAD 설계</li><li>제품 구조 및 기구 설계</li><li>설계 검토 및 최적화</li></ul><span class="more">자세히 보기 →</span></div></a>
-        <a class="service-card" href="#portfolio"><div class="service-img" style="background-image:url('assets/service-analysis.jpg')"></div><div class="service-body"><h3><span class="num">02</span>구조해석 / 기구해석</h3><ul><li>선형 / 비선형 구조해석</li><li>진동 / 강도 / 피로 해석</li><li>성형해석 및 설계 개선</li></ul><span class="more">자세히 보기 →</span></div></a>
-        <a class="service-card" href="#portfolio"><div class="service-img" style="background-image:url('assets/service-press-die.jpg')"></div><div class="service-body"><h3><span class="num">03</span>프레스 금형설계</h3><ul><li>프레스 금형 설계 및 검토</li><li>금형 구조 설계 및 최적화</li><li>성형성 해석 및 양산성 검토</li></ul><span class="more">자세히 보기 →</span></div></a>
-        <a class="service-card" href="#portfolio"><div class="service-img" style="background-image:url('assets/service-reverse.jpg')"></div><div class="service-body"><h3><span class="num">04</span>역설계 / CAD 대행</h3><ul><li>3D 스캔 · 측정 기반 역설계</li><li>도면화 / 3D 모델링</li><li>CAD 대행 / 캐드 알바 / 파견</li></ul><span class="more">자세히 보기 →</span></div></a>
-      </div>
-    </div>
-  </section>
-  <section id="about" class="about">
-    <div class="wrap about-grid"><div><div class="section-kicker">About QDM</div><h2 class="section-title">제작 가능한 형상을 고려하는 실무형 설계 파트너</h2><p>큐디엠(QDM)은 경남 창원시에 위치한 엔지니어링 서비스 사업장입니다. 프레스 금형설계, 기계·기구설계, 구조해석, 역설계를 기반으로 제품 개발 과정에서 필요한 설계 검토와 제작성 개선을 지원합니다.</p><p>아이디어 단계의 제품 형상 검토부터 3D 모델링, 구조해석, 금형 검토, 시제품 제작 연계까지 실무 중심으로 대응합니다.</p></div><div class="stats"><div class="stat"><strong>30년+</strong>설계 실무 경험</div><div class="stat"><strong>4</strong>핵심 사업영역</div><div class="stat"><strong>1:1</strong>기술 상담</div></div></div>
-  </section>
-  <section id="portfolio">
-    <div class="wrap"><div class="section-head"><div><div class="section-kicker">Portfolio</div><h2 class="section-title">대표 실적 / 프로젝트</h2></div><p class="section-desc">상세 프로젝트 페이지는 이후 확장 예정입니다. 초기 버전에서는 대표 분야별 이미지를 중심으로 구성합니다.</p></div><div class="portfolio-grid">
-      <article class="project"><div class="project-img" style="background-image:url('assets/portfolio-01.jpg')"></div><div class="project-body"><span class="badge">구조해석</span><h3>제품 구조 검토 및 강도 해석</h3><p>제품 형상 검토, 변형·응력 검토, 설계 개선 제안</p></div></article>
-      <article class="project"><div class="project-img" style="background-image:url('assets/portfolio-02.jpg')"></div><div class="project-body"><span class="badge">금형설계</span><h3>프레스 금형 구조 설계</h3><p>금형 구조 검토, 성형성 검토, 양산성 개선</p></div></article>
-      <article class="project"><div class="project-img" style="background-image:url('assets/portfolio-03.jpg')"></div><div class="project-body"><span class="badge">기구설계</span><h3>2D/3D CAD 설계</h3><p>제품 구조 및 기구 설계, 도면화, 설계 검토</p></div></article>
-      <article class="project"><div class="project-img" style="background-image:url('assets/portfolio-04.jpg')"></div><div class="project-body"><span class="badge">역설계</span><h3>실물 기반 3D 모델링</h3><p>사진, 스케치, 측정 데이터를 기반으로 CAD 모델 구현</p></div></article>
-    </div></div>
-  </section>
-  <section id="blog" class="about">
-    <div class="wrap"><div class="section-head"><div><div class="section-kicker">Technical Blog</div><h2 class="section-title">최신 기술자료</h2></div><p class="section-desc">기술자료는 네이버 블로그에서 관리합니다. 아래 글을 클릭하면 QDM 기술블로그로 이동합니다.</p></div><div class="blog-grid" id="blogGrid" aria-live="polite">
-      <noscript>최신 기술자료 목록을 보려면 브라우저의 JavaScript를 활성화해 주세요.</noscript>
-    </div></div>
-  </section>
-  <section id="contact" class="contact">
-    <div class="wrap"><div class="section-head"><div><div class="section-kicker">Contact</div><h2 class="section-title">문의하기</h2></div><p class="section-desc" style="color:#d8e4f5">견적 및 기술문의는 이메일 또는 전화로 연락 주시면 검토 후 회신드리겠습니다.</p></div><div class="contact-grid"><div class="contact-box"><h3>QDM 큐디엠</h3><ul class="contact-list"><li>주소: 경남 창원시 의창구 금강로 367</li><li>전화: <a href="tel:07080646621">070-8064-6621</a></li><li>이메일: <a href="mailto:ryopho@naver.com">ryopho@naver.com</a></li><li>블로그: <a href="https://blog.naver.com/meteor_822" target="_blank" rel="noopener">네이버 기술블로그 바로가기</a></li></ul></div><form class="contact-box" action="mailto:ryopho@naver.com" method="post" enctype="text/plain"><div class="form-grid"><input name="name" placeholder="이름" required><input name="company" placeholder="회사명"><input name="phone" placeholder="연락처" required><input name="email" type="email" placeholder="이메일"><select name="field"><option>문의분야 선택</option><option>기계·기구설계</option><option>구조해석</option><option>프레스 금형설계</option><option>역설계 / CAD 대행</option></select><input name="subject" placeholder="문의 제목"><textarea class="full" name="message" placeholder="문의 내용을 입력하세요"></textarea><button class="submit full" type="submit">이메일로 문의 보내기</button></div></form></div></div>
-  </section>
-</main>
-<footer class="footer"><div class="wrap footer-inner"><div><strong>QDM 큐디엠</strong> · 기계설계 · 구조해석 · 프레스 금형설계 · 역설계</div><div>© QDM. All rights reserved.</div></div></footer>
-
+<section class="hero"><div class="wrap hero-inner"><div class="hero-copy"><div class="eyebrow">QDM Total Engineering Solution</div><h1>설계부터 제작까지,<br>최적의 <span class="accent">엔지니어링 솔루션</span></h1><p>기계설계 · 구조해석 · 프레스 금형설계 · 역설계</p><div class="feature-row"><div class="feature"><span class="icon">◎</span><span><b>정확한 설계</b><br>실무 경험 기반의 정밀한 설계</span></div><div class="feature"><span class="icon">◇</span><span><b>신뢰성 해석</b><br>구조해석으로 성능 검증</span></div><div class="feature"><span class="icon">▣</span><span><b>금형설계 전문</b><br>성형성 검토와 구조 최적화</span></div><div class="feature"><span class="icon">⌕</span><span><b>역설계 / CAD 대행</b><br>실물 기반 3D 모델링 구현</span></div></div><div class="actions"><a class="btn primary" href="#services">사업영역 보기 →</a><a class="btn secondary" href="#contact">문의하기 →</a></div></div><div class="hero-art" aria-label="CAD, 구조해석, 금형설계 이미지"></div></div></section>
+<section id="services"><div class="wrap"><div class="section-head"><div><div class="section-kicker">Our Services</div><h2 class="section-title">QDM의 핵심 사업영역</h2></div><p class="section-desc">풍부한 경험과 전문 기술로 고객의 아이디어를 현실로 구현합니다. 설계 · 해석 · 금형설계 · 역설계까지 원스톱 엔지니어링 서비스를 제공합니다.</p></div><div class="service-grid"><a class="service-card" href="#contact"><div class="service-img" style="background-image:url('assets/service-design.jpg')"></div><div class="service-body"><h3><span class="num">01</span>기계설계 / 기구설계</h3><ul><li>2D / 3D CAD 설계</li><li>제품 구조 및 기구 설계</li><li>설계 검토 및 최적화</li></ul><span class="more">상담 문의 →</span></div></a><a class="service-card" href="#contact"><div class="service-img" style="background-image:url('assets/service-analysis.jpg')"></div><div class="service-body"><h3><span class="num">02</span>구조해석 / 기구해석</h3><ul><li>선형 / 비선형 구조해석</li><li>진동 / 강도 / 피로 해석</li><li>성형해석 및 설계 개선</li></ul><span class="more">상담 문의 →</span></div></a><a class="service-card" href="#contact"><div class="service-img" style="background-image:url('assets/service-press-die.jpg')"></div><div class="service-body"><h3><span class="num">03</span>프레스 금형설계</h3><ul><li>프레스 금형 설계 및 검토</li><li>금형 구조 설계 및 최적화</li><li>성형성 해석 및 양산성 검토</li></ul><span class="more">상담 문의 →</span></div></a><a class="service-card" href="#contact"><div class="service-img" style="background-image:url('assets/service-reverse.jpg')"></div><div class="service-body"><h3><span class="num">04</span>역설계 / CAD 대행</h3><ul><li>3D 스캔 · 측정 기반 역설계</li><li>도면화 / 3D 모델링</li><li>CAD 대행 / 캐드 알바 / 파견</li></ul><span class="more">상담 문의 →</span></div></a></div></div></section>
+<section id="about" class="about"><div class="wrap about-grid"><div><div class="section-kicker">About QDM</div><h2 class="section-title">제작 가능한 형상을 고려하는 실무형 설계 파트너</h2><p>큐디엠(QDM)은 경남 창원시에 위치한 엔지니어링 서비스 사업장입니다. 프레스 금형설계, 기계·기구설계, 구조해석, 역설계를 기반으로 제품 개발 과정에서 필요한 설계 검토와 제작성 개선을 지원합니다.</p><p>아이디어 단계의 제품 형상 검토부터 3D 모델링, 구조해석, 금형 검토, 시제품 제작 연계까지 실무 중심으로 대응합니다.</p></div><div class="stats"><div class="stat"><strong>20년+</strong>설계 실무 경험</div><div class="stat"><strong>4</strong>핵심 사업영역</div><div class="stat"><strong>1:1</strong>기술 상담</div></div></div></section>
+<section id="portfolio"><div class="wrap"><div class="section-head"><div><div class="section-kicker">Portfolio</div><h2 class="section-title">대표 실적 / 프로젝트</h2></div><p class="section-desc">보안이 필요한 세부 도면과 고객사 정보는 제외하고, 수행 역할과 기술 검토 내용을 중심으로 정리한 포트폴리오입니다.</p></div><div class="portfolio-grid" id="portfolioGrid">
+<a class="project" href="portfolio-core-drill.html">
+  <div class="project-img" style="background-image:url('assets/portfolio-core-drill.jpg')"></div>
+  <div class="project-body">
+    <span class="badge">01 기계·기구설계</span>
+    <h3>SiC 코어드릴 장비 스트로크 개선</h3>
+    <p>SiC 원소재 가공 장비의 스트로크 확장, 기존 구동부 활용, 소재 투입 구조 개선 제안</p>
+    <span class="more">상세 보기 →</span>
+  </div>
+</a>
+<a class="project" href="portfolio-double-drill.html">
+  <div class="project-img" style="background-image:url('assets/portfolio-double-drill.jpg')"></div>
+  <div class="project-body">
+    <span class="badge">02 구조해석</span>
+    <h3>양면 웨이퍼 드릴링 장비 구조 검토</h3>
+    <p>대구경 SiC 웨이퍼 대응을 위한 장비 스트로크 확장, 기존 기구 재활용, 자중 처짐 구조해석 검토</p>
+    <span class="more">상세 보기 →</span>
+  </div>
+</a>
+<a class="project" href="portfolio-press-die-seat.html">
+  <div class="project-img" style="background-image:url('assets/service-press-die.jpg')"></div>
+  <div class="project-body">
+    <span class="badge">03 프레스 금형설계</span>
+    <h3>자동차 부품 프레스 금형설계</h3>
+    <p>프레스 부품의 성형 가능성, 금형 구조, 제작성을 고려한 금형설계 대표 사례</p>
+    <span class="more">상세 보기 →</span>
+  </div>
+</a>
+<a class="project" href="portfolio-reverse-nozzle.html">
+  <div class="project-img" style="background-image:url('assets/service-reverse.jpg')"></div>
+  <div class="project-body">
+    <span class="badge">04 역설계</span>
+    <h3>금속 부품 역설계 및 3D 모델링</h3>
+    <p>실물 부품을 기반으로 형상을 분석하고 제작 가능한 3D CAD 데이터로 복원한 사례</p>
+    <span class="more">상세 보기 →</span>
+  </div>
+</a>
+</div></div></div></section>
+<section id="blog" class="about"><div class="wrap"><div class="section-head"><div><div class="section-kicker">Technical Blog</div><h2 class="section-title">최신 기술자료</h2></div><p class="section-desc">기술자료는 네이버 블로그에서 관리합니다. 아래 글을 클릭하면 QDM 기술블로그로 이동합니다.</p></div><div class="blog-grid" id="blogGrid" aria-live="polite"><noscript>최신 기술자료 목록을 보려면 브라우저의 JavaScript를 활성화해 주세요.</noscript></div></div></section>
+<section id="contact" class="contact"><div class="wrap"><div class="section-head"><div><div class="section-kicker">Contact</div><h2 class="section-title">문의하기</h2></div><p class="section-desc" style="color:#d8e4f5">견적 및 기술문의는 이메일 또는 전화로 연락 주시면 검토 후 회신드리겠습니다.</p></div><div class="contact-grid"><div class="contact-box"><h3>QDM 큐디엠</h3><ul class="contact-list"><li>주소: 경남 창원시 의창구 금강로 367</li><li>전화: <a href="tel:07080646621">070-8064-6621</a></li><li>이메일: <a href="mailto:ryopho@naver.com">ryopho@naver.com</a></li><li>블로그: <a href="https://blog.naver.com/meteor_822" target="_blank" rel="noopener">네이버 기술블로그 바로가기</a></li></ul></div><form class="contact-box" action="mailto:ryopho@naver.com" method="post" enctype="text/plain"><div class="form-grid"><input name="name" placeholder="이름" required><input name="company" placeholder="회사명"><input name="phone" placeholder="연락처" required><input name="email" type="email" placeholder="이메일"><select name="field"><option>문의분야 선택</option><option>기계·기구설계</option><option>구조해석</option><option>프레스 금형설계</option><option>역설계 / CAD 대행</option></select><input name="subject" placeholder="문의 제목"><textarea class="full" name="message" placeholder="문의 내용을 입력하세요"></textarea><button class="submit full" type="submit">이메일로 문의 보내기</button></div></form></div></div></section>
+</main><footer class="footer"><div class="wrap footer-inner"><div><strong>QDM 큐디엠</strong> · 기계설계 · 구조해석 · 프레스 금형설계 · 역설계</div><div>© QDM. All rights reserved.</div></div></footer>
 <script>
-  const fallbackBlogPosts = [
-    { category: "기계설계", title: "기계설계 기술자료", description: "기구설계, 2D/3D CAD 설계, 제작성을 고려한 설계 사례", url: "https://blog.naver.com/meteor_822/223829402349", image: "assets/service-design.jpg" },
-    { category: "구조해석", title: "구조해석·기구해석 사례", description: "하중 조건, 응력, 변형 검토 및 설계 개선 관련 자료", url: "https://blog.naver.com/meteor_822/224201514103", image: "assets/service-analysis.jpg" },
-    { category: "프레스 금형", title: "프레스 금형설계 기술자료", description: "금형 구조 설계, 성형성 검토, 양산성 관련 자료", url: "https://blog.naver.com/meteor_822/223631728621", image: "assets/service-press-die.jpg" },
-    { category: "역설계", title: "역설계 및 CAD 대행", description: "실물, 사진, 스케치 기반 3D 모델링 및 도면화 자료", url: "https://blog.naver.com/meteor_822/224200351959", image: "assets/service-reverse.jpg" }
-  ];
-
-  function renderBlogPosts(posts) {
-    const grid = document.getElementById('blogGrid');
-    if (!grid) return;
-    grid.innerHTML = posts.map(post => `
-      <a class="blog-card" href="${post.url}" target="_blank" rel="noopener">
-        <div class="blog-img" style="background-image:url('${post.image}')"></div>
-        <div class="blog-body">
-          <span class="badge">${post.category}</span>
-          <h3>${post.title}</h3>
-          <p>${post.description}</p>
-        </div>
-      </a>
-    `).join('');
-  }
-
-  fetch('data/blog-posts.json')
-    .then(response => response.ok ? response.json() : Promise.reject())
-    .then(renderBlogPosts)
-    .catch(() => renderBlogPosts(fallbackBlogPosts));
-</script>
-</body>
-</html>
+const fallbackBlogPosts=[{category:"기계설계",title:"기계설계 기술자료",description:"기구설계, 2D/3D CAD 설계, 제작성을 고려한 설계 사례",url:"https://blog.naver.com/meteor_822/223829402349",image:"assets/service-design.jpg"},{category:"구조해석",title:"구조해석·기구해석 사례",description:"하중 조건, 응력, 변형 검토 및 설계 개선 관련 자료",url:"https://blog.naver.com/meteor_822/224201514103",image:"assets/service-analysis.jpg"},{category:"프레스 금형",title:"프레스 금형설계 기술자료",description:"금형 구조 설계, 성형성 검토, 양산성 관련 자료",url:"https://blog.naver.com/meteor_822/223631728621",image:"assets/service-press-die.jpg"},{category:"역설계",title:"역설계 및 CAD 대행",description:"실물, 사진, 스케치 기반 3D 모델링 및 도면화 자료",url:"https://blog.naver.com/meteor_822/224200351959",image:"assets/service-reverse.jpg"}];function renderBlogPosts(posts){const grid=document.getElementById('blogGrid');if(!grid)return;grid.innerHTML=posts.map(post=>`<a class="blog-card" href="${post.url}" target="_blank" rel="noopener"><div class="blog-img" style="background-image:url('${post.image}')"></div><div class="blog-body"><span class="badge">${post.category}</span><h3>${post.title}</h3><p>${post.description}</p></div></a>`).join('')}fetch('data/blog-posts.json').then(r=>r.ok?r.json():Promise.reject()).then(renderBlogPosts).catch(()=>renderBlogPosts(fallbackBlogPosts));
+</script></body></html>
