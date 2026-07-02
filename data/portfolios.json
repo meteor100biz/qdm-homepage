@@ -1,33 +1,37 @@
 [
   {
-    "order": 1,
     "category": "mechanical",
-    "categoryName": "기계·기구설계",
+    "categoryName": "01 기계·기구설계",
     "title": "SiC 코어드릴 장비 스트로크 개선",
+    "summary": "SiC 원소재 가공 장비의 스트로크 확장, 기존 구동부 활용, 소재 투입 구조 개선 제안",
+    "image": "assets/portfolio/mechanical/core-drill/main.jpg",
     "url": "portfolio-core-drill.html",
     "featured": true
   },
   {
-    "order": 2,
     "category": "analysis",
-    "categoryName": "구조해석",
-    "title": "양면 웨이퍼 드릴링 장비 구조 검토",
+    "categoryName": "02 구조해석",
+    "title": "양면 웨이퍼 드릴링 장비 처짐 검토",
+    "summary": "대구경 SiC 웨이퍼 대응을 위한 장비 스트로크 확장, 기존 기구 재활용, 자중 처짐 구조해석 검토",
+    "image": "assets/portfolio/analysis/double-drill/main.jpg",
     "url": "portfolio-double-drill.html",
     "featured": true
   },
   {
-    "order": 3,
     "category": "press-die",
-    "categoryName": "프레스 금형설계",
-    "title": "자동차 부품 프레스 금형설계",
+    "categoryName": "03 프레스 금형설계",
+    "title": "자동차 시트 부품 프레스 성형 검토",
+    "summary": "프레스 부품의 성형 가능성, 금형 구조, 제작성을 고려한 프레스 금형설계 대표 사례",
+    "image": "assets/portfolio/press-die/seat-bracket/main.jpg",
     "url": "portfolio-press-die-seat.html",
     "featured": true
   },
   {
-    "order": 4,
     "category": "reverse",
-    "categoryName": "역설계",
-    "title": "금속 부품 역설계 및 3D 모델링",
+    "categoryName": "04 역설계",
+    "title": "금속 노즐 부품 역설계",
+    "summary": "실물 부품을 기반으로 형상을 분석하고 제작 가능한 3D CAD 데이터와 2D 도면으로 복원한 사례",
+    "image": "assets/portfolio/reverse/nozzle/main.jpg",
     "url": "portfolio-reverse-nozzle.html",
     "featured": true
   }
