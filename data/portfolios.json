@@ -39,8 +39,23 @@
     "summary": "실물 부품을 기반으로 형상을 분석하고 제작 가능한 3D CAD 데이터와 2D 도면으로 복원한 사례",
     "image": "assets/portfolio/reverse/nozzle/main.png",
     "url": "assets/portfolio/reverse/nozzle/portfolio.html",
-    "featured": true,
+    "featured": false,
     "order": 4,
     "categoryLabel": "04 역설계"
   }
-]
+]{
+  "category": "press-die",
+  "categoryName": "03 프레스 금형설계",
+  "categoryLabel": "03 프레스 금형설계",
+  "title": "자동차 시트 프레임 부품 프레스 금형설계",
+  "summary": "깊은 벤딩 형상, 내측 쏠림, 버링 구조를 고려한 자동차 시트 프레임 부품의 프레스 금형설계 사례",
+  "image": "assets/portfolio/press-die/seat-frame/main.jpg",
+  "url": "assets/portfolio/press-die/seat-frame/portfolio.html",
+  "featured": true,
+  "order": 5,
+  "tags": [
+    "자동차 부품",
+    "프레스 금형",
+    "3D 금형 모델링"
+  ]
+}
