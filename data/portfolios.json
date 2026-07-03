@@ -7,8 +7,7 @@
     "image": "assets/portfolio/mechanical/core-drill/main.jpg",
     "url": "assets/portfolio/mechanical/core-drill/portfolio.html",
     "featured": true,
-    "order": 1,
-    "categoryLabel": "01 기계·기구설계"
+    "order": 1
   },
   {
     "category": "analysis",
@@ -18,8 +17,7 @@
     "image": "assets/portfolio/analysis/double-drill/main.jpg",
     "url": "assets/portfolio/analysis/double-drill/portfolio.html",
     "featured": true,
-    "order": 2,
-    "categoryLabel": "02 구조해석"
+    "order": 2
   },
   {
     "category": "press-die",
@@ -29,8 +27,7 @@
     "image": "assets/portfolio/press-die/seat-bracket/main.jpg",
     "url": "assets/portfolio/press-die/seat-bracket/portfolio.html",
     "featured": true,
-    "order": 3,
-    "categoryLabel": "03 프레스 금형설계"
+    "order": 3
   },
   {
     "category": "reverse",
@@ -40,22 +37,16 @@
     "image": "assets/portfolio/reverse/nozzle/main.png",
     "url": "assets/portfolio/reverse/nozzle/portfolio.html",
     "featured": false,
-    "order": 4,
-    "categoryLabel": "04 역설계"
+    "order": 4
+  },
+  {
+    "category": "press-die",
+    "categoryName": "03 프레스 금형설계",
+    "title": "자동차 시트 프레임 부품 프레스 금형설계",
+    "summary": "깊은 벤딩 형상, 내측 쏠림, 버링 구조를 고려한 자동차 시트 프레임 부품의 프레스 금형설계 사례",
+    "image": "assets/portfolio/press-die/seat-frame/main.jpg",
+    "url": "assets/portfolio/press-die/seat-frame/portfolio.html",
+    "featured": true,
+    "order": 5
   }
-]{
-  "category": "press-die",
-  "categoryName": "03 프레스 금형설계",
-  "categoryLabel": "03 프레스 금형설계",
-  "title": "자동차 시트 프레임 부품 프레스 금형설계",
-  "summary": "깊은 벤딩 형상, 내측 쏠림, 버링 구조를 고려한 자동차 시트 프레임 부품의 프레스 금형설계 사례",
-  "image": "assets/portfolio/press-die/seat-frame/main.jpg",
-  "url": "assets/portfolio/press-die/seat-frame/portfolio.html",
-  "featured": true,
-  "order": 5,
-  "tags": [
-    "자동차 부품",
-    "프레스 금형",
-    "3D 금형 모델링"
-  ]
-}
+]
