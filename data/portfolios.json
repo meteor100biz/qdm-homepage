@@ -26,7 +26,7 @@
     "summary": "프레스 부품의 성형 가능성, 금형 구조, 제작성을 고려한 프레스 금형설계 대표 사례",
     "image": "assets/portfolio/press-die/seat-bracket/main.jpg",
     "url": "assets/portfolio/press-die/seat-bracket/portfolio.html",
-    "featured": true,
+    "featured": false,
     "order": 3
   },
   {
@@ -36,7 +36,7 @@
     "summary": "실물 부품을 기반으로 형상을 분석하고 제작 가능한 3D CAD 데이터와 2D 도면으로 복원한 사례",
     "image": "assets/portfolio/reverse/nozzle/main.png",
     "url": "assets/portfolio/reverse/nozzle/portfolio.html",
-    "featured": false,
+    "featured": true,
     "order": 4
   },
   {
