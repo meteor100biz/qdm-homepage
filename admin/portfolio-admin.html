@@ -362,6 +362,24 @@
       return categoryName(categoryId).replace(/^\d+\s*/, "");
     }
 
+    function categoryIdFromName(name) {
+      const compact = String(name || "").replace(/^\d+\s*/, "").replace(/\s+/g, "");
+      return categories.find((c) => categoryPlainName(c.id).replace(/\s+/g, "") === compact)?.id || "";
+    }
+
+    function cleanTagsForCategory(tags, categoryId) {
+      const categoryLabel = categoryPlainName(categoryId).replace(/\s+/g, "");
+      const categoryFull = categoryName(categoryId).replace(/^\d+\s*/, "").replace(/\s+/g, "");
+      const seen = new Set();
+      return (tags || []).filter((tag) => {
+        const normalized = String(tag || "").trim();
+        const compact = normalized.replace(/\s+/g, "");
+        if (!normalized || compact === categoryLabel || compact === categoryFull || seen.has(compact)) return false;
+        seen.add(compact);
+        return true;
+      });
+    }
+
     async function getDir(parent, name, create = false) {
       return parent.getDirectoryHandle(name, { create });
     }
@@ -470,7 +488,7 @@
     function formValue() {
       const category = $("category").value;
       const slug = slugify($("slug").value);
-      const tags = $("tags").value.split(",").map((v) => v.trim()).filter(Boolean);
+      const tags = cleanTagsForCategory($("tags").value.split(",").map((v) => v.trim()).filter(Boolean), category);
       return {
         category,
         categoryName: categoryName(category),
@@ -494,7 +512,7 @@
       $("subtitle").value = portfolio.subtitle || "";
       $("summary").value = portfolio.summary || portfolio.description || "";
       $("overview").value = portfolio.overview || portfolio.summary || portfolio.description || "";
-      $("tags").value = (portfolio.tags || []).join(", ");
+      $("tags").value = cleanTagsForCategory(portfolio.tags || [], portfolio.category || categories[0].id).join(", ");
       $("featured").checked = Boolean(portfolio.featured);
       $("tasks").value = portfolio.tasks ? portfolio.tasks.join("\n") : "";
       $("mainImage").value = "";
@@ -564,7 +582,7 @@
         subtitle: textOf(doc.querySelector(".page-hero p")),
         overview: paragraphAfterHeading(doc, "h2", "프로젝트 개요"),
         tasks: listAfterHeading(doc, "h3", "수행 내용"),
-        tags: badges.slice(1),
+        tags: cleanTagsForCategory(badges.slice(1), categoryIdFromName(badges[0])),
         image,
         galleryPaths: removeMainPath([...doc.querySelectorAll(".gallery img")].map((img) => normalizeAssetPath(img.getAttribute("src"))).filter(Boolean), image)
       };
