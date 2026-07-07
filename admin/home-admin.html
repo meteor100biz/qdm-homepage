@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QDM 메인 홈페이지 관리자</title>
+  <style>
+    :root{--blue:#06306f;--green:#0b7a53;--red:#b42318;--yellow:#a15c00;--ink:#172033;--muted:#667085;--line:#d8e0ec;--bg:#f3f6fb}
+    *{box-sizing:border-box} body{margin:0;font-family:Arial,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
+    header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2}.top{max-width:1000px;margin:0 auto;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+    h1{margin:0;color:var(--blue);font-size:22px}.sub{margin:3px 0 0;color:var(--muted);font-size:13px;font-weight:700}
+    main{max-width:1000px;margin:0 auto;padding:22px 24px 42px}.panel{background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}.body{padding:20px;display:grid;gap:18px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label{display:grid;gap:7px;font-size:13px;font-weight:900}input{width:100%;border:1px solid #cfd8e6;border-radius:8px;padding:12px;font:inherit}
+    .btn{border:1px solid var(--line);background:#fff;border-radius:8px;min-height:42px;padding:0 15px;font-weight:900;color:var(--ink);text-decoration:none;display:inline-flex;align-items:center}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.green{background:var(--green);border-color:var(--green);color:#fff}.btn:disabled{opacity:.45;cursor:not-allowed}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap}.status{padding:11px 13px;border-radius:8px;background:#fff7ed;border:1px solid #fed7aa;color:var(--yellow);font-size:13px;font-weight:700}.status.good{background:#ecfdf3;border-color:#abefc6;color:var(--green)}.status.bad{background:#fef3f2;border-color:#fecdca;color:var(--red)}
+    .hint{font-size:12px;color:var(--muted);font-weight:700}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    @media(max-width:720px){.grid{grid-template-columns:1fr}.top{display:block}.toolbar{margin-top:12px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top">
+      <div><h1>메인 홈페이지 수정</h1><p class="sub">전화번호, 이메일, 주소 등 메인 페이지 연락처 정보를 수정합니다.</p></div>
+      <div class="toolbar"><a class="btn" href="index.html">관리자 홈</a><button class="btn primary" id="pickRootBtn" type="button">홈페이지 폴더 선택</button></div>
+    </div>
+  </header>
+  <main>
+    <section class="panel">
+      <div class="body">
+        <div id="status" class="status">먼저 홈페이지 루트 폴더인 qdm-homepage-main을 선택하세요.</div>
+        <div class="grid">
+          <label>전화번호 표시
+            <input id="phoneDisplay" placeholder="070-8064-6621">
+          </label>
+          <label>전화번호 링크용 숫자
+            <input id="phoneTel" placeholder="07080646621">
+            <span class="hint">전화번호 표시값에서 자동 생성됩니다. 필요하면 직접 수정하세요.</span>
+          </label>
+        </div>
+        <div class="grid">
+          <label>대표 이메일
+            <input id="email" type="email" placeholder="meteor100biz@gmail.com">
+          </label>
+          <label>문의 폼 수신 이메일
+            <input id="formEmail" type="email" placeholder="ryopho@naver.com">
+          </label>
+        </div>
+        <label>주소
+          <input id="address" placeholder="경남 창원시 의창구 금강로 367">
+        </label>
+        <label>네이버 기술블로그 대표 링크
+          <input id="blogUrl" type="url" placeholder="https://blog.naver.com/meteor_822">
+        </label>
+        <div class="actions">
+          <button class="btn green" id="saveBtn" type="button" disabled>index.html 저장</button>
+          <span class="hint">저장 전 <code>index.backup-날짜.html</code> 파일을 1회 생성합니다.</span>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="admin-shared.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const state = { rootHandle: null, html: "", backupMade: false };
+    function setStatus(message, type = "") { const el = $("status"); el.className = `status ${type}`.trim(); el.textContent = message; }
+    function phoneToTel(value) { return String(value || "").replace(/[^0-9]/g, ""); }
+    async function fileHandle(name, create = false) { return state.rootHandle.getFileHandle(name, { create }); }
+    async function readIndex() { state.html = await (await (await fileHandle("index.html")).getFile()).text(); }
+    async function writeFile(name, text) { const h = await fileHandle(name, true); const w = await h.createWritable(); await w.write(new Blob([text], { type: "text/html;charset=utf-8" })); await w.close(); }
+    function textMatch(regex) { return state.html.match(regex)?.[1] || ""; }
+    function loadForm() {
+      $("phoneDisplay").value = textMatch(/<a class="phone" href="tel:[^"]+">☎\s*([^<]+)<\/a>/);
+      $("phoneTel").value = textMatch(/<a class="phone" href="tel:([^"]+)">/);
+      $("address").value = textMatch(/<li>주소:\s*([^<]+)<\/li>/);
+      $("email").value = textMatch(/<li>이메일:\s*<a href="mailto:[^"]+">([^<]+)<\/a><\/li>/);
+      $("formEmail").value = textMatch(/<form class="contact-box" action="mailto:([^"]+)"/);
+      $("blogUrl").value = textMatch(/<li>블로그:\s*<a href="([^"]+)"/);
+      if (!$("phoneTel").value) $("phoneTel").value = phoneToTel($("phoneDisplay").value);
+    }
+    async function backupOnce() {
+      if (state.backupMade) return;
+      const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "").replace("T", "-");
+      await writeFile(`index.backup-${stamp}.html`, state.html);
+      state.backupMade = true;
+    }
+    function replaceOnce(html, regex, replacement) {
+      if (!regex.test(html)) throw new Error(`수정할 항목을 찾지 못했습니다: ${regex}`);
+      return html.replace(regex, replacement);
+    }
+    async function save() {
+      await backupOnce();
+      const phone = $("phoneDisplay").value.trim();
+      const tel = ($("phoneTel").value.trim() || phoneToTel(phone));
+      const email = $("email").value.trim();
+      const formEmail = $("formEmail").value.trim();
+      const address = $("address").value.trim();
+      const blogUrl = $("blogUrl").value.trim();
+      let html = state.html;
+      html = html.replaceAll(/href="tel:[^"]+"/g, `href="tel:${tel}"`);
+      html = html.replaceAll(/☎\s*070[-0-9]+/g, `☎ ${phone}`);
+      html = replaceOnce(html, /<li>주소:\s*[^<]+<\/li>/, `<li>주소: ${address}</li>`);
+      html = replaceOnce(html, /<li>전화:\s*<a href="tel:[^"]+">[^<]+<\/a><\/li>/, `<li>전화: <a href="tel:${tel}">${phone}</a></li>`);
+      html = replaceOnce(html, /<li>이메일:\s*<a href="mailto:[^"]+">[^<]+<\/a><\/li>/, `<li>이메일: <a href="mailto:${email}">${email}</a></li>`);
+      html = replaceOnce(html, /<li>블로그:\s*<a href="[^"]+" target="_blank" rel="noopener">네이버 기술블로그 바로가기<\/a><\/li>/, `<li>블로그: <a href="${blogUrl}" target="_blank" rel="noopener">네이버 기술블로그 바로가기</a></li>`);
+      html = replaceOnce(html, /<form class="contact-box" action="mailto:[^"]+"/, `<form class="contact-box" action="mailto:${formEmail}"`);
+      state.html = html;
+      await writeFile("index.html", html);
+      setStatus("index.html 저장 완료. GitHub에 올리면 Vercel에 반영됩니다.", "good");
+    }
+    $("phoneDisplay").addEventListener("input", () => { $("phoneTel").value = phoneToTel($("phoneDisplay").value); });
+    async function useRootHandle(handle, shared = false) {
+      state.rootHandle = handle;
+      await readIndex();
+      loadForm();
+      $("saveBtn").disabled = false;
+      setStatus(shared ? `공유된 폴더를 불러왔습니다: ${handle.name}` : "index.html을 불러왔습니다.", "good");
+    }
+    $("pickRootBtn").addEventListener("click", async () => {
+      try {
+        await useRootHandle(await QdmAdminStorage.pickAndSaveRoot());
+      } catch (error) { setStatus(error.message, "bad"); }
+    });
+    $("saveBtn").addEventListener("click", () => save().catch((error) => setStatus(error.message, "bad")));
+    QdmAdminStorage.loadSavedRoot().then((handle) => {
+      if (handle) return useRootHandle(handle, true);
+    }).catch(() => {});
+  </script>
+</body>
+</html>
