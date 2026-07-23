@@ -64,10 +64,10 @@ module.exports = async function handler(request, response) {
     return response.status(400).json({ message: "이메일 주소를 확인해주세요." });
   }
 
-  const smtpUser = process.env.DAUM_SMTP_USER;
-  const smtpPassword = process.env.DAUM_SMTP_APP_PASSWORD;
-  const from = process.env.CONTACT_FROM || "contact@qdm.co.kr";
-  const to = process.env.CONTACT_TO || "contact@qdm.co.kr";
+  const smtpUser = String(process.env.DAUM_SMTP_USER || "").trim();
+  const smtpPassword = String(process.env.DAUM_SMTP_APP_PASSWORD || "").trim();
+  const from = String(process.env.CONTACT_FROM || "contact@qdm.co.kr").trim();
+  const to = String(process.env.CONTACT_TO || "contact@qdm.co.kr").trim();
   if (!smtpUser || !smtpPassword) {
     console.error("Missing Daum SMTP environment variables");
     return response.status(503).json({ message: "메일 전송 설정이 완료되지 않았습니다." });
