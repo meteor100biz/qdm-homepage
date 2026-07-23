@@ -103,7 +103,13 @@ module.exports = async function handler(request, response) {
     });
     return response.status(200).json({ ok: true });
   } catch (error) {
-    console.error("Daum SMTP send failed", error?.code || error?.message);
+    console.error("Daum SMTP send failed", {
+      code: error?.code,
+      command: error?.command,
+      responseCode: error?.responseCode,
+      response: error?.response,
+      message: error?.message
+    });
     return response.status(500).json({ message: "메일 전송 중 오류가 발생했습니다." });
   }
 };
