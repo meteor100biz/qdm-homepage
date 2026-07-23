@@ -2,3 +2,5 @@ node_modules/
 .vercel/
 .env*
 !.env.example
+local-admin/
+offline-admin/
