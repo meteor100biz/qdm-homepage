@@ -77,6 +77,7 @@ module.exports = async function handler(request, response) {
     host: "smtp.daum.net",
     port: 465,
     secure: true,
+    authMethod: "LOGIN",
     auth: { user: smtpUser, pass: smtpPassword }
   });
 
