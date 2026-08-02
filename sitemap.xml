@@ -1,35 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://qdm.co.kr/</loc>
-    <lastmod>2026-07-23</lastmod>
-  </url>
-  <url>
-    <loc>https://qdm.co.kr/portfolio.html</loc>
-    <lastmod>2026-07-23</lastmod>
-  </url>
-  <url>
-    <loc>https://qdm.co.kr/assets/portfolio/analysis/double-drill/portfolio.html</loc>
-    <lastmod>2026-07-23</lastmod>
-  </url>
-  <url>
-    <loc>https://qdm.co.kr/assets/portfolio/analysis/led_cover/portfolio.html</loc>
-    <lastmod>2026-07-23</lastmod>
-  </url>
-  <url>
-    <loc>https://qdm.co.kr/assets/portfolio/mechanical/core-drill/portfolio.html</loc>
-    <lastmod>2026-07-23</lastmod>
-  </url>
-  <url>
-    <loc>https://qdm.co.kr/assets/portfolio/press-die/seat-bracket/portfolio.html</loc>
-    <lastmod>2026-07-23</lastmod>
-  </url>
-  <url>
-    <loc>https://qdm.co.kr/assets/portfolio/press-die/seat-frame/portfolio.html</loc>
-    <lastmod>2026-07-23</lastmod>
-  </url>
-  <url>
-    <loc>https://qdm.co.kr/assets/portfolio/reverse/nozzle/portfolio.html</loc>
-    <lastmod>2026-07-23</lastmod>
-  </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url><loc>https://qdm.co.kr/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/portfolio.html"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/assets/portfolio/analysis/double-drill/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/analysis/double-drill/portfolio.html"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/analysis/double-drill/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/assets/portfolio/analysis/led_cover/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/analysis/led_cover/portfolio.html"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/analysis/led_cover/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/assets/portfolio/mechanical/core-drill/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/mechanical/core-drill/portfolio.html"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/mechanical/core-drill/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/assets/portfolio/press-die/seat-bracket/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/press-die/seat-bracket/portfolio.html"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/press-die/seat-bracket/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/assets/portfolio/press-die/seat-frame/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/press-die/seat-frame/portfolio.html"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/press-die/seat-frame/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/assets/portfolio/reverse/nozzle/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/reverse/nozzle/portfolio.html"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/reverse/nozzle/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/"/><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/portfolio.html"/><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/assets/portfolio/analysis/double-drill/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/analysis/double-drill/portfolio.html"/><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/analysis/double-drill/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/assets/portfolio/analysis/led_cover/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/analysis/led_cover/portfolio.html"/><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/analysis/led_cover/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/assets/portfolio/mechanical/core-drill/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/mechanical/core-drill/portfolio.html"/><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/mechanical/core-drill/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/assets/portfolio/press-die/seat-bracket/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/press-die/seat-bracket/portfolio.html"/><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/press-die/seat-bracket/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/assets/portfolio/press-die/seat-frame/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/press-die/seat-frame/portfolio.html"/><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/press-die/seat-frame/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/assets/portfolio/reverse/nozzle/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/reverse/nozzle/portfolio.html"/><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/reverse/nozzle/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
 </urlset>
