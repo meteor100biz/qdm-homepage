@@ -12,9 +12,9 @@
     press: "薄板成形解析・プレス金型設計"
   } : {
     full: "제품설계.구조해석.박판성형해석.프레스금형설계",
-    mechanical: "제품설계.구조해석",
-    separator: ".",
-    press: "박판성형해석.프레스금형설계"
+    mechanical: "제품설계 . 구조해석",
+    separator: " . ",
+    press: "박판성형해석 . 프레스금형설계"
   };
   const groupedMarkup = `<span class="qdm-service-group mechanical">${groupedCopy.mechanical}</span><span class="qdm-service-separator">${groupedCopy.separator}</span><span class="qdm-service-group press">${groupedCopy.press}</span>`;
   document.querySelectorAll(".tagline").forEach((tagline) => {
