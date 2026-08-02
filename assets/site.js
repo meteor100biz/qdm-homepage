@@ -35,6 +35,46 @@ function renderFeatured(posts){const g=document.getElementById('featuredPortfoli
 function renderPortfolioList(posts,category='all'){const g=document.getElementById('portfolioList');if(!g)return;let list=posts.slice().sort((a,b)=>(a.order||0)-(b.order||0));if(category!=='all')list=list.filter(p=>p.category===category);g.innerHTML=list.map(card).join('')||`<p>${qdmText.empty}</p>`;}
 function updatePortfolioIntro(category='all'){const el=document.getElementById('portfolioHeroDesc');if(el)el.textContent=qdmText.descriptions[category]||qdmText.descriptions.all;}
 const qdmDataBase=qdmJapanese?'/data/ja':'/data';
+function initHeroSlider(){
+  const root=document.querySelector('.hero-art');
+  if(!root)return;
+  const stage=root.querySelector('.hero-slides');
+  const dots=root.querySelector('.hero-dots');
+  const prev=root.querySelector('[data-hero-prev]');
+  const next=root.querySelector('[data-hero-next]');
+  let index=0,timer=0,interval=5000,slides=[];
+  const internalPath=(value)=>/^(?:https?:)?\//.test(value||'')?value:`/${String(value||'').replace(/^\/+/, '')}`;
+  const show=(nextIndex)=>{
+    if(!slides.length)return;
+    index=(nextIndex+slides.length)%slides.length;
+    slides.forEach((slide,i)=>slide.classList.toggle('is-active',i===index));
+    dots.querySelectorAll('button').forEach((dot,i)=>{dot.classList.toggle('is-active',i===index);dot.setAttribute('aria-current',i===index?'true':'false');});
+  };
+  const stop=()=>{if(timer){clearInterval(timer);timer=0;}};
+  const play=()=>{stop();if(slides.length>1&&!matchMedia('(prefers-reduced-motion: reduce)').matches)timer=setInterval(()=>show(index+1),interval);};
+  const render=(settings)=>{
+    const items=(settings.slides||[]).filter(item=>item&&item.enabled!==false&&item.image);
+    if(!items.length)return;
+    interval=Math.max(2,Number(settings.intervalSeconds)||5)*1000;
+    root.style.setProperty('--hero-ratio',String(settings.aspectRatio||'16:10').replace(':',' / '));
+    stage.replaceChildren(...items.map((item,i)=>{
+      const figure=document.createElement('figure');figure.className=`hero-slide${i===0?' is-active':''}`;
+      const img=document.createElement('img');img.src=internalPath(item.image);img.alt=(qdmJapanese?item.altJa:item.altKo)||item.altKo||'';img.decoding='async';
+      if(i===0)img.fetchPriority='high';else img.loading='lazy';
+      figure.append(img);return figure;
+    }));
+    slides=[...stage.querySelectorAll('.hero-slide')];
+    dots.replaceChildren(...slides.map((_,i)=>{const button=document.createElement('button');button.type='button';button.setAttribute('aria-label',qdmJapanese?`${i+1}番目のバナーを見る`:`${i+1}번째 배너 보기`);button.addEventListener('click',()=>{show(i);play();});return button;}));
+    root.classList.toggle('has-multiple',slides.length>1);show(0);play();
+  };
+  prev?.addEventListener('click',()=>{show(index-1);play();});
+  next?.addEventListener('click',()=>{show(index+1);play();});
+  root.addEventListener('mouseenter',stop);root.addEventListener('mouseleave',play);
+  root.addEventListener('focusin',stop);root.addEventListener('focusout',play);
+  document.addEventListener('visibilitychange',()=>document.hidden?stop():play());
+  fetch('/data/hero-slides.json').then(response=>{if(!response.ok)throw new Error('hero settings');return response.json();}).then(render).catch(()=>{});
+}
+initHeroSlider();
 fetch(`${qdmDataBase}/blog-posts.json`).then(r=>r.json()).then(renderBlog).catch(()=>{});
 fetch(`${qdmDataBase}/portfolios.json`).then(r=>r.json()).then(posts=>{
   renderFeatured(posts);

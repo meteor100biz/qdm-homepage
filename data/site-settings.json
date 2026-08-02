@@ -2,10 +2,6 @@
   "phoneTel": "07080646621",
   "phoneDisplayKo": "070-8064-6621",
   "phoneDisplayJa": "+82-70-8064-6621",
-  "email": "contact@qdm.co.kr",
-  "addressKo": "경남 창원시 의창구 금강로 367",
-  "addressJa": "韓国 慶尚南道 昌原市 義昌区 金剛路 367",
-  "blogUrlKo": "https://blog.naver.com/meteor_822",
   "ko": {
     "tagline": "제품설계.구조해석.박판성형해석.프레스금형설계",
     "taglineEn": "QUALITY-DRIVEN DESIGN & MANUFACTURING",
@@ -23,5 +19,9 @@
     "portfolio": "実績",
     "blog": "技術ブログ",
     "contact": "お問い合わせ"
-  }
+  },
+  "email": "contact@qdm.co.kr",
+  "addressKo": "경남 창원시 의창구 금강로 367",
+  "addressJa": "韓国 慶尚南道 昌原市 義昌区 金剛路 367",
+  "blogUrlKo": "https://blog.naver.com/meteor_822"
 }
