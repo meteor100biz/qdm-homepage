@@ -4,17 +4,17 @@
   "transition": "fade",
   "slides": [
     {
-      "id": "hero-main",
-      "image": "assets/hero-main.jpg",
-      "altKo": "제품설계, 구조해석, 프레스 금형설계 이미지",
-      "altJa": "製品設計、構造解析、プレス金型設計のイメージ",
-      "enabled": true
-    },
-    {
       "id": "hero-1785711991541-inxas",
       "image": "assets/hero/hero-1785721722759-1.png",
       "altKo": "프레스 금형설계 이미지",
       "altJa": "プレス金型設計のイメージ",
+      "enabled": true
+    },
+    {
+      "id": "hero-main",
+      "image": "assets/hero-main.jpg",
+      "altKo": "제품설계, 구조해석, 프레스 금형설계 이미지",
+      "altJa": "製品設計、構造解析、プレス金型設計のイメージ",
       "enabled": true
     }
   ]
