@@ -7,7 +7,7 @@
     "publishedAt": "2026-08-04",
     "tags": [],
     "summary": "test 목록 요약문",
-    "metaDescription": "검색 설명 meta",
+    "metaDescription": "test 목록 요약문",
     "published": true,
     "featured": true,
     "relatedPortfolioUrl": "",
@@ -17,7 +17,7 @@
     "modifiedAt": "2026-08-04",
     "sections": [
       {
-        "heading": "소제목",
+        "heading": "",
         "body": "test 본문",
         "bullets": "test 글머리표",
         "image": "/ja/blog/press080401/section-1-01.jpg",
