@@ -55,25 +55,14 @@ function renderBlogList(posts){
 function renderFeatured(posts){const g=document.getElementById('featuredPortfolioGrid');if(g)g.innerHTML=posts.filter(p=>p.featured).sort((a,b)=>(a.order||0)-(b.order||0)).map(card).join('');}
 function renderPortfolioList(posts,category='all'){const g=document.getElementById('portfolioList');if(!g)return;let list=posts.slice().sort((a,b)=>(a.order||0)-(b.order||0));if(category!=='all')list=list.filter(p=>p.category===category);g.innerHTML=list.map(card).join('')||`<p>${qdmText.empty}</p>`;}
 function updatePortfolioIntro(category='all'){const el=document.getElementById('portfolioHeroDesc');if(el)el.textContent=qdmText.descriptions[category]||qdmText.descriptions.all;}
-function initLineContact(){
+function initOverseasTrade(){
   if(!qdmJapanese)return;
   const list=document.querySelector('#contact .contact-list');
   if(!list)return;
-  fetch('/data/site-settings.json').then(response=>response.json()).then(settings=>{
-    if(!settings.lineId||!settings.lineAddUrl)return;
-    document.querySelector('[data-line-contact]')?.remove();
-    const section=document.createElement('section');section.className='line-contact';section.dataset.lineContact='';
-    const symbol=document.createElement('div');symbol.className='line-symbol';symbol.setAttribute('aria-hidden','true');symbol.textContent='LINE';
-    const copy=document.createElement('div');copy.className='line-copy';
-    const kicker=document.createElement('span');kicker.className='line-kicker';kicker.textContent='LINEでのお問い合わせ';
-    const title=document.createElement('strong');title.textContent='QDM 公式アカウント ';
-    const id=document.createElement('small');id.textContent=settings.lineId;title.append(id);
-    const description=document.createElement('p');description.textContent='友だち追加後、トークから設計・解析・金型に関するご相談をお送りください。';
-    const actions=document.createElement('div');actions.className='line-actions';
-    const add=document.createElement('a');add.className='line-add';add.href=settings.lineAddUrl;add.target='_blank';add.rel='noopener';add.textContent='LINEで友だち追加';actions.append(add);
-    if(settings.lineCallUrl){const call=document.createElement('a');call.className='line-call';call.href=settings.lineCallUrl;call.target='_blank';call.rel='noopener';call.textContent='無料通話を開始';actions.append(call);}
-    copy.append(kicker,title,description,actions);section.append(symbol,copy);list.insertAdjacentElement('afterend',section);
-  }).catch(()=>{});
+  if(document.querySelector('[data-overseas-trade]'))return;
+  const section=document.createElement('section');section.className='overseas-trade';section.dataset.overseasTrade='';
+  section.innerHTML='<span class="trade-kicker">OVERSEAS BUSINESS</span><strong>海外取引について</strong><p class="trade-intro">QDMは、日本企業からのプレス金型設計・薄板成形解析のご依頼に対応しています。</p><ul class="trade-support"><li>日本語によるメール・オンライン打ち合わせ・音声通話に対応</li><li>見積書・請求書（Invoice）を発行</li><li>図面・仕様書はフォームまたはメールで送付可能</li><li>必要に応じて秘密保持契約（NDA）に対応</li><li>韓国と日本の間に時差はありません</li></ul><div class="trade-flow" aria-label="海外取引の流れ"><div><b>1</b><span>お問い合わせ<br>資料送付</span></div><div><b>2</b><span>お見積り<br>業務範囲確認</span></div><div><b>3</b><span>ご発注<br>設計・解析</span></div><div><b>4</b><span>納品・請求書<br>海外送金</span></div></div>';
+  list.insertAdjacentElement('afterend',section);
 }
 const qdmDataBase=qdmJapanese?'/data/ja':'/data';
 function initHeroSlider(){
@@ -116,7 +105,7 @@ function initHeroSlider(){
   fetch('/data/hero-slides.json').then(response=>{if(!response.ok)throw new Error('hero settings');return response.json();}).then(render).catch(()=>{});
 }
 initHeroSlider();
-initLineContact();
+initOverseasTrade();
 fetch(`${qdmDataBase}/blog-posts.json`).then(r=>r.json()).then(posts=>{renderBlog(posts);renderBlogList(posts);}).catch(()=>{});
 fetch(`${qdmDataBase}/portfolios.json`).then(r=>r.json()).then(posts=>{
   renderFeatured(posts);
