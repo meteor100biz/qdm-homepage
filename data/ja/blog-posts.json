@@ -1,1 +1,29 @@
-[]
+[
+  {
+    "title": "press",
+    "slug": "press080401",
+    "category": "mechanical",
+    "categoryLabel": "製品・機械設計",
+    "publishedAt": "2026-08-04",
+    "tags": [],
+    "summary": "test 목록 요약문",
+    "metaDescription": "test 목록 요약문",
+    "published": true,
+    "featured": true,
+    "relatedPortfolioUrl": "",
+    "relatedPortfolioTitle": "",
+    "image": "/ja/blog/press080401/main.jpg",
+    "url": "/ja/blog/press080401/",
+    "modifiedAt": "2026-08-04",
+    "sections": [
+      {
+        "heading": "",
+        "body": "test 본문",
+        "bullets": "test 글머리표",
+        "image": "/ja/blog/press080401/section-1-01.jpg",
+        "imageAlt": "",
+        "caption": ""
+      }
+    ]
+  }
+]
