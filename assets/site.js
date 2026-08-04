@@ -25,15 +25,56 @@ function card(p){
   const image=/^(?:https?:)?\//.test(p.image||'')?p.image:`/${p.image||''}`;
   return `<a class="project" href="${url}"><div class="project-img" style="background-image:url('${image}')"></div><div class="project-body"><span class="badge">${label}</span>${tags}<h3>${p.title}</h3><p>${p.summary || p.description || ''}</p><span class="more">${qdmText.detail}</span></div></a>`;
 }
+function blogDate(value){if(!value)return '';try{return new Intl.DateTimeFormat(qdmJapanese?'ja-JP':'ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(`${value}T00:00:00`));}catch{return value;}}
+function blogCard(post){
+  const image=/^(?:https?:)?\//.test(post.image||'')?post.image:`/${post.image||''}`;
+  const external=/^https?:\/\//.test(post.url||'');
+  const attrs=external?' target="_blank" rel="noopener"':'';
+  const label=post.categoryLabel||post.category||'';
+  const date=blogDate(post.publishedAt);
+  return `<a class="blog-card" href="${post.url}"${attrs}><div class="blog-img" style="background-image:url('${image}')"></div><div class="blog-body"><div class="blog-meta"><span class="badge">${label}</span>${date?`<time datetime="${post.publishedAt}">${date}</time>`:''}</div><h3>${post.title}</h3><p>${post.summary||post.description||''}</p><span class="more">${qdmJapanese?'記事を読む →':'글 보기 →'}</span></div></a>`;
+}
+function publishedBlogs(posts){return posts.filter(post=>post.published!==false).sort((a,b)=>String(b.publishedAt||'').localeCompare(String(a.publishedAt||''))||(a.order||0)-(b.order||0));}
 function renderBlog(posts){
   const g=document.getElementById('blogGrid');
   if(!g)return;
-  if(!posts.length){g.closest('section').hidden=true;return;}
-  g.innerHTML=posts.map(post=>{const image=/^(?:https?:)?\//.test(post.image||'')?post.image:`/${post.image||''}`;return `<a class="blog-card" href="${post.url}" target="_blank" rel="noopener"><div class="blog-img" style="background-image:url('${image}')"></div><div class="blog-body"><span class="badge">${post.category}</span><h3>${post.title}</h3><p>${post.description}</p></div></a>`;}).join('');
+  const list=publishedBlogs(posts).filter(post=>post.featured!==false).slice(0,4);
+  if(!list.length){g.closest('section').hidden=true;return;}
+  g.innerHTML=list.map(blogCard).join('');
+}
+function renderBlogList(posts){
+  const g=document.getElementById('blogList');
+  if(!g)return;
+  const list=publishedBlogs(posts);
+  const empty=qdmJapanese?'公開された記事はまだありません。':'공개된 글이 아직 없습니다.';
+  const draw=(category='all')=>{const filtered=category==='all'?list:list.filter(post=>post.category===category);g.innerHTML=filtered.map(blogCard).join('')||`<p class="empty-message">${empty}</p>`;};
+  const tabs=document.getElementById('blogCategoryTabs');
+  if(tabs){const categories=[...new Map(list.map(post=>[post.category,post.categoryLabel||post.category])).entries()];tabs.innerHTML=[['all',qdmJapanese?'すべて':'전체'],...categories].map(([key,label],index)=>`<button class="tab${index===0?' active':''}" type="button" data-blog-category="${key}">${label}</button>`).join('');tabs.querySelectorAll('button').forEach(button=>button.addEventListener('click',()=>{tabs.querySelectorAll('button').forEach(item=>item.classList.remove('active'));button.classList.add('active');draw(button.dataset.blogCategory);}));}
+  draw();
 }
 function renderFeatured(posts){const g=document.getElementById('featuredPortfolioGrid');if(g)g.innerHTML=posts.filter(p=>p.featured).sort((a,b)=>(a.order||0)-(b.order||0)).map(card).join('');}
 function renderPortfolioList(posts,category='all'){const g=document.getElementById('portfolioList');if(!g)return;let list=posts.slice().sort((a,b)=>(a.order||0)-(b.order||0));if(category!=='all')list=list.filter(p=>p.category===category);g.innerHTML=list.map(card).join('')||`<p>${qdmText.empty}</p>`;}
 function updatePortfolioIntro(category='all'){const el=document.getElementById('portfolioHeroDesc');if(el)el.textContent=qdmText.descriptions[category]||qdmText.descriptions.all;}
+function initLineContact(){
+  if(!qdmJapanese)return;
+  const list=document.querySelector('#contact .contact-list');
+  if(!list)return;
+  fetch('/data/site-settings.json').then(response=>response.json()).then(settings=>{
+    if(!settings.lineId||!settings.lineAddUrl)return;
+    document.querySelector('[data-line-contact]')?.remove();
+    const section=document.createElement('section');section.className='line-contact';section.dataset.lineContact='';
+    const symbol=document.createElement('div');symbol.className='line-symbol';symbol.setAttribute('aria-hidden','true');symbol.textContent='LINE';
+    const copy=document.createElement('div');copy.className='line-copy';
+    const kicker=document.createElement('span');kicker.className='line-kicker';kicker.textContent='LINEでのお問い合わせ';
+    const title=document.createElement('strong');title.textContent='QDM 公式アカウント ';
+    const id=document.createElement('small');id.textContent=settings.lineId;title.append(id);
+    const description=document.createElement('p');description.textContent='友だち追加後、トークから設計・解析・金型に関するご相談をお送りください。';
+    const actions=document.createElement('div');actions.className='line-actions';
+    const add=document.createElement('a');add.className='line-add';add.href=settings.lineAddUrl;add.target='_blank';add.rel='noopener';add.textContent='LINEで友だち追加';actions.append(add);
+    if(settings.lineCallUrl){const call=document.createElement('a');call.className='line-call';call.href=settings.lineCallUrl;call.target='_blank';call.rel='noopener';call.textContent='無料通話を開始';actions.append(call);}
+    copy.append(kicker,title,description,actions);section.append(symbol,copy);list.insertAdjacentElement('afterend',section);
+  }).catch(()=>{});
+}
 const qdmDataBase=qdmJapanese?'/data/ja':'/data';
 function initHeroSlider(){
   const root=document.querySelector('.hero-art');
@@ -75,7 +116,8 @@ function initHeroSlider(){
   fetch('/data/hero-slides.json').then(response=>{if(!response.ok)throw new Error('hero settings');return response.json();}).then(render).catch(()=>{});
 }
 initHeroSlider();
-fetch(`${qdmDataBase}/blog-posts.json`).then(r=>r.json()).then(renderBlog).catch(()=>{});
+initLineContact();
+fetch(`${qdmDataBase}/blog-posts.json`).then(r=>r.json()).then(posts=>{renderBlog(posts);renderBlogList(posts);}).catch(()=>{});
 fetch(`${qdmDataBase}/portfolios.json`).then(r=>r.json()).then(posts=>{
   renderFeatured(posts);
   const params=new URLSearchParams(location.search);const init=params.get('category')||'all';updatePortfolioIntro(init);renderPortfolioList(posts,init);
