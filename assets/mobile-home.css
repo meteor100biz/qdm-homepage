@@ -1,0 +1,139 @@
+@media (max-width: 720px) {
+  main > section {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  main > .hero {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .hero-inner {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .about-grid {
+    gap: 16px;
+  }
+
+  .stats {
+    gap: 8px;
+    margin-top: 0;
+  }
+
+  .stat {
+    padding: 12px 14px;
+  }
+
+  .section-head {
+    margin-bottom: 14px;
+  }
+
+  #portfolio .wrap > p,
+  #blog .wrap > p {
+    margin-top: 18px !important;
+  }
+
+  .mobile-carousel-shell {
+    position: relative;
+  }
+
+  #featuredPortfolioGrid,
+  #blogGrid {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 3px 1px 10px;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-color: #9db3cf transparent;
+    scrollbar-width: thin;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #featuredPortfolioGrid > .project,
+  #blogGrid > .blog-card {
+    flex: 0 0 100%;
+    min-width: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    transform: none;
+  }
+
+  #featuredPortfolioGrid::-webkit-scrollbar,
+  #blogGrid::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  #featuredPortfolioGrid::-webkit-scrollbar-thumb,
+  #blogGrid::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: #9db3cf;
+  }
+
+  #featuredPortfolioGrid::-webkit-scrollbar-track,
+  #blogGrid::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .mobile-carousel-arrow {
+    position: absolute;
+    z-index: 4;
+    top: 50%;
+    display: grid;
+    width: 50px;
+    height: 96px;
+    padding: 0;
+    place-items: center;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    opacity: .66;
+    filter: drop-shadow(0 2px 4px rgba(255, 255, 255, .95)) drop-shadow(0 2px 5px rgba(6, 48, 111, .22));
+    transition: opacity .2s ease;
+  }
+
+  .mobile-carousel-arrow.prev {
+    left: 0;
+  }
+
+  .mobile-carousel-arrow.next {
+    right: 0;
+  }
+
+  .mobile-carousel-arrow::before {
+    width: 0;
+    height: 0;
+    content: "";
+    border-top: 21px solid transparent;
+    border-bottom: 21px solid transparent;
+  }
+
+  .mobile-carousel-arrow.prev::before {
+    border-right: 25px solid rgba(6, 48, 111, .58);
+  }
+
+  .mobile-carousel-arrow.next::before {
+    border-left: 25px solid rgba(6, 48, 111, .58);
+  }
+
+  .mobile-carousel-arrow:disabled {
+    pointer-events: none;
+    opacity: .16;
+  }
+
+  .footer {
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+}
+
+@media (min-width: 721px) {
+  .mobile-carousel-arrow {
+    display: none;
+  }
+}

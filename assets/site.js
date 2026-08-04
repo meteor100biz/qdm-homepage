@@ -35,12 +35,31 @@ function blogCard(post){
   return `<a class="blog-card" href="${post.url}"${attrs}><div class="blog-img" style="background-image:url('${image}')"></div><div class="blog-body"><div class="blog-meta"><span class="badge">${label}</span>${date?`<time datetime="${post.publishedAt}">${date}</time>`:''}</div><h3>${post.title}</h3><p>${post.summary||post.description||''}</p><span class="more">${qdmJapanese?'記事を読む →':'글 보기 →'}</span></div></a>`;
 }
 function publishedBlogs(posts){return posts.filter(post=>post.published!==false).sort((a,b)=>String(b.publishedAt||'').localeCompare(String(a.publishedAt||''))||(a.order||0)-(b.order||0));}
+function initMobileCarousel(grid){
+  if(!grid)return;
+  let shell=grid.closest('.mobile-carousel-shell');
+  if(!shell){
+    shell=document.createElement('div');shell.className='mobile-carousel-shell';
+    grid.parentNode.insertBefore(shell,grid);shell.append(grid);
+    const previous=document.createElement('button');previous.type='button';previous.className='mobile-carousel-arrow prev';previous.setAttribute('aria-label',qdmJapanese?'前の項目':'이전 항목');
+    const next=document.createElement('button');next.type='button';next.className='mobile-carousel-arrow next';next.setAttribute('aria-label',qdmJapanese?'次の項目':'다음 항목');
+    shell.append(previous,next);
+    const move=direction=>grid.scrollBy({left:direction*(grid.clientWidth+14),behavior:'smooth'});
+    previous.addEventListener('click',()=>move(-1));next.addEventListener('click',()=>move(1));
+    let frame=0;
+    const update=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{const end=Math.max(0,grid.scrollWidth-grid.clientWidth);previous.disabled=grid.scrollLeft<=2;next.disabled=grid.scrollLeft>=end-2;});};
+    grid.addEventListener('scroll',update,{passive:true});
+    if(globalThis.ResizeObserver){const observer=new ResizeObserver(update);observer.observe(grid);shell._qdmCarouselObserver=observer;}
+    shell._qdmCarouselUpdate=update;
+  }
+  shell._qdmCarouselUpdate?.();
+}
 function renderBlog(posts){
   const g=document.getElementById('blogGrid');
   if(!g)return;
   const list=publishedBlogs(posts).filter(post=>post.featured!==false).slice(0,4);
   if(!list.length){g.closest('section').hidden=true;return;}
-  g.innerHTML=list.map(blogCard).join('');
+  g.innerHTML=list.map(blogCard).join('');initMobileCarousel(g);
 }
 function renderBlogList(posts){
   const g=document.getElementById('blogList');
@@ -52,7 +71,7 @@ function renderBlogList(posts){
   if(tabs){const categories=[...new Map(list.map(post=>[post.category,post.categoryLabel||post.category])).entries()];tabs.innerHTML=[['all',qdmJapanese?'すべて':'전체'],...categories].map(([key,label],index)=>`<button class="tab${index===0?' active':''}" type="button" data-blog-category="${key}">${label}</button>`).join('');tabs.querySelectorAll('button').forEach(button=>button.addEventListener('click',()=>{tabs.querySelectorAll('button').forEach(item=>item.classList.remove('active'));button.classList.add('active');draw(button.dataset.blogCategory);}));}
   draw();
 }
-function renderFeatured(posts){const g=document.getElementById('featuredPortfolioGrid');if(g)g.innerHTML=posts.filter(p=>p.featured).sort((a,b)=>(a.order||0)-(b.order||0)).map(card).join('');}
+function renderFeatured(posts){const g=document.getElementById('featuredPortfolioGrid');if(g){g.innerHTML=posts.filter(p=>p.featured).sort((a,b)=>(a.order||0)-(b.order||0)).map(card).join('');initMobileCarousel(g);}}
 function renderPortfolioList(posts,category='all'){const g=document.getElementById('portfolioList');if(!g)return;let list=posts.slice().sort((a,b)=>(a.order||0)-(b.order||0));if(category!=='all')list=list.filter(p=>p.category===category);g.innerHTML=list.map(card).join('')||`<p>${qdmText.empty}</p>`;}
 function updatePortfolioIntro(category='all'){const el=document.getElementById('portfolioHeroDesc');if(el)el.textContent=qdmText.descriptions[category]||qdmText.descriptions.all;}
 function initOverseasTrade(){
