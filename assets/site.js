@@ -39,7 +39,7 @@ function initMobileCarousel(grid){
   if(!grid)return;
   let shell=grid.closest('.mobile-carousel-shell');
   if(!shell){
-    shell=document.createElement('div');shell.className='mobile-carousel-shell';
+    shell=document.createElement('div');shell.className=`mobile-carousel-shell ${grid.id==='featuredPortfolioGrid'?'portfolio-carousel-shell':'blog-carousel-shell'}`;
     grid.parentNode.insertBefore(shell,grid);shell.append(grid);
     const previous=document.createElement('button');previous.type='button';previous.className='mobile-carousel-arrow prev';previous.setAttribute('aria-label',qdmJapanese?'前の項目':'이전 항목');
     const next=document.createElement('button');next.type='button';next.className='mobile-carousel-arrow next';next.setAttribute('aria-label',qdmJapanese?'次の項目':'다음 항목');
