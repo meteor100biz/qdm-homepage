@@ -1,6 +1,6 @@
 [
   {
-    "title": "自動車シート部品の事前成形検証",
+    "title": "press",
     "slug": "press080401",
     "category": "forming",
     "categoryLabel": "プレス部品の薄板成形解析",
@@ -22,12 +22,12 @@
     "relatedPortfolioTitle": "",
     "image": "/ja/blog/press080401/main.jpg",
     "url": "/ja/blog/press080401/",
-    "modifiedAt": "2026-08-05",
+    "modifiedAt": "2026-08-04",
     "sections": [
       {
-        "heading": "板厚検証",
-        "body": "プレス部品の板厚変化を簡易的に成形解析した後、実際の金型レイアウトを作成します。\nこのプロセスでは、まずシミュレーションによって板厚の分布や変形傾向を事前に確認し、問題点を早期に把握します。\nその結果を基に、金型設計に反映させることで、試作段階での不具合を減らし、効率的な製品開発を可能にします。\nさらに、事前解析によるレイアウト検討は、コスト削減や品質向上にも大きく寄与します。",
-        "bullets": "簡単に板厚の変化を事前に検証します。",
+        "heading": "소제목",
+        "body": "test 본문",
+        "bullets": "test 글머리표",
         "image": "/ja/blog/press080401/section-1-01.jpg",
         "imageAlt": "",
         "caption": ""
