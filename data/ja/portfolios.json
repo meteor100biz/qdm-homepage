@@ -6,7 +6,6 @@
     "summary": "SiC素材加工装置のストローク拡張、既存駆動部の活用、素材投入構造の改善提案",
     "image": "/assets/portfolio/mechanical/core-drill/main.jpg",
     "url": "/ja/assets/portfolio/mechanical/core-drill/portfolio.html",
-    "featured": true,
     "order": 1,
     "tags": ["装置改善", "ストローク拡張"]
   },
@@ -17,7 +16,6 @@
     "summary": "大口径SiCウェハ対応のための装置ストローク拡張、既存機構の再活用、自重たわみの構造解析検討",
     "image": "/assets/portfolio/analysis/double-drill/main.jpg",
     "url": "/ja/assets/portfolio/analysis/double-drill/portfolio.html",
-    "featured": true,
     "order": 2,
     "tags": ["静解析", "たわみ検討"]
   },
@@ -28,7 +26,6 @@
     "summary": "プレス部品の成形可能性、金型構造、製作性を考慮したプレス金型設計事例",
     "image": "/assets/portfolio/press-die/seat-bracket/main.jpg",
     "url": "/ja/assets/portfolio/press-die/seat-bracket/portfolio.html",
-    "featured": false,
     "order": 3,
     "tags": ["成形解析", "ブランク検討"]
   },
@@ -39,7 +36,6 @@
     "summary": "実物部品を基に形状を解析し、製作可能な3D CADデータと2D図面へ復元した事例",
     "image": "/assets/portfolio/reverse/nozzle/main.png",
     "url": "/ja/assets/portfolio/reverse/nozzle/portfolio.html",
-    "featured": true,
     "order": 4,
     "tags": ["3Dスキャン", "2D図面化"]
   },
@@ -50,7 +46,6 @@
     "summary": "深い曲げ形状、内側への偏り、バーリング構造を考慮した自動車シートフレーム部品のプレス金型設計事例",
     "image": "/assets/portfolio/press-die/seat-frame/main.jpg",
     "url": "/ja/assets/portfolio/press-die/seat-frame/portfolio.html",
-    "featured": true,
     "order": 5,
     "tags": ["自動車部品", "3D金型モデリング"]
   },
@@ -61,7 +56,6 @@
     "summary": "LED照明カバーの製品設計から構造解析、試作品製作まで一貫して実施",
     "image": "/assets/portfolio/analysis/led_cover/main.png",
     "url": "/ja/assets/portfolio/analysis/led_cover/portfolio.html",
-    "featured": false,
     "order": 6,
     "tags": ["機構解析", "機構設計", "試作品製作"]
   }

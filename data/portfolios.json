@@ -6,7 +6,6 @@
     "summary": "SiC 원소재 가공 장비의 스트로크 확장, 기존 구동부 활용, 소재 투입 구조 개선 제안",
     "image": "assets/portfolio/mechanical/core-drill/main.jpg",
     "url": "assets/portfolio/mechanical/core-drill/portfolio.html",
-    "featured": true,
     "order": 1,
     "tags": [
       "장비개선",
@@ -20,7 +19,6 @@
     "summary": "대구경 SiC 웨이퍼 대응을 위한 장비 스트로크 확장, 기존 기구 재활용, 자중 처짐 구조해석 검토",
     "image": "assets/portfolio/analysis/double-drill/main.jpg",
     "url": "assets/portfolio/analysis/double-drill/portfolio.html",
-    "featured": true,
     "order": 2,
     "tags": [
       "정적해석",
@@ -34,7 +32,6 @@
     "summary": "프레스 부품의 성형 가능성, 금형 구조, 제작성을 고려한 프레스 금형설계 대표 사례",
     "image": "assets/portfolio/press-die/seat-bracket/main.jpg",
     "url": "assets/portfolio/press-die/seat-bracket/portfolio.html",
-    "featured": false,
     "order": 3,
     "tags": [
       "성형해석",
@@ -48,7 +45,6 @@
     "summary": "실물 부품을 기반으로 형상을 분석하고 제작 가능한 3D CAD 데이터와 2D 도면으로 복원한 사례",
     "image": "assets/portfolio/reverse/nozzle/main.png",
     "url": "assets/portfolio/reverse/nozzle/portfolio.html",
-    "featured": true,
     "order": 4,
     "tags": [
       "3D스캔",
@@ -62,7 +58,6 @@
     "summary": "깊은 벤딩 형상, 내측 쏠림, 버링 구조를 고려한 자동차 시트 프레임 부품의 프레스 금형설계 사례",
     "image": "assets/portfolio/press-die/seat-frame/main.jpg",
     "url": "assets/portfolio/press-die/seat-frame/portfolio.html",
-    "featured": true,
     "order": 5,
     "tags": [
       "자동차 부품",
@@ -76,7 +71,6 @@
     "summary": "LED등기구 COVER 의 설계에서 구조해석 및 실제품 제작까지 수행",
     "image": "assets/portfolio/analysis/led_cover/main.png",
     "url": "assets/portfolio/analysis/led_cover/portfolio.html",
-    "featured": false,
     "order": 6,
     "tags": [
       "기구해석",

@@ -45,7 +45,7 @@ function initMobileCarousel(grid){
   if(!grid)return;
   let shell=grid.closest('.mobile-carousel-shell');
   if(!shell){
-    shell=document.createElement('div');shell.className=`mobile-carousel-shell ${grid.id==='featuredPortfolioGrid'?'portfolio-carousel-shell':'blog-carousel-shell'}`;
+    shell=document.createElement('div');shell.className='mobile-carousel-shell blog-carousel-shell';
     grid.parentNode.insertBefore(shell,grid);shell.append(grid);
     const previous=document.createElement('button');previous.type='button';previous.className='mobile-carousel-arrow prev';previous.setAttribute('aria-label',qdmJapanese?'前の項目':'이전 항목');
     const next=document.createElement('button');next.type='button';next.className='mobile-carousel-arrow next';next.setAttribute('aria-label',qdmJapanese?'次の項目':'다음 항목');
@@ -77,7 +77,6 @@ function renderBlogList(posts){
   if(tabs){const categories=[...new Map(list.map(post=>[post.category,post.categoryLabel||post.category])).entries()];tabs.innerHTML=[['all',qdmJapanese?'すべて':'전체'],...categories].map(([key,label],index)=>`<button class="tab${index===0?' active':''}" type="button" data-blog-category="${key}">${label}</button>`).join('');tabs.querySelectorAll('button').forEach(button=>button.addEventListener('click',()=>{tabs.querySelectorAll('button').forEach(item=>item.classList.remove('active'));button.classList.add('active');draw(button.dataset.blogCategory);}));}
   draw();
 }
-function renderFeatured(posts){const g=document.getElementById('featuredPortfolioGrid');if(g){g.innerHTML=posts.filter(p=>p.featured).sort((a,b)=>(a.order||0)-(b.order||0)).map(card).join('');initMobileCarousel(g);}}
 function renderPortfolioList(posts,category='all'){const g=document.getElementById('portfolioList');if(!g)return;let list=posts.slice().sort((a,b)=>(a.order||0)-(b.order||0));if(category==='product')list=list.filter(p=>['mechanical','analysis'].includes(p.category));else if(category==='press')list=list.filter(p=>['press-die','forming'].includes(p.category));else if(category!=='all')list=list.filter(p=>p.category===category);g.innerHTML=list.map(card).join('')||`<p>${qdmText.empty}</p>`;}
 function updatePortfolioIntro(category='all'){const el=document.getElementById('portfolioHeroDesc');if(el)el.textContent=qdmText.descriptions[category]||qdmText.descriptions.all;}
 function initOverseasTrade(){
@@ -133,7 +132,6 @@ initHeroSlider();
 initOverseasTrade();
 fetch(`${qdmDataBase}/blog-posts.json`).then(r=>r.json()).then(posts=>{renderBlog(posts);renderBlogList(posts);}).catch(()=>{});
 fetch(`${qdmDataBase}/portfolios.json`).then(r=>r.json()).then(posts=>{
-  renderFeatured(posts);
   const params=new URLSearchParams(location.search);const init=params.get('category')||'all';updatePortfolioIntro(init);renderPortfolioList(posts,init);
   document.querySelectorAll('.tab').forEach(btn=>{if(btn.dataset.category===init){document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updatePortfolioIntro(btn.dataset.category);renderPortfolioList(posts,btn.dataset.category);});});
 }).catch(()=>{});

@@ -40,7 +40,6 @@
     position: relative;
   }
 
-  #featuredPortfolioGrid,
   #blogGrid {
     display: flex;
     gap: 14px;
@@ -54,7 +53,6 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  #featuredPortfolioGrid > .project,
   #blogGrid > .blog-card {
     flex: 0 0 100%;
     min-width: 100%;
@@ -63,18 +61,15 @@
     transform: none;
   }
 
-  #featuredPortfolioGrid::-webkit-scrollbar,
   #blogGrid::-webkit-scrollbar {
     height: 5px;
   }
 
-  #featuredPortfolioGrid::-webkit-scrollbar-thumb,
   #blogGrid::-webkit-scrollbar-thumb {
     border-radius: 999px;
     background: #9db3cf;
   }
 
-  #featuredPortfolioGrid::-webkit-scrollbar-track,
   #blogGrid::-webkit-scrollbar-track {
     background: transparent;
   }
@@ -95,10 +90,6 @@
     opacity: .66;
     filter: drop-shadow(0 2px 4px rgba(255, 255, 255, .95)) drop-shadow(0 2px 5px rgba(6, 48, 111, .22));
     transition: opacity .2s ease;
-  }
-
-  .portfolio-carousel-shell .mobile-carousel-arrow {
-    top: 108px;
   }
 
   .blog-carousel-shell .mobile-carousel-arrow {
