@@ -1,0 +1,57 @@
+.category-tabs .tab:is(
+  [data-category="product"],
+  [data-category="mechanical"],
+  [data-category="analysis"]
+) {
+  background: #eef5ff;
+  border-color: #bfd3ed;
+  color: #0b4fb3;
+}
+
+.category-tabs .tab:is(
+  [data-category="product"],
+  [data-category="mechanical"],
+  [data-category="analysis"]
+):is(:hover, :focus-visible) {
+  background: #dfeeff;
+  border-color: #78a7df;
+}
+
+.category-tabs .tab:is(
+  [data-category="product"],
+  [data-category="mechanical"],
+  [data-category="analysis"]
+).active {
+  background: #0b4fb3;
+  border-color: #0b4fb3;
+  color: #fff;
+}
+
+.category-tabs .tab:is(
+  [data-category="press"],
+  [data-category="press-die"],
+  [data-category="forming"]
+) {
+  background: #fff5e8;
+  border-color: #ebcda5;
+  color: #9a5300;
+}
+
+.category-tabs .tab:is(
+  [data-category="press"],
+  [data-category="press-die"],
+  [data-category="forming"]
+):is(:hover, :focus-visible) {
+  background: #ffead0;
+  border-color: #d99b50;
+}
+
+.category-tabs .tab:is(
+  [data-category="press"],
+  [data-category="press-die"],
+  [data-category="forming"]
+).active {
+  background: #c76800;
+  border-color: #c76800;
+  color: #fff;
+}
