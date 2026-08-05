@@ -6,26 +6,28 @@
   const nav = document.querySelector(".menu");
 
   const groupedCopy = isJapanese ? {
-    full: "製品設計・構造解析・薄板成形解析・プレス金型設計",
-    mechanical: "製品設計・構造解析",
+    full: "プレス金型設計・薄板成形解析・構造解析・製品設計",
+    legacyFull: "製品設計・構造解析・薄板成形解析・プレス金型設計",
+    mechanical: "構造解析・製品設計",
     separator: "・",
-    press: "薄板成形解析・プレス金型設計"
+    press: "プレス金型設計・薄板成形解析"
   } : {
-    full: "제품설계.구조해석.박판성형해석.프레스금형설계",
-    mechanical: "제품설계 . 구조해석",
+    full: "프레스금형설계.박판성형해석.구조해석.제품설계",
+    legacyFull: "제품설계.구조해석.박판성형해석.프레스금형설계",
+    mechanical: "구조해석 . 제품설계",
     separator: " . ",
-    press: "박판성형해석 . 프레스금형설계"
+    press: "프레스금형설계 . 박판성형해석"
   };
-  const groupedMarkup = `<span class="qdm-service-group mechanical">${groupedCopy.mechanical}</span><span class="qdm-service-separator">${groupedCopy.separator}</span><span class="qdm-service-group press">${groupedCopy.press}</span>`;
+  const groupedMarkup = `<span class="qdm-service-group press">${groupedCopy.press}</span><span class="qdm-service-separator">${groupedCopy.separator}</span><span class="qdm-service-group mechanical">${groupedCopy.mechanical}</span>`;
   document.querySelectorAll(".tagline").forEach((tagline) => {
     const firstLine = (tagline.childNodes[0]?.textContent || "").trim();
-    if (firstLine !== groupedCopy.full) return;
+    if (firstLine !== groupedCopy.full && firstLine !== groupedCopy.legacyFull) return;
     const br = tagline.querySelector("br");
     const secondLine = br ? [...tagline.childNodes].slice([...tagline.childNodes].indexOf(br) + 1).map((node) => node.textContent).join("").trim() : "";
     tagline.innerHTML = `${groupedMarkup}${secondLine ? `<br><span class="qdm-tagline-en">${secondLine}</span>` : ""}`;
   });
   const footerCopy = document.querySelector(".footer .footer-inner > div:first-child");
-  if (footerCopy?.textContent.trim() === groupedCopy.full) footerCopy.innerHTML = groupedMarkup;
+  if ([groupedCopy.full, groupedCopy.legacyFull].includes(footerCopy?.textContent.trim())) footerCopy.innerHTML = groupedMarkup;
 
   if (nav && !nav.querySelector(".language-switch")) {
     const switcher = document.createElement("span");

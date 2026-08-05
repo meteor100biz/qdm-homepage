@@ -128,6 +128,49 @@ function initHeroSlider(){
   document.addEventListener('visibilitychange',()=>document.hidden?stop():play());
   fetch('/data/hero-slides.json').then(response=>{if(!response.ok)throw new Error('hero settings');return response.json();}).then(render).catch(()=>{});
 }
+function initKoreanServiceDirectory(){
+  if(document.getElementById('serviceDetailLinks'))return;
+  const section=document.querySelector('.services-overview');
+  const pillars=section?.querySelector('.service-pillars');
+  if(!section||!pillars)return;
+  section.id='services';
+  const links=document.createElement('nav');
+  links.id='serviceDetailLinks';
+  links.className='service-detail-links';
+  links.setAttribute('aria-label',qdmJapanese?'分野別サービス詳細ページ':'분야별 서비스 상세 페이지');
+  const base=qdmJapanese?'/ja/services':'/services';
+  links.innerHTML=qdmJapanese
+    ? `<a class="service-detail-link" href="${base}/press-die-design/">プレス金型設計 <span>→</span></a><a class="service-detail-link" href="${base}/sheet-metal-forming-analysis/">薄板成形解析 <span>→</span></a><a class="service-detail-link" href="${base}/structural-analysis/">構造解析 <span>→</span></a><a class="service-detail-link" href="${base}/product-design/">製品設計 <span>→</span></a>`
+    : `<a class="service-detail-link" href="${base}/press-die-design/">프레스금형설계 <span>→</span></a><a class="service-detail-link" href="${base}/sheet-metal-forming-analysis/">박판성형해석 <span>→</span></a><a class="service-detail-link" href="${base}/structural-analysis/">구조해석 <span>→</span></a><a class="service-detail-link" href="${base}/product-design/">제품설계 <span>→</span></a>`;
+  pillars.insertAdjacentElement('afterend',links);
+}
+function initKoreanServicePriority(){
+  const moveFirst=(container,item)=>{if(container&&item&&container.firstElementChild!==item)container.insertBefore(item,container.firstElementChild);};
+  const businessPaths=document.querySelector('.business-paths');
+  const pressPath=businessPaths?.querySelector('a[href*="category=press"]');
+  const productPath=businessPaths?.querySelector('a[href*="category=product"]');
+  pressPath?.classList.add('press-priority');productPath?.classList.add('product-priority');
+  moveFirst(businessPaths,pressPath);
+  const servicePillars=document.querySelector('.service-pillars');
+  moveFirst(servicePillars,servicePillars?.querySelector('.press-field'));
+  const serviceTitle=document.getElementById('services-title');
+  if(serviceTitle)serviceTitle.textContent=qdmJapanese?'プレス金型設計と製品開発、実務経験で形にします':'프레스금형설계와 제품개발, 실무 경험으로 완성합니다';
+  const heroTitle=document.querySelector('.hero-copy h1');
+  if(heroTitle)heroTitle.innerHTML=qdmJapanese?'プレス金型と製品開発、<br><span class="hero-subtitle">製作まで考慮したエンジニアリング</span>':'프레스금형과 제품개발,<br><span class="hero-subtitle">제작까지 고려한 엔지니어링</span>';
+  const aboutTitle=document.querySelector('#about .section-title');
+  if(aboutTitle)aboutTitle.textContent=qdmJapanese?'プレス金型設計と製品開発、実際の製作まで考慮します':'프레스금형설계와 제품개발, 실제 제작까지 고려합니다';
+  const aboutCopy=document.querySelector('#about .about-grid > div:first-child');
+  const aboutHeadings=aboutCopy?[...aboutCopy.querySelectorAll('.about-domain-title')]:[];
+  const productHeading=aboutHeadings.find(item=>item.textContent.includes(qdmJapanese?'製品開発':'제품개발'));
+  const pressHeading=aboutHeadings.find(item=>item.textContent.includes(qdmJapanese?'プレス金型':'프레스금형'));
+  if(aboutCopy&&productHeading&&pressHeading){const pressParagraph=pressHeading.nextElementSibling;aboutCopy.insertBefore(pressHeading,productHeading);if(pressParagraph)aboutCopy.insertBefore(pressParagraph,productHeading);}
+  const directory=document.querySelector('.service-directory-grid');
+  if(directory){['press-die-design','sheet-metal-forming-analysis','structural-analysis','product-design'].forEach(key=>{const link=directory.querySelector(`a[href*="${key}"]`);if(link)directory.appendChild(link);});}
+  const tabs=document.getElementById('portfolioTabs');
+  if(tabs){['all','press','press-die','forming','product','mechanical','analysis'].forEach(key=>{const tab=tabs.querySelector(`[data-category="${key}"]`);if(tab)tabs.appendChild(tab);});}
+}
+initKoreanServicePriority();
+initKoreanServiceDirectory();
 initHeroSlider();
 initOverseasTrade();
 fetch(`${qdmDataBase}/blog-posts.json`).then(r=>r.json()).then(posts=>{renderBlog(posts);renderBlogList(posts);}).catch(()=>{});

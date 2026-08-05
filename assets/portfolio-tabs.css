@@ -55,3 +55,4 @@
   border-color: #c76800;
   color: #fff;
 }
+.service-directory{padding-bottom:24px;background:#f8fafc}.service-directory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.service-directory-grid a{display:flex;min-height:112px;flex-direction:column;justify-content:space-between;padding:19px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 8px 22px rgba(15,35,68,.05);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}.service-directory-grid a:hover,.service-directory-grid a:focus-visible{transform:translateY(-3px);border-color:#79a6df;box-shadow:0 14px 30px rgba(15,35,68,.1);outline:none}.service-directory-grid strong{color:#0b234b;font-size:19px}.service-directory-grid span{color:var(--blue2);font-size:13px;font-weight:800}@media(max-width:900px){.service-directory-grid{grid-template-columns:1fr 1fr}}@media(max-width:520px){.service-directory-grid{grid-template-columns:1fr}}

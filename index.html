@@ -13,10 +13,10 @@
   
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QDM 큐디엠 | 제품개발 · 프레스금형 엔지니어링</title>
+  <title>프레스금형설계·제품설계·박판성형해석·구조해석 | QDM</title>
   <meta name="description" content="QDM 큐디엠은 25년 이상의 실무 경험을 바탕으로 기계·기구설계, 역설계, 구조해석, 시제품 제작과 프레스금형설계, 박판성형해석을 제공합니다." />
   <meta name="keywords" content="QDM, 큐디엠, 기계설계, 기구설계, 구조해석, 박판성형해석, 프레스 금형설계, 역설계, CAD 대행, 창원 기계설계" />
-  <meta property="og:title" content="QDM 큐디엠 | 제품개발 · 프레스금형 엔지니어링" />
+  <meta property="og:title" content="프레스금형설계·제품설계·박판성형해석·구조해석 | QDM" />
   <meta property="og:description" content="제품개발과 프레스금형, 두 가지 전문 영역을 지원하는 실무형 엔지니어링" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="assets/hero-main.jpg" />
@@ -42,6 +42,10 @@
     .business-path:first-child{background:#eef5ff;border-color:#bfd3ed}
     .business-path:nth-child(2){background:#fff5e8;border-color:#ebcda5}
     .business-path:nth-child(2) .path-number{color:#91551c}
+    .business-path.press-priority{background:#fff5e8;border-color:#ebcda5}
+    .business-path.press-priority .path-number{color:#91551c}
+    .business-path.product-priority{background:#eef5ff;border-color:#bfd3ed}
+    .business-path.product-priority .path-number{color:var(--blue2)}
     .service-pillar.product-field{background:#f3f7fd;border-color:#c7d9ee}
     .service-pillar.press-field{background:#fff8ed;border-color:#ecd2ae}
     .service-pillar.press-field .pillar-label{color:#91551c}
@@ -59,6 +63,12 @@
     @media(max-width:720px){.experience-row{grid-template-columns:1fr;gap:4px}}
     .blog-section-head{display:block}
     .blog-section-head .section-desc{max-width:none;margin:10px 0 0}
+    .service-detail-links{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+    .service-detail-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 16px;border:1px solid var(--line);border-radius:12px;background:#fff;color:#0b234b;font-weight:900;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+    .service-detail-link:hover,.service-detail-link:focus-visible{transform:translateY(-2px);border-color:#79a6df;box-shadow:0 10px 24px rgba(15,35,68,.1);outline:none}
+    .service-detail-link span{color:var(--blue2)}
+    @media(max-width:900px){.service-detail-links{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.service-detail-links{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -70,5 +80,5 @@
 
 <section id="blog" class="about"><div class="wrap"><div class="section-head blog-section-head"><div><div class="section-kicker">Technical Blog</div><h2 class="section-title">최신 기술자료</h2><p class="section-desc">기술자료는 네이버 블로그에서 관리합니다. 아래 글을 클릭하면 QDM 기술블로그로 이동합니다.</p></div></div><div class="blog-grid" id="blogGrid" aria-live="polite"><noscript>최신 기술자료 목록을 보려면 브라우저의 JavaScript를 활성화해 주세요.</noscript></div></div></section>
 <section id="contact" class="contact"><div class="wrap"><div class="section-head"><div><div class="section-kicker">Contact</div><h2 class="section-title">문의·견적 요청</h2></div><p class="section-desc" style="color:#d8e4f5">아래 문의·견적 요청서를 남기거나 대표 문의 이메일로 직접 연락해 주세요. 확인 후 회신드리겠습니다.</p></div><div class="contact-grid"><div class="contact-box"><h3>QDM 큐디엠</h3><p class="contact-email-label">대표 문의 이메일</p><a class="contact-email" href="mailto:contact@qdm.co.kr">contact@qdm.co.kr</a><ul class="contact-list"><li>주소: 경남 창원시 의창구 금강로 367</li><li>전화: <a href="tel:07080646621">070-8064-6621</a></li><li>블로그: <a href="https://blog.naver.com/meteor_822" target="_blank" rel="noopener">네이버 기술블로그 바로가기</a></li></ul></div><form id="contactForm" class="contact-box"><div class="form-grid"><input name="name" placeholder="이름" autocomplete="name" maxlength="80" required><input name="company" placeholder="회사명" autocomplete="organization" maxlength="100"><input name="phone" placeholder="연락처" autocomplete="tel" maxlength="40" required><input name="email" type="email" placeholder="이메일" autocomplete="email" maxlength="160" required><input class="full" name="subject" placeholder="문의 제목" maxlength="160"><textarea class="full" name="message" placeholder="문의 내용을 입력하세요" maxlength="5000" required></textarea><label class="file-upload full">첨부파일 (선택)<input id="contactFiles" name="attachments" type="file" multiple accept="image/*,.pdf,.zip,.7z,.rar,.dwg,.dxf,.step,.stp,.iges,.igs"><span class="file-help">사진·PDF·압축파일 최대 2개 / 파일당 20MB. 대용량 파일은 contact@qdm.co.kr로 이메일 문의 부탁드립니다.</span></label><label class="privacy-consent full"><input name="privacy" type="checkbox" required><span>개인정보 수집 및 이용에 동의합니다. <details><summary>내용 보기</summary><p>문의 답변을 위해 이름, 회사명, 연락처, 이메일, 문의 내용 및 첨부파일을 수집하며, 접수일로부터 1년간 보관 후 삭제합니다. 동의를 거부할 수 있으나 문의·견적 요청은 제한됩니다.</p></details></span></label><div class="form-trap" aria-hidden="true"><label>웹사이트<input name="website" tabindex="-1" autocomplete="off"></label></div><input name="startedAt" type="hidden"><p id="contactStatus" class="form-status full" role="status" aria-live="polite"></p><button class="submit full" type="submit">문의·견적 요청</button></div></form></div></div></section>
-</main><footer class="footer"><div class="wrap footer-inner"><div>제품설계.구조해석.박판성형해석.프레스금형설계</div><div>© QDM. All rights reserved.</div></div></footer>
+</main><footer class="footer"><div class="wrap footer-inner"><div>프레스금형설계.박판성형해석.구조해석.제품설계</div><div>© QDM. All rights reserved.</div></div></footer>
 <script src="assets/site.js?v=20260805-2"></script><script src="assets/language.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/supabase-config.js"></script><script src="assets/contact-form.js"></script></body></html>

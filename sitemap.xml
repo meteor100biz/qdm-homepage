@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url><loc>https://qdm.co.kr/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/"/><lastmod>2026-08-02</lastmod></url>
-  <url><loc>https://qdm.co.kr/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/portfolio.html"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
+  <url><loc>https://qdm.co.kr/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/"/><lastmod>2026-08-06</lastmod></url>
+  <url><loc>https://qdm.co.kr/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/portfolio.html"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/portfolio.html"/><lastmod>2026-08-06</lastmod></url>
+  <url><loc>https://qdm.co.kr/services/press-die-design/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/services/press-die-design/"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/services/press-die-design/"/><lastmod>2026-08-06</lastmod></url>
+  <url><loc>https://qdm.co.kr/services/product-design/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/services/product-design/"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/services/product-design/"/><lastmod>2026-08-06</lastmod></url>
+  <url><loc>https://qdm.co.kr/services/sheet-metal-forming-analysis/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/services/sheet-metal-forming-analysis/"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/services/sheet-metal-forming-analysis/"/><lastmod>2026-08-06</lastmod></url>
+  <url><loc>https://qdm.co.kr/services/structural-analysis/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/services/structural-analysis/"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/services/structural-analysis/"/><lastmod>2026-08-06</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/services/press-die-design/</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/services/press-die-design/"/><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/services/press-die-design/"/><lastmod>2026-08-06</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/services/product-design/</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/services/product-design/"/><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/services/product-design/"/><lastmod>2026-08-06</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/services/sheet-metal-forming-analysis/</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/services/sheet-metal-forming-analysis/"/><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/services/sheet-metal-forming-analysis/"/><lastmod>2026-08-06</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/services/structural-analysis/</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/services/structural-analysis/"/><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/services/structural-analysis/"/><lastmod>2026-08-06</lastmod></url>
   <url><loc>https://qdm.co.kr/assets/portfolio/analysis/double-drill/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/analysis/double-drill/portfolio.html"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/analysis/double-drill/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
   <url><loc>https://qdm.co.kr/assets/portfolio/analysis/led_cover/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/analysis/led_cover/portfolio.html"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/analysis/led_cover/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
   <url><loc>https://qdm.co.kr/assets/portfolio/mechanical/core-drill/portfolio.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/mechanical/core-drill/portfolio.html"/><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/mechanical/core-drill/portfolio.html"/><lastmod>2026-08-02</lastmod></url>
@@ -20,8 +28,6 @@
   <url><loc>https://qdm.co.kr/ja/blog/sheet-metal-forming-analysis-20260805/</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/blog/sheet-metal-forming-analysis-20260805/"/><lastmod>2026-08-05</lastmod></url>
   <url><loc>https://qdm.co.kr/ja/blog/press080401/</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/blog/press080401/"/><lastmod>2026-08-05</lastmod></url>
 </urlset>
-
-
 
 
 
