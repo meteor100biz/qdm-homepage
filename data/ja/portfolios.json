@@ -1,7 +1,7 @@
 [
   {
     "category": "mechanical",
-    "categoryName": "01 機械・機構設計",
+    "categoryName": "機械・機構設計",
     "title": "SiCコアドリル装置のストローク改善",
     "summary": "SiC素材加工装置のストローク拡張、既存駆動部の活用、素材投入構造の改善提案",
     "image": "/assets/portfolio/mechanical/core-drill/main.jpg",
@@ -12,7 +12,7 @@
   },
   {
     "category": "analysis",
-    "categoryName": "02 構造解析",
+    "categoryName": "構造解析",
     "title": "両面ウェハドリリング装置のたわみ検討",
     "summary": "大口径SiCウェハ対応のための装置ストローク拡張、既存機構の再活用、自重たわみの構造解析検討",
     "image": "/assets/portfolio/analysis/double-drill/main.jpg",
@@ -23,7 +23,7 @@
   },
   {
     "category": "press-die",
-    "categoryName": "03 プレス金型設計",
+    "categoryName": "プレス金型設計",
     "title": "自動車シート部品のプレス成形検討",
     "summary": "プレス部品の成形可能性、金型構造、製作性を考慮したプレス金型設計事例",
     "image": "/assets/portfolio/press-die/seat-bracket/main.jpg",
@@ -34,7 +34,7 @@
   },
   {
     "category": "reverse",
-    "categoryName": "04 リバースエンジニアリング",
+    "categoryName": "リバースエンジニアリング",
     "title": "金属ノズル部品のリバースエンジニアリング",
     "summary": "実物部品を基に形状を解析し、製作可能な3D CADデータと2D図面へ復元した事例",
     "image": "/assets/portfolio/reverse/nozzle/main.png",
@@ -45,7 +45,7 @@
   },
   {
     "category": "press-die",
-    "categoryName": "03 プレス金型設計",
+    "categoryName": "プレス金型設計",
     "title": "自動車シートフレーム部品のプレス金型設計",
     "summary": "深い曲げ形状、内側への偏り、バーリング構造を考慮した自動車シートフレーム部品のプレス金型設計事例",
     "image": "/assets/portfolio/press-die/seat-frame/main.jpg",
@@ -56,7 +56,7 @@
   },
   {
     "category": "analysis",
-    "categoryName": "02 構造解析",
+    "categoryName": "構造解析",
     "title": "LED照明カバーの設計・解析・試作品製作",
     "summary": "LED照明カバーの製品設計から構造解析、試作品製作まで一貫して実施",
     "image": "/assets/portfolio/analysis/led_cover/main.png",
