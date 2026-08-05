@@ -73,6 +73,12 @@
     .service-detail-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 16px;border:1px solid var(--line);border-radius:12px;background:#fff;color:#0b234b;font-weight:900;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
     .service-detail-link:hover,.service-detail-link:focus-visible{transform:translateY(-2px);border-color:#79a6df;box-shadow:0 10px 24px rgba(15,35,68,.1);outline:none}
     .service-detail-link span{color:var(--blue2)}
+    .service-detail-link:is([href*="press-die-design"],[href*="sheet-metal-forming-analysis"]){background:var(--press-bg);border-color:var(--press-border);color:var(--press-color)}
+    .service-detail-link:is([href*="press-die-design"],[href*="sheet-metal-forming-analysis"]) span{color:var(--press-strong)}
+    .service-detail-link:is([href*="press-die-design"],[href*="sheet-metal-forming-analysis"]):is(:hover,:focus-visible){background:var(--press-hover);border-color:var(--press-strong)}
+    .service-detail-link:is([href*="structural-analysis"],[href*="product-design"]){background:var(--product-bg);border-color:var(--product-border);color:var(--product-color)}
+    .service-detail-link:is([href*="structural-analysis"],[href*="product-design"]) span{color:var(--product-strong)}
+    .service-detail-link:is([href*="structural-analysis"],[href*="product-design"]):is(:hover,:focus-visible){background:var(--product-hover);border-color:#78a7df}
     @media(max-width:900px){.service-detail-links{grid-template-columns:1fr 1fr}}
     @media(max-width:520px){.service-detail-links{grid-template-columns:1fr}}
     @media(max-width:1050px){.hero-inner{grid-template-columns:1fr}.service-pillars{grid-template-columns:1fr}}
