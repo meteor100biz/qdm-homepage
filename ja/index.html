@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QDM | 製品設計・構造解析・薄板成形解析・プレス金型設計</title>
-  <meta name="description" content="韓国・昌原のQDMは、25年以上の経験を基に、製品設計、構造解析、薄板成形解析、プレス金型設計、リバースエンジニアリングをご提供します。">
+  <title>QDM | 製品開発・プレス金型エンジニアリング</title>
+  <meta name="description" content="韓国・昌原のQDMは、機械・機構設計、構造解析、リバースエンジニアリング、試作品製作、プレス金型設計、薄板成形解析をご提供します。">
   <meta name="keywords" content="製品設計,機械設計,機構設計,構造解析,薄板成形解析,プレス成形解析,プレス金型設計,リバースエンジニアリング,3D CAD,韓国">
   <link rel="canonical" href="https://qdm.co.kr/ja/">
   <link rel="alternate" hreflang="ko" href="https://qdm.co.kr/">
   <link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/">
   <link rel="alternate" hreflang="x-default" href="https://qdm.co.kr/">
-  <meta property="og:title" content="QDM | 製品設計・構造解析・薄板成形解析・プレス金型設計">
-  <meta property="og:description" content="25年以上の経験と技術で実現する実務型エンジニアリング">
+  <meta property="og:title" content="QDM | 製品開発・プレス金型エンジニアリング">
+  <meta property="og:description" content="製品開発とプレス金型、二つの専門分野を支援する実務型エンジニアリング">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://qdm.co.kr/assets/hero-main.jpg">
   <link rel="stylesheet" href="/assets/style.css">
@@ -19,13 +19,52 @@
   <link rel="stylesheet" href="/assets/blog.css">
   <link rel="stylesheet" href="/assets/hero-slider.css">
   <link rel="stylesheet" href="/assets/mobile-home.css?v=20260805-2">
+  <style>
+    .hero-inner{min-height:520px;grid-template-columns:1.08fr .92fr;gap:34px;padding:38px 0}
+    .hero h1{font-size:48px;line-height:1.12;margin:14px 0;letter-spacing:-1.6px}
+    .hero-subtitle{display:inline-block;margin-top:12px;color:var(--blue2);font-size:18px;line-height:1.45;letter-spacing:-.2px}
+    .hero-intro{margin:0 0 20px!important;color:#34415a!important;font-size:18px!important;font-weight:700!important}
+    .business-paths{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .business-path{display:flex;min-height:154px;flex-direction:column;padding:20px;border:1px solid #cfdced;border-radius:14px;box-shadow:0 10px 28px rgba(15,35,68,.07);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+    .business-path:first-child{background:#eef5ff;border-color:#bfd3ed}
+    .business-path:nth-child(2){background:#fff5e8;border-color:#ebcda5}
+    .business-path:hover,.business-path:focus-visible{transform:translateY(-3px);box-shadow:0 18px 36px rgba(15,35,68,.13);outline:none}
+    .path-number{color:var(--blue2);font-size:12px;font-weight:900;letter-spacing:.12em}
+    .business-path:nth-child(2) .path-number{color:#91551c}
+    .business-path strong{display:block;margin:6px 0 7px;color:#0b234b;font-size:20px;letter-spacing:-.3px}
+    .business-path small{color:#526079;font-size:12.5px;font-weight:700;line-height:1.55}
+    .path-more{margin-top:auto;padding-top:12px;color:var(--blue2);font-size:14px;font-weight:900}
+    .actions{margin-top:18px}
+    .hero-art{border-radius:14px}
+    .services-overview{background:#fff}
+    .services-overview .section-head{display:block}
+    .services-overview .section-desc{max-width:none;margin:10px 0 0}
+    .service-pillars{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    .service-pillar{display:grid;grid-template-columns:180px 1fr;min-height:270px;overflow:hidden;border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 30px rgba(15,35,68,.06);cursor:pointer;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+    .service-pillar:hover,.service-pillar:focus-visible{transform:translateY(-3px);box-shadow:0 18px 36px rgba(15,35,68,.13);outline:none}
+    .service-pillar.product-field{background:#f3f7fd;border-color:#c7d9ee}
+    .service-pillar.press-field{background:#fff8ed;border-color:#ecd2ae}
+    .pillar-gallery{display:grid;grid-template-rows:1fr 1fr;gap:8px;padding:8px;background:#edf2f8}
+    .service-pillar.product-field .pillar-gallery{background:#e4edf8}
+    .service-pillar.press-field .pillar-gallery{background:#f5e8d5}
+    .pillar-gallery img{display:block;width:100%;height:100%;min-height:0;object-fit:contain;background:#fff;border-radius:8px}
+    .pillar-content{display:flex;flex-direction:column;padding:26px}
+    .pillar-label{color:var(--blue2);font-size:12px;font-weight:900;letter-spacing:.1em}
+    .service-pillar.press-field .pillar-label{color:#91551c}
+    .service-pillar h3{margin:7px 0 10px;color:#0b234b;font-size:23px;letter-spacing:-.4px}
+    .service-pillar p{margin:0 0 12px;color:var(--muted);font-weight:700}
+    .service-pillar ul{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;margin:0 0 16px;padding-left:19px;color:#34415a;font-size:13px}
+    .service-pillar .more{margin-top:auto}
+    @media(max-width:1050px){.hero-inner{grid-template-columns:1fr}.service-pillars{grid-template-columns:1fr}}
+    @media(max-width:720px){.hero-inner{padding:30px 0;gap:24px}.hero h1{font-size:32px}.hero-subtitle,.hero-intro{font-size:17px!important}.business-paths{grid-template-columns:1fr}.business-path{min-height:0;padding:17px}.service-pillar{grid-template-columns:1fr}.pillar-gallery{height:360px}.pillar-content{padding:21px}.service-pillar ul{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
 <header class="topbar"><div class="wrap nav"><a href="/ja/" class="brand" aria-label="QDM home"><div class="logo">QDM</div><div class="tagline">製品設計・構造解析・薄板成形解析・プレス金型設計<br>QUALITY-DRIVEN DESIGN &amp; MANUFACTURING</div></a><nav class="menu" aria-label="メインメニュー"><a class="hide-sm" href="/ja/#about">会社案内</a><a class="hide-sm" href="/ja/portfolio.html">実績</a><a class="hide-sm" href="/ja/blog.html">技術ブログ</a><a href="/ja/#contact">お問い合わせ</a><a class="phone" href="tel:07080646621">☎ +82-70-8064-6621</a></nav></div></header>
 <main id="home">
-  <section class="hero"><div class="wrap hero-inner"><div class="hero-copy"><div class="eyebrow">25年以上の設計経験と技術</div><h1>産業を理解した設計、<br><span class="accent">製作まで考慮したエンジニアリング</span></h1><p>産業機械から防衛関連部品、生活用品、特許出願製品まで、幅広い経験を持つ設計専門家がサポートします。</p><div class="feature-row"><div class="feature"><span class="icon">◎</span><span><b>幅広い産業経験</b><br>産業機械・防衛・生活用品設計</span></div><div class="feature"><span class="icon">◇</span><span><b>製品開発設計</b><br>アイデアと特許製品の構造設計</span></div><div class="feature"><span class="icon">▣</span><span><b>解析による検証</b><br>構造安全性と性能の事前検討</span></div><div class="feature"><span class="icon">⌕</span><span><b>製作連携設計</b><br>金型ノウハウを反映した製作性検討</span></div></div><div class="actions"><a class="btn primary" href="#portfolio">主な実績を見る →</a><a class="btn secondary" href="#contact">技術相談 →</a></div></div><div class="hero-art" aria-label="メインバナー"><div class="hero-slides" aria-live="off"><figure class="hero-slide is-active"><img src="/assets/hero-main.jpg" alt="製品設計、構造解析、プレス金型設計のイメージ" fetchpriority="high"></figure></div><button class="hero-arrow prev" data-hero-prev type="button" aria-label="前のバナー">‹</button><button class="hero-arrow next" data-hero-next type="button" aria-label="次のバナー">›</button><div class="hero-dots" aria-label="バナー選択"></div></div></div></section>
+  <section class="hero"><div class="wrap hero-inner"><div class="hero-copy"><div class="eyebrow">QDM ENGINEERING SERVICES</div><h1>製品開発とプレス金型、<br><span class="hero-subtitle">製作まで考慮したエンジニアリング</span></h1><p class="hero-intro">アイデアの具体化から設計・解析・製作まで、幅広い実務経験で課題を解決します。</p><div class="business-paths" aria-label="QDMの主要業務分野"><a class="business-path" href="/ja/portfolio.html?category=product"><span class="path-number">PRODUCT DEVELOPMENT</span><strong>製品開発エンジニアリング</strong><small>機械・機構設計・リバースエンジニアリング・構造解析・試作品製作</small><span class="path-more">製品開発の実績を見る →</span></a><a class="business-path" href="/ja/portfolio.html?category=press"><span class="path-number">PRESS DIE</span><strong>プレス金型エンジニアリング</strong><small>プレス金型設計・工程検討・薄板成形解析</small><span class="path-more">プレス金型の実績を見る →</span></a></div><div class="actions"><a class="btn primary" href="#contact">技術相談・お問い合わせ →</a></div></div><div class="hero-art" aria-label="メインバナー"><div class="hero-slides" aria-live="off"><figure class="hero-slide is-active"><img src="/assets/hero-main.jpg" alt="製品開発とプレス金型エンジニアリングのイメージ" fetchpriority="high"></figure></div><button class="hero-arrow prev" data-hero-prev type="button" aria-label="前のバナー">‹</button><button class="hero-arrow next" data-hero-next type="button" aria-label="次のバナー">›</button><div class="hero-dots" aria-label="バナー選択"></div></div></div></section>
+  <section class="services-overview" aria-labelledby="services-title"><div class="wrap"><div class="section-head"><div><div class="section-kicker">Core Services</div><h2 class="section-title" id="services-title">二つの専門分野で明確にサポートします</h2></div><p class="section-desc">お客様の課題に合う分野を選ぶと、対応業務と実績をすぐにご確認いただけます。</p></div><div class="service-pillars"><a class="service-pillar product-field" id="product-development" href="/ja/portfolio.html?category=product"><div class="pillar-gallery" aria-label="最近の製品開発事例"><img src="/assets/portfolio/analysis/led_cover/main.png" alt="LED照明カバーの構造解析" loading="lazy"><img src="/assets/portfolio/reverse/nozzle/main.png" alt="金属ノズル部品のリバースエンジニアリング" loading="lazy"></div><div class="pillar-content"><span class="pillar-label">PRODUCT DEVELOPMENT</span><h3>製品開発エンジニアリング</h3><p>アイデアを製作可能な製品へ具体化し、解析と試作品で設計を検証します。</p><ul><li>機械・機構設計</li><li>アイデア製品設計</li><li>リバース設計・図面復元</li><li>構造・機構解析</li><li>試作品製作</li><li>量産性検討</li></ul><span class="more">製品開発の実績を見る →</span></div></a><a class="service-pillar press-field" id="press-die-engineering" href="/ja/portfolio.html?category=press"><div class="pillar-gallery" aria-label="最近のプレス金型事例"><img src="/assets/portfolio/press-die/seat-frame/main.jpg" alt="自動車シートフレームのプレス金型設計" loading="lazy"><img src="/assets/portfolio/press-die/seat-bracket/main.jpg" alt="自動車シート部品のプレス金型設計" loading="lazy"></div><div class="pillar-content"><span class="pillar-label">PRESS DIE</span><h3>プレス金型エンジニアリング</h3><p>金型構造と成形可能性を併せて検討し、製作前の試行錯誤を削減します。</p><ul><li>プレス金型設計</li><li>プレス工程検討</li><li>薄板成形解析</li><li>割れ・しわ検討</li><li>スプリングバック検討</li><li>金型・工程改善</li></ul><span class="more">プレス金型の実績を見る →</span></div></a></div></div></section>
   <section id="about" class="about"><div class="wrap about-grid"><div><div class="section-kicker">About QDM</div><h2 class="section-title">製品アイデアから実現まで、共に取り組みます</h2><p>QDMは25年以上の設計経験を基に、産業機械、防衛関連部品、生活用品など幅広い分野の製品設計を行っています。新製品の構想と3Dモデリングはもちろん、特許出願に向けた製品形状と構造設計まで、目的と使用環境に合わせて具体化します。</p><p>構造解析により設計段階で安全性と性能を検証し、長年のプレス金型設計ノウハウを基に材料・加工・成形工程まで考慮します。図面だけで終わらず、実際の製作と実現につながる完成度の高い設計をご提供します。</p></div><div class="stats"><div class="stat"><strong>25年+</strong>設計実務経験</div><div class="stat"><strong>産業全般</strong>幅広い設計分野</div><div class="stat"><strong>1:1</strong>専門技術相談</div></div></div></section>
-  <section id="portfolio"><div class="wrap"><div class="section-head"><div><div class="section-kicker">Portfolio</div><h2 class="section-title">主な実績・プロジェクト</h2></div><p class="section-desc">製品設計、構造解析、薄板成形解析、プレス金型設計など、さまざまな産業分野で実施したプロジェクトをご紹介します。お客様を特定できる情報や詳細寸法は掲載していません。</p></div><div class="portfolio-grid" id="featuredPortfolioGrid"></div><p style="margin-top:26px"><a class="btn secondary" href="/ja/portfolio.html">すべての実績を見る →</a></p></div></section>
   <section id="blog" class="about"><div class="wrap"><div class="section-head"><div><div class="section-kicker">Technical Blog</div><h2 class="section-title">最新技術資料</h2></div><p class="section-desc">製品設計、解析、プレス金型設計に関する技術情報をご紹介します。</p></div><div class="blog-grid" id="blogGrid" aria-live="polite"></div><p style="margin-top:26px"><a class="btn secondary" href="/ja/blog.html">すべての記事を見る →</a></p></div></section>
   <section id="contact" class="contact"><div class="wrap"><div class="section-head"><div><div class="section-kicker">Contact</div><h2 class="section-title">お問い合わせ・お見積り</h2></div><p class="section-desc" style="color:#d8e4f5">下記フォームまたは代表メールアドレスまでご連絡ください。内容を確認後、ご返信いたします。</p></div><div class="contact-grid"><div class="contact-box"><h3>QDM</h3><p class="contact-email-label">代表メールアドレス</p><a class="contact-email" href="mailto:contact@qdm.co.kr">contact@qdm.co.kr</a><ul class="contact-list"><li>所在地：韓国 慶尚南道 昌原市 義昌区 金剛路 367</li><li>電話：<a href="tel:07080646621">+82-70-8064-6621</a></li></ul></div><form id="contactForm" class="contact-box"><div class="form-grid"><input name="name" placeholder="お名前" autocomplete="name" maxlength="80" required><input name="company" placeholder="会社名" autocomplete="organization" maxlength="100"><input name="phone" placeholder="電話番号" autocomplete="tel" maxlength="40" required><input name="email" type="email" placeholder="メールアドレス" autocomplete="email" maxlength="160" required><input class="full" name="subject" placeholder="お問い合わせ件名" maxlength="160"><textarea class="full" name="message" placeholder="お問い合わせ内容をご入力ください" maxlength="5000" required></textarea><label class="file-upload full">添付ファイル（任意）<input id="contactFiles" name="attachments" type="file" multiple accept="image/*,.pdf,.zip,.7z,.rar,.dwg,.dxf,.step,.stp,.iges,.igs"><span class="file-help">画像・PDF・圧縮ファイルは2点まで、1ファイル20MBまで。大容量ファイルはメールでお送りください。</span></label><label class="privacy-consent full"><input name="privacy" type="checkbox" required><span>個人情報の収集・利用に同意します。<details><summary>内容を見る</summary><p>お問い合わせへの回答のため、お名前、会社名、連絡先、メールアドレス、お問い合わせ内容および添付ファイルを収集し、受付日から1年間保管した後に削除します。</p></details></span></label><div class="form-trap" aria-hidden="true"><label>ウェブサイト<input name="website" tabindex="-1" autocomplete="off"></label></div><input name="startedAt" type="hidden"><p id="contactStatus" class="form-status full" role="status" aria-live="polite"></p><button class="submit full" type="submit">お問い合わせを送信</button></div></form></div></div></section>
 </main>
