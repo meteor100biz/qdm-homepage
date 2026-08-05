@@ -1,5 +1,48 @@
 [
   {
+    "title": "プレス部品の板厚変化成形解析と金型レイアウト検討",
+    "slug": "sheet-metal-forming-analysis-20260805",
+    "category": "forming",
+    "categoryLabel": "プレス部品の薄板成形解析",
+    "publishedAt": "2026-08-05",
+    "tags": [
+      "プレス金型設計",
+      "プレス金型",
+      "プレス部品",
+      "薄板成形解析",
+      "プレス成形解析",
+      "成形解析",
+      "CAE"
+    ],
+    "summary": "プレス金型設計とプレス部品の薄板成形解析について、QDMの実務経験に基づく技術情報をご紹介します。",
+    "metaDescription": "QDMは、プレス金型設計とプレス部品の薄板成形解析に対応します。成形性、割れ・しわ、金型構造、製作性を事前に検討し、実務経験に基づく設計・解析サービスをご提供します。",
+    "published": true,
+    "featured": true,
+    "relatedPortfolioUrl": "",
+    "relatedPortfolioTitle": "",
+    "image": "/ja/blog/sheet-metal-forming-analysis-20260805/main.png",
+    "url": "/ja/blog/sheet-metal-forming-analysis-20260805/",
+    "modifiedAt": "2026-08-05",
+    "sections": [
+      {
+        "heading": "板厚減少率および成形安全性評価結果",
+        "body": "本図は、プレス成形後の板厚変化解析結果を示しています。\n最大板厚減少率は -21.29％ であり、一般的な薄板成形の許容範囲内にあります。\n現在の成形条件では破断は発生せず、全体的に安全領域にあります。\n該当箇所の成形後板厚は 2.016 mm、主成形方向に 65.80％ 伸長、垂直方向に 23.31％ 収縮 しています。\nこの結果を基に、実際の金型レイアウト設計を行い、成形性および品質の最適化を図ります。",
+        "bullets": "",
+        "image": "/ja/blog/sheet-metal-forming-analysis-20260805/section-1-2026-08-05-182222.png",
+        "imageAlt": "プレス金型設計・プレス部品の薄板成形解析",
+        "caption": ""
+      },
+      {
+        "heading": "",
+        "body": "",
+        "bullets": "",
+        "image": "/ja/blog/sheet-metal-forming-analysis-20260805/section-2-2026-08-05-182228.png",
+        "imageAlt": "プレス金型設計・プレス部品の薄板成形解析",
+        "caption": ""
+      }
+    ]
+  },
+  {
     "title": "自動車シート部品の事前成形検証",
     "slug": "press080401",
     "category": "forming",
