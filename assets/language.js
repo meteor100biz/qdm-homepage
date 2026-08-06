@@ -1,8 +1,20 @@
 (() => {
   const isJapanese = document.documentElement.lang.toLowerCase().startsWith("ja");
   const path = location.pathname || "/";
-  const koreanPath = isJapanese ? (path.replace(/^\/ja(?=\/|$)/, "") || "/") : path;
-  const japanesePath = isJapanese ? path : (path === "/" || path === "/index.html" ? "/ja/" : `/ja${path.startsWith("/") ? path : `/${path}`}`);
+  const alternateUrl = (language) => {
+    const alternate = document.querySelector(`link[rel="alternate"][hreflang="${language}"]`);
+    if (!alternate?.href) return "";
+    try {
+      const url = new URL(alternate.href, location.href);
+      return url.origin === location.origin ? `${url.pathname}${url.search}${url.hash}` : url.href;
+    } catch {
+      return "";
+    }
+  };
+  const fallbackKoreanPath = isJapanese ? (path.replace(/^\/ja(?=\/|$)/, "") || "/") : path;
+  const fallbackJapanesePath = isJapanese ? path : (path === "/" || path === "/index.html" ? "/ja/" : `/ja${path.startsWith("/") ? path : `/${path}`}`);
+  const koreanPath = alternateUrl("ko") || fallbackKoreanPath;
+  const japanesePath = alternateUrl("ja") || fallbackJapanesePath;
   const nav = document.querySelector(".menu");
 
   const groupedCopy = isJapanese ? {
