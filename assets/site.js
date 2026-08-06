@@ -41,6 +41,7 @@ function blogCard(post){
   return `<a class="blog-card" href="${post.url}"${attrs}><div class="blog-img" style="background-image:url('${image}')"></div><div class="blog-body"><div class="blog-meta"><span class="badge">${label}</span>${date?`<time datetime="${post.publishedAt}">${date}</time>`:''}</div><h3>${post.title}</h3><p>${post.summary||post.description||''}</p><span class="more">${qdmJapanese?'記事を読む →':'글 보기 →'}</span></div></a>`;
 }
 function publishedBlogs(posts){return posts.filter(post=>post.published!==false).sort((a,b)=>String(b.publishedAt||'').localeCompare(String(a.publishedAt||''))||(a.order||0)-(b.order||0));}
+function publishedPortfolios(posts){return posts.filter(portfolio=>portfolio.published!==false);}
 function initMobileCarousel(grid){
   if(!grid)return;
   let shell=grid.closest('.mobile-carousel-shell');
@@ -77,26 +78,47 @@ function renderBlogList(posts){
   if(tabs){const categories=[...new Map(list.map(post=>[post.category,post.categoryLabel||post.category])).entries()];tabs.innerHTML=[['all',qdmJapanese?'すべて':'전체'],...categories].map(([key,label],index)=>`<button class="tab${index===0?' active':''}" type="button" data-blog-category="${key}">${label}</button>`).join('');tabs.querySelectorAll('button').forEach(button=>button.addEventListener('click',()=>{tabs.querySelectorAll('button').forEach(item=>item.classList.remove('active'));button.classList.add('active');draw(button.dataset.blogCategory);}));}
   draw();
 }
-function renderPortfolioList(posts,category='all'){const g=document.getElementById('portfolioList');if(!g)return;let list=posts.slice().sort((a,b)=>(b.order||0)-(a.order||0));if(category==='product')list=list.filter(p=>['mechanical','analysis'].includes(p.category));else if(category==='press')list=list.filter(p=>['press-die','forming'].includes(p.category));else if(category!=='all')list=list.filter(p=>p.category===category);g.innerHTML=list.map(card).join('')||`<p>${qdmText.empty}</p>`;}
+function renderPortfolioList(posts,category='all'){const g=document.getElementById('portfolioList');if(!g)return;let list=publishedPortfolios(posts).sort((a,b)=>(b.order||0)-(a.order||0));if(category==='product')list=list.filter(p=>['mechanical','analysis'].includes(p.category));else if(category==='press')list=list.filter(p=>['press-die','forming'].includes(p.category));else if(category!=='all')list=list.filter(p=>p.category===category);g.innerHTML=list.map(card).join('')||`<p>${qdmText.empty}</p>`;}
 function renderHomePortfolioPreviews(posts){
   const groups=[
     {selector:'.service-pillar.press-field .pillar-gallery',categories:['press-die','forming']},
     {selector:'.service-pillar.product-field .pillar-gallery',categories:['mechanical','analysis']}
   ];
-  const sorted=posts.slice().sort((a,b)=>(b.order||0)-(a.order||0));
+  const sorted=publishedPortfolios(posts).sort((a,b)=>(b.order||0)-(a.order||0));
   groups.forEach(group=>{
     const gallery=document.querySelector(group.selector);
     if(!gallery)return;
     const latest=sorted.filter(item=>group.categories.includes(item.category)).slice(0,2);
-    if(!latest.length)return;
-    gallery.replaceChildren(...latest.map(item=>{
+    const previews=latest.map(item=>{
       const image=document.createElement('img');
       image.src=/^(?:https?:)?\//.test(item.image||'')?item.image:`/${item.image||''}`;
       image.alt=`${item.title} · ${item.categoryLabel||item.categoryName||item.category||''}`;
       image.loading='lazy';image.decoding='async';
       return image;
-    }));
+    });
+    while(previews.length<2){const empty=document.createElement('span');empty.className='portfolio-image-empty';empty.setAttribute('aria-hidden','true');previews.push(empty);}
+    gallery.replaceChildren(...previews);
   });
+}
+function renderServiceRelatedProjects(posts){
+  const grid=document.querySelector('.related-grid');
+  if(!grid)return;
+  const service=location.pathname.match(/\/services\/([^/]+)\/?(?:index\.html)?$/)?.[1];
+  const categories={'press-die-design':'press-die','sheet-metal-forming-analysis':'forming','structural-analysis':'analysis','product-design':'mechanical'};
+  const category=categories[service];
+  if(!category)return;
+  const projects=publishedPortfolios(posts).filter(item=>item.category===category).sort((a,b)=>(b.order||0)-(a.order||0)).slice(0,2);
+  const items=projects.map(item=>{
+    const link=document.createElement('a');link.className='related-card';
+    link.href=/^(?:https?:)?\//.test(item.url||'')?item.url:`/${item.url||''}`;
+    const image=/^(?:https?:)?\//.test(item.image||'')?item.image:`/${item.image||''}`;
+    const label=item.categoryLabel||item.categoryName||item.category||'';
+    link.innerHTML=`<div class="related-image" style="background-image:url('${image}')"></div><div class="related-body"><span class="badge">${label}</span><h3>${item.title}</h3><p>${item.summary||item.description||''}</p><span class="more">${qdmJapanese?'実績を見る →':'프로젝트 보기 →'}</span></div>`;
+    return link;
+  });
+  while(items.length<2){const empty=document.createElement('div');empty.className='related-card related-card-empty';empty.setAttribute('aria-hidden','true');empty.innerHTML='<div class="related-image"></div><div class="related-body"></div>';items.push(empty);}
+  grid.replaceChildren(...items);
+  grid.classList.add('is-ready');
 }
 function updatePortfolioIntro(category='all'){const el=document.getElementById('portfolioHeroDesc');if(el)el.textContent=qdmText.descriptions[category]||qdmText.descriptions.all;}
 function initOverseasTrade(){
@@ -196,6 +218,7 @@ initOverseasTrade();
 fetch(`${qdmDataBase}/blog-posts.json`).then(r=>r.json()).then(posts=>{renderBlog(posts);renderBlogList(posts);}).catch(()=>{});
 fetch(`${qdmDataBase}/portfolios.json`,{cache:'no-store'}).then(r=>r.json()).then(posts=>{
   renderHomePortfolioPreviews(posts);
+  renderServiceRelatedProjects(posts);
   const params=new URLSearchParams(location.search);const init=params.get('category')||'all';updatePortfolioIntro(init);renderPortfolioList(posts,init);
   document.querySelectorAll('.tab').forEach(btn=>{if(btn.dataset.category===init){document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updatePortfolioIntro(btn.dataset.category);renderPortfolioList(posts,btn.dataset.category);});});
 }).catch(()=>{});
