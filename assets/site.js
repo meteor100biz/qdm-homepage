@@ -78,6 +78,26 @@ function renderBlogList(posts){
   draw();
 }
 function renderPortfolioList(posts,category='all'){const g=document.getElementById('portfolioList');if(!g)return;let list=posts.slice().sort((a,b)=>(b.order||0)-(a.order||0));if(category==='product')list=list.filter(p=>['mechanical','analysis'].includes(p.category));else if(category==='press')list=list.filter(p=>['press-die','forming'].includes(p.category));else if(category!=='all')list=list.filter(p=>p.category===category);g.innerHTML=list.map(card).join('')||`<p>${qdmText.empty}</p>`;}
+function renderHomePortfolioPreviews(posts){
+  const groups=[
+    {selector:'.service-pillar.press-field .pillar-gallery',categories:['press-die','forming']},
+    {selector:'.service-pillar.product-field .pillar-gallery',categories:['mechanical','analysis']}
+  ];
+  const sorted=posts.slice().sort((a,b)=>(b.order||0)-(a.order||0));
+  groups.forEach(group=>{
+    const gallery=document.querySelector(group.selector);
+    if(!gallery)return;
+    const latest=sorted.filter(item=>group.categories.includes(item.category)).slice(0,2);
+    if(!latest.length)return;
+    gallery.replaceChildren(...latest.map(item=>{
+      const image=document.createElement('img');
+      image.src=/^(?:https?:)?\//.test(item.image||'')?item.image:`/${item.image||''}`;
+      image.alt=`${item.title} · ${item.categoryLabel||item.categoryName||item.category||''}`;
+      image.loading='lazy';image.decoding='async';
+      return image;
+    }));
+  });
+}
 function updatePortfolioIntro(category='all'){const el=document.getElementById('portfolioHeroDesc');if(el)el.textContent=qdmText.descriptions[category]||qdmText.descriptions.all;}
 function initOverseasTrade(){
   if(!qdmJapanese)return;
@@ -174,7 +194,8 @@ initKoreanServiceDirectory();
 initHeroSlider();
 initOverseasTrade();
 fetch(`${qdmDataBase}/blog-posts.json`).then(r=>r.json()).then(posts=>{renderBlog(posts);renderBlogList(posts);}).catch(()=>{});
-fetch(`${qdmDataBase}/portfolios.json`).then(r=>r.json()).then(posts=>{
+fetch(`${qdmDataBase}/portfolios.json`,{cache:'no-store'}).then(r=>r.json()).then(posts=>{
+  renderHomePortfolioPreviews(posts);
   const params=new URLSearchParams(location.search);const init=params.get('category')||'all';updatePortfolioIntro(init);renderPortfolioList(posts,init);
   document.querySelectorAll('.tab').forEach(btn=>{if(btn.dataset.category===init){document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updatePortfolioIntro(btn.dataset.category);renderPortfolioList(posts,btn.dataset.category);});});
 }).catch(()=>{});
