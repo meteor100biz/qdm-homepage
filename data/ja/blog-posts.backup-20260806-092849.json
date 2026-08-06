@@ -1,0 +1,115 @@
+[
+  {
+    "title": "FreeCADでSTEP（STP）ファイルを2D DXF図面に変換する方法",
+    "slug": "press-die-design-2026080602",
+    "category": "press-die",
+    "categoryLabel": "プレス金型設計",
+    "publishedAt": "2026-08-06",
+    "tags": [
+      "プレス金型設計",
+      "プレス金型",
+      "プレス部品",
+      "薄板成形解析",
+      "プレス成形解析",
+      "成形解析",
+      "CAE"
+    ],
+    "summary": "無料3D CADソフト「FreeCAD」を使い、STEP（STP）形式の3Dデータから2D図面を作成してDXF形式で保存する手順を解説します。",
+    "metaDescription": "QDMは、プレス金型設計とプレス部品の薄板成形解析に対応します。成形性、割れ・しわ、金型構造、製作性を事前に検討し、実務経験に基づく設計・解析サービスをご提供します。",
+    "published": true,
+    "featured": true,
+    "relatedPortfolioUrl": "",
+    "relatedPortfolioTitle": "",
+    "image": "/ja/blog/press-die-design-2026080602/main.png",
+    "url": "/ja/blog/press-die-design-2026080602/",
+    "modifiedAt": "2026-08-06",
+    "sections": [
+      {
+        "heading": "1. STEP（STP）ファイルを開く",
+        "body": "まず、FreeCADの上部にある「開く」アイコンをクリックします。\n\nその後、STEP（STP）ファイルを選択します。\n\nSTEPファイルは、機械設計分野で広く使用されている代表的な3D中間フォーマットの一つです。CATIA、NX、SOLIDWORKS、Creoなど、ほとんどのCADソフトと互換性があります。",
+        "bullets": "",
+        "image": "/ja/blog/press-die-design-2026080602/section-1-01-2026-08-06-172839.png",
+        "imageAlt": "プレス金型設計・プレス部品の薄板成形解析",
+        "caption": ""
+      }
+    ]
+  },
+  {
+    "title": "プレス部品の板厚変化成形解析と金型レイアウト検討",
+    "slug": "sheet-metal-forming-analysis-20260805",
+    "category": "forming",
+    "categoryLabel": "プレス部品の薄板成形解析",
+    "publishedAt": "2026-08-05",
+    "tags": [
+      "プレス金型設計",
+      "プレス金型",
+      "プレス部品",
+      "薄板成形解析",
+      "プレス成形解析",
+      "成形解析",
+      "CAE"
+    ],
+    "summary": "プレス金型設計とプレス部品の薄板成形解析について、QDMの実務経験に基づく技術情報をご紹介します。",
+    "metaDescription": "QDMは、プレス金型設計とプレス部品の薄板成形解析に対応します。成形性、割れ・しわ、金型構造、製作性を事前に検討し、実務経験に基づく設計・解析サービスをご提供します。",
+    "published": true,
+    "featured": true,
+    "relatedPortfolioUrl": "",
+    "relatedPortfolioTitle": "",
+    "image": "/ja/blog/sheet-metal-forming-analysis-20260805/main.png",
+    "url": "/ja/blog/sheet-metal-forming-analysis-20260805/",
+    "modifiedAt": "2026-08-05",
+    "sections": [
+      {
+        "heading": "板厚減少率および成形安全性評価結果",
+        "body": "本図は、プレス成形後の板厚変化解析結果を示しています。\n最大板厚減少率は -21.29％ であり、一般的な薄板成形の許容範囲内にあります。\n現在の成形条件では破断は発生せず、全体的に安全領域にあります。\n該当箇所の成形後板厚は 2.016 mm、主成形方向に 65.80％ 伸長、垂直方向に 23.31％ 収縮 しています。\nこの結果を基に、実際の金型レイアウト設計を行い、成形性および品質の最適化を図ります。",
+        "bullets": "",
+        "image": "/ja/blog/sheet-metal-forming-analysis-20260805/section-1-2026-08-05-182222.png",
+        "imageAlt": "プレス金型設計・プレス部品の薄板成形解析",
+        "caption": ""
+      },
+      {
+        "heading": "",
+        "body": "",
+        "bullets": "",
+        "image": "/ja/blog/sheet-metal-forming-analysis-20260805/section-2-2026-08-05-182228.png",
+        "imageAlt": "プレス金型設計・プレス部品の薄板成形解析",
+        "caption": ""
+      }
+    ]
+  },
+  {
+    "title": "自動車シート部品の事前成形検証",
+    "slug": "press080401",
+    "category": "forming",
+    "categoryLabel": "プレス部品の薄板成形解析",
+    "publishedAt": "2026-08-04",
+    "tags": [
+      "プレス金型設計",
+      "プレス金型",
+      "プレス部品",
+      "薄板成形解析",
+      "プレス成形解析",
+      "成形解析",
+      "CAE"
+    ],
+    "summary": "プレス金型設計とプレス部品の薄板成形解析について、QDMの実務経験に基づく技術情報をご紹介します。",
+    "metaDescription": "QDMは、プレス金型設計とプレス部品の薄板成形解析に対応します。成形性、割れ・しわ、金型構造、製作性を事前に検討し、実務経験に基づく設計・解析サービスをご提供します。",
+    "published": true,
+    "featured": true,
+    "relatedPortfolioUrl": "",
+    "relatedPortfolioTitle": "",
+    "image": "/ja/blog/press080401/main.jpg",
+    "url": "/ja/blog/press080401/",
+    "modifiedAt": "2026-08-05",
+    "sections": [
+      {
+        "heading": "板厚検証",
+        "body": "プレス部品の板厚変化を簡易的に成形解析した後、実際の金型レイアウトを作成します。\nこのプロセスでは、まずシミュレーションによって板厚の分布や変形傾向を事前に確認し、問題点を早期に把握します。\nその結果を基に、金型設計に反映させることで、試作段階での不具合を減らし、効率的な製品開発を可能にします。\nさらに、事前解析によるレイアウト検討は、コスト削減や品質向上にも大きく寄与します。",
+        "bullets": "簡単に板厚の変化を事前に検証します。",
+        "image": "/ja/blog/press080401/section-1-01.jpg",
+        "imageAlt": "",
+        "caption": ""
+      }
+    ]
+  }
+]
