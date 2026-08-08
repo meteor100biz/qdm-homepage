@@ -1,0 +1,61 @@
+{
+  "updatedAt": "2026-08-09T00:00:00.000Z",
+  "services": [
+    {
+      "id": "press-die-design",
+      "nameKo": "프레스금형설계",
+      "nameJa": "プレス金型設計",
+      "shared": true,
+      "ko": {
+        "image": "assets/portfolio/press-die/seat-frame/main.jpg",
+        "alt": "자동차 시트 프레임 프레스금형 3D 설계"
+      },
+      "ja": {
+        "image": "assets/portfolio/press-die/seat-frame/main.jpg",
+        "alt": "自動車シートフレーム部品のプレス金型3D設計"
+      }
+    },
+    {
+      "id": "sheet-metal-forming-analysis",
+      "nameKo": "박판성형해석",
+      "nameJa": "薄板成形解析",
+      "shared": false,
+      "ko": {
+        "image": "assets/portfolio/forming/press_sm_001/main.png",
+        "alt": "사각 박스형 제품의 드로잉 박판성형해석 결과"
+      },
+      "ja": {
+        "image": "assets/portfolio/forming/press_sheetmetal_008/main.png",
+        "alt": "角形ボックス製品の絞り薄板成形解析結果"
+      }
+    },
+    {
+      "id": "structural-analysis",
+      "nameKo": "구조해석",
+      "nameJa": "構造解析",
+      "shared": true,
+      "ko": {
+        "image": "assets/portfolio/analysis/double-drill/main.jpg",
+        "alt": "양면 웨이퍼 드릴링 장비 구조해석과 처짐 검토"
+      },
+      "ja": {
+        "image": "assets/portfolio/analysis/double-drill/main.jpg",
+        "alt": "両面ウェハドリリング装置の構造解析"
+      }
+    },
+    {
+      "id": "product-design",
+      "nameKo": "제품설계",
+      "nameJa": "製品設計",
+      "shared": true,
+      "ko": {
+        "image": "assets/portfolio/analysis/led_cover/main.png",
+        "alt": "LED 등기구 커버 제품설계 및 시제품"
+      },
+      "ja": {
+        "image": "assets/portfolio/analysis/led_cover/main.png",
+        "alt": "LED照明カバーの製品設計と試作品"
+      }
+    }
+  ]
+}
