@@ -75,6 +75,9 @@
     .service-detail-link:is([href*="structural-analysis"],[href*="product-design"]):is(:hover,:focus-visible){background:var(--product-hover);border-color:#78a7df}
     @media(max-width:900px){.service-detail-links{grid-template-columns:1fr 1fr}}
     @media(max-width:520px){.service-detail-links{grid-template-columns:1fr}}
+    .menu>a{transition:color .18s ease,transform .18s ease,background-color .18s ease,box-shadow .18s ease}.menu>a:not(.phone){position:relative;padding:8px 0}.menu>a:not(.phone):after{content:"";position:absolute;right:0;bottom:1px;left:0;height:2px;border-radius:2px;background:var(--blue2);transform:scaleX(0);transform-origin:center;transition:transform .18s ease}.menu>a:not(.phone):is(:hover,:focus-visible){color:var(--blue2);transform:translateY(-1px);outline:none}.menu>a:not(.phone):is(:hover,:focus-visible):after{transform:scaleX(1)}.phone:is(:hover,:focus-visible){background:var(--blue2);transform:translateY(-2px);box-shadow:0 8px 18px rgba(6,48,111,.22);outline:none}
+    .pillar-gallery,.service-pillar.product-field .pillar-gallery,.service-pillar.press-field .pillar-gallery{background:transparent!important}.pillar-gallery img{background:transparent!important}
+    main#home>.services-overview{padding-top:36px!important;padding-bottom:38px!important}@media(min-width:721px){main#home>.hero .hero-inner{min-height:470px!important;padding:24px 0!important}}@media(max-width:720px){main#home>.hero .hero-inner{padding-top:22px!important;padding-bottom:22px!important}}
   </style>
 </head>
 <body>
