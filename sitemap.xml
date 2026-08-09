@@ -7,6 +7,12 @@
     <lastmod>2026-08-06</lastmod>
   </url>
   <url>
+    <loc>https://qdm.co.kr/about/</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/about/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/about/"/>
+    <lastmod>2026-08-09</lastmod>
+  </url>
+  <url>
     <loc>https://qdm.co.kr/assets/portfolio/analysis/double-drill/portfolio.html</loc>
     <xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/analysis/double-drill/portfolio.html"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/analysis/double-drill/portfolio.html"/>
@@ -55,6 +61,12 @@
     <xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/"/>
     <lastmod>2026-08-06</lastmod>
+  </url>
+  <url>
+    <loc>https://qdm.co.kr/ja/about/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/about/"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/about/"/>
+    <lastmod>2026-08-09</lastmod>
   </url>
   <url>
     <loc>https://qdm.co.kr/ja/assets/portfolio/analysis/double-drill/portfolio.html</loc>
