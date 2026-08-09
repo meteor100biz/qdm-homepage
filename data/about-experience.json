@@ -1,12 +1,34 @@
 {
   "items": [
     {
+      "id": "experience-1786314295014-9eibf",
+      "image": "assets/about/experience/experience-1786315125937-1.jpg",
+      "labelKo": "프레스금형 설계",
+      "labelJa": "プレス金型設計",
+      "altKo": "프레스금형 설계, 프레스금형",
+      "altJa": "プレス金型設計, プレス金型",
+      "linkKo": "/portfolio.html?category=press",
+      "linkJa": "/ja/portfolio.html?category=press",
+      "enabled": true
+    },
+    {
       "id": "press-die-cad",
       "image": "assets/press-die-cad-overview.png",
       "labelKo": "프레스금형 설계",
       "labelJa": "プレス金型CAD",
       "altKo": "프레스금형 설계 도면",
       "altJa": "プレス金型CAD設計図面",
+      "linkKo": "/portfolio.html?category=press",
+      "linkJa": "/ja/portfolio.html?category=press",
+      "enabled": true
+    },
+    {
+      "id": "experience-1786314836905-57kjy",
+      "image": "assets/about/experience/experience-1786315126579-2.png",
+      "labelKo": "코킹(Caulking)지그설계",
+      "labelJa": "カシメ治具設計",
+      "altKo": "프레스금형 코킹(Caulking)지그",
+      "altJa": "プレス金型 カシメ治具, プレス金型設計",
       "linkKo": "/portfolio.html?category=press",
       "linkJa": "/ja/portfolio.html?category=press",
       "enabled": true
