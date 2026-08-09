@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T00:00:00.000Z",
+  "updatedAt": "2026-08-09T00:29:02.306Z",
   "services": [
     {
       "id": "press-die-design",
@@ -49,11 +49,11 @@
       "nameJa": "製品設計",
       "shared": true,
       "ko": {
-        "image": "assets/portfolio/analysis/led_cover/main.png",
+        "image": "assets/portfolio/mechanical/core-drill/main.jpg",
         "alt": "LED 등기구 커버 제품설계 및 시제품"
       },
       "ja": {
-        "image": "assets/portfolio/analysis/led_cover/main.png",
+        "image": "assets/portfolio/mechanical/core-drill/main.jpg",
         "alt": "LED照明カバーの製品設計と試作品"
       }
     }
