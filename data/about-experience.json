@@ -1,0 +1,48 @@
+{
+  "items": [
+    {
+      "id": "press-die-cad",
+      "image": "assets/press-die-cad-overview.png",
+      "labelKo": "프레스금형 설계",
+      "labelJa": "プレス金型CAD",
+      "altKo": "프레스금형 설계 도면",
+      "altJa": "プレス金型CAD設計図面",
+      "linkKo": "/portfolio.html?category=press",
+      "linkJa": "/ja/portfolio.html?category=press",
+      "enabled": true
+    },
+    {
+      "id": "product-design",
+      "image": "assets/product-development-21.png",
+      "labelKo": "제품설계",
+      "labelJa": "製品設計",
+      "altKo": "기계·기구 제품 3D 설계",
+      "altJa": "機械・機構製品の3D設計",
+      "linkKo": "/portfolio.html?category=product",
+      "linkJa": "/ja/portfolio.html?category=product",
+      "enabled": true
+    },
+    {
+      "id": "mechanism-design",
+      "image": "assets/product-development-22.png",
+      "labelKo": "기구설계",
+      "labelJa": "機構設計",
+      "altKo": "기계 제품 내부 구조 설계",
+      "altJa": "機械製品の内部構造設計",
+      "linkKo": "/portfolio.html?category=product",
+      "linkJa": "/ja/portfolio.html?category=product",
+      "enabled": true
+    },
+    {
+      "id": "structural-analysis",
+      "image": "assets/product-development-23.png",
+      "labelKo": "구조해석",
+      "labelJa": "構造解析",
+      "altKo": "제품 구조해석 결과",
+      "altJa": "製品の構造解析結果",
+      "linkKo": "/portfolio.html?category=product",
+      "linkJa": "/ja/portfolio.html?category=product",
+      "enabled": true
+    }
+  ]
+}

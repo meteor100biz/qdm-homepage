@@ -130,6 +130,28 @@ function initOverseasTrade(){
   section.innerHTML='<span class="trade-kicker">OVERSEAS BUSINESS</span><strong>海外取引について</strong><p class="trade-intro">QDMは、日本企業からのプレス金型設計・薄板成形解析のご依頼に対応しています。</p><ul class="trade-support"><li>日本語によるメール・オンライン打ち合わせ・音声通話に対応</li><li>見積書・請求書（Invoice）を発行</li><li>図面・仕様書はフォームまたはメールで送付可能</li><li>必要に応じて秘密保持契約（NDA）に対応</li><li>韓国と日本の間に時差はありません</li></ul><div class="trade-flow" aria-label="海外取引の流れ"><div><b>1</b><span>お問い合わせ<br>資料送付</span></div><div><b>2</b><span>お見積り<br>業務範囲確認</span></div><div><b>3</b><span>ご発注<br>設計・解析</span></div><div><b>4</b><span>納品・請求書<br>海外送金</span></div></div>';
   list.insertAdjacentElement('afterend',section);
 }
+function renderAboutExperience(settings){
+  const gallery=document.querySelector('.experience-gallery');
+  if(!gallery)return;
+  const items=(Array.isArray(settings?.items)?settings.items:[]).filter(item=>item&&item.enabled!==false&&item.image);
+  const nodes=items.map(item=>{
+    const link=document.createElement('a');link.className='experience-thumb';
+    link.href=(qdmJapanese?item.linkJa:item.linkKo)||item.linkKo||'#';
+    const image=document.createElement('img');
+    image.src=/^(?:https?:)?\//.test(item.image)?item.image:`/${String(item.image).replace(/^\/+/, '')}`;
+    image.alt=(qdmJapanese?item.altJa:item.altKo)||item.altKo||'';image.loading='lazy';image.decoding='async';
+    const label=document.createElement('span');label.textContent=(qdmJapanese?item.labelJa:item.labelKo)||item.labelKo||'';
+    link.append(image,label);return link;
+  });
+  gallery.replaceChildren(...nodes);
+  gallery.hidden=!nodes.length;
+  const heading=gallery.previousElementSibling;
+  if(heading?.classList.contains('experience-gallery-label'))heading.hidden=!nodes.length;
+}
+function initAboutExperience(){
+  if(!document.querySelector('.experience-gallery'))return;
+  fetch('/data/about-experience.json',{cache:'no-store'}).then(response=>{if(!response.ok)throw new Error('about experience settings');return response.json();}).then(renderAboutExperience).catch(()=>{});
+}
 const qdmDataBase=qdmJapanese?'/data/ja':'/data';
 function initHeroSlider(){
   const root=document.querySelector('.hero-art');
@@ -215,6 +237,7 @@ initKoreanServicePriority();
 initKoreanServiceDirectory();
 initHeroSlider();
 initOverseasTrade();
+initAboutExperience();
 fetch(`${qdmDataBase}/blog-posts.json`).then(r=>r.json()).then(posts=>{renderBlog(posts);renderBlogList(posts);}).catch(()=>{});
 fetch(`${qdmDataBase}/portfolios.json`,{cache:'no-store'}).then(r=>r.json()).then(posts=>{
   renderHomePortfolioPreviews(posts);
