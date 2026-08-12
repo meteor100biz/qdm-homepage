@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>프레스금형 견적서 작성기 | 무료 PDF 견적서 양식</title>
+  <meta name="description" content="프레스금형 설계비, 소재비, 가공비와 부가세를 직접 입력해 견적서를 작성하고 PDF와 편집용 파일로 저장하는 무료 도구입니다. 입력 자료는 서버로 전송되지 않습니다.">
+  <link rel="canonical" href="https://qdm.co.kr/resources/press-die-quotation/">
+  <link rel="stylesheet" href="/assets/style.css?v=20260812-1">
+  <link rel="stylesheet" href="/assets/quotation.css?v=20260812-1">
+</head>
+<body>
+<header class="topbar"><div class="wrap nav"><a href="/" class="brand" aria-label="QDM home"><div class="logo">QDM</div><div class="tagline">제품설계.구조해석.박판성형해석.프레스금형설계<br>QUALITY-DRIVEN DESIGN &amp; MANUFACTURING</div></a><nav class="menu" aria-label="주요 메뉴"><a class="hide-sm" href="/about/">회사소개</a><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/services/press-die-design/" aria-haspopup="menu">서비스<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel" role="menu"><a role="menuitem" href="/services/press-die-design/">프레스금형설계</a><a role="menuitem" href="/services/sheet-metal-forming-analysis/">박판성형해석</a><a role="menuitem" href="/services/structural-analysis/">구조해석</a><a role="menuitem" href="/services/product-design/">제품설계</a><a class="menu-dropdown-all" role="menuitem" href="/portfolio.html">전체 포트폴리오 보기</a></div></div><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/resources/press-die-quotation/" aria-haspopup="menu">자료실<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel resource-menu" role="menu"><a role="menuitem" href="/resources/press-die-quotation/">프레스금형 견적서 작성기</a><a role="menuitem" href="#linked-calculators">금형소재 견적산출 <small>준비중</small></a><a role="menuitem" href="#linked-calculators">설계비용 견적산출 <small>준비중</small></a></div></div><a class="hide-sm" href="/#blog">기술블로그</a><a href="/#contact">문의하기</a><a class="phone" href="tel:07080646621">☎ 070-8064-6621</a></nav></div></header>
+
+<main class="quote-page">
+  <section class="quote-hero">
+    <div class="wrap quote-hero-inner">
+      <div><span class="quote-kicker">LOCAL-ONLY QUOTATION TOOL</span><h1>프레스금형 견적서 작성기</h1><p>회사 정보와 금액을 직접 입력해 제출용 PDF와 다시 편집할 수 있는 견적 파일을 함께 만듭니다.</p></div>
+      <div class="privacy-chip"><strong>서버 저장 없음</strong><span>입력 자료는 이 브라우저에만 보관됩니다.</span></div>
+    </div>
+  </section>
+
+  <div class="wrap quote-layout">
+    <form id="quoteForm" class="quote-editor" autocomplete="off">
+      <div class="editor-toolbar" aria-label="견적서 파일 작업">
+        <button class="tool-button primary" type="button" id="downloadPdf">PDF 다운로드</button>
+        <button class="tool-button" type="button" id="downloadQuote">편집용 파일 저장</button>
+        <label class="tool-button file-button">견적 파일 불러오기<input id="importQuote" type="file" accept=".pressquote,application/json"></label>
+        <button class="tool-button subtle" type="button" id="newQuote">새 견적서</button>
+      </div>
+      <p id="saveStatus" class="save-status" role="status" aria-live="polite">브라우저에 자동 저장됩니다.</p>
+
+      <section class="editor-card">
+        <div class="card-title"><span>01</span><div><h2>작성자와 납품처</h2><p>PDF에는 QDM 정보가 표시되지 않고 작성자가 입력한 회사 정보만 사용됩니다.</p></div></div>
+        <div class="form-grid quote-fields">
+          <label>작성 회사명<input name="sellerCompany" required placeholder="예: 주식회사 한국금형"></label>
+          <label>대표자<input name="sellerRepresentative" placeholder="예: 홍길동"></label>
+          <label>사업자등록번호<input name="sellerBusinessNo" placeholder="000-00-00000"></label>
+          <label>담당자<input name="sellerContact" placeholder="성명 / 부서"></label>
+          <label class="full">주소<input name="sellerAddress" placeholder="사업장 주소"></label>
+          <label>전화<input name="sellerPhone" placeholder="000-0000-0000"></label>
+          <label>이메일<input name="sellerEmail" type="email" placeholder="name@company.com"></label>
+          <label>납품 회사명<input name="buyerCompany" required placeholder="견적서를 제출할 회사"></label>
+          <label>수신 담당자<input name="buyerContact" placeholder="담당자명 / 귀중"></label>
+        </div>
+      </section>
+
+      <section class="editor-card">
+        <div class="card-title"><span>02</span><div><h2>견적 기본정보</h2><p>금형 종류와 주요 제작 조건을 기록합니다.</p></div></div>
+        <div class="form-grid quote-fields">
+          <label>견적번호<input name="quoteNumber"></label>
+          <label>견적일<input name="quoteDate" type="date"></label>
+          <label>견적 유효기간<input name="validUntil" type="date"></label>
+          <label>납기<input name="delivery" placeholder="예: 발주 후 8주"></label>
+          <label class="full">금형명 / 프로젝트명<input name="projectName" required placeholder="예: BRACKET OP10 BLANK 금형"></label>
+          <label>금형 형식<select name="dieType"><option>단발금형</option><option>순차이송금형</option><option>트랜스퍼금형</option><option>복합금형</option><option>기타</option></select></label>
+          <label>금형 수량<input name="dieQuantity" type="number" min="1" step="1" value="1"></label>
+          <label>제품 소재<input name="productMaterial" placeholder="예: SPFC980Y 1.2t"></label>
+          <label>프레스 사양<input name="pressSpec" placeholder="예: 400 ton / BED 2500"></label>
+          <label>결제 조건<input name="paymentTerms" placeholder="예: 계약금 30%, 납품 후 70%"></label>
+          <label>통화<select name="currency"><option value="KRW">KRW (원)</option><option value="JPY">JPY (엔)</option><option value="USD">USD (달러)</option></select></label>
+        </div>
+      </section>
+
+      <section class="editor-card">
+        <div class="card-title action-title"><span>03</span><div><h2>견적 항목</h2><p>수량과 단가를 직접 입력합니다. 별도 계산기의 결과도 추후 이 항목으로 연동됩니다.</p></div><button type="button" class="mini-button" id="addItem">항목 추가</button></div>
+        <div class="items-table-wrap"><table class="items-table"><thead><tr><th>항목</th><th>내용·사양</th><th>수량</th><th>단위</th><th>단가</th><th>금액</th><th aria-label="삭제"></th></tr></thead><tbody id="itemsBody"></tbody></table></div>
+      </section>
+
+      <section class="editor-card amount-card">
+        <div class="card-title"><span>04</span><div><h2>경비·세금·합계</h2><p>마진은 내부 계산에만 쓰고 PDF에서 숨길 수도 있습니다.</p></div></div>
+        <div class="amount-settings">
+          <label>일반관리비·마진율 (%)<input name="marginRate" type="number" min="0" step="0.1" value="0"></label>
+          <label class="check-label"><input name="showMargin" type="checkbox" checked><span>PDF에 일반관리비·이윤 항목 표시</span></label>
+          <label>부가세<select name="vatMode"><option value="excluded">별도 (10%)</option><option value="included">포함</option><option value="none">면세 / 적용 안 함</option></select></label>
+        </div>
+        <dl class="amount-summary"><div><dt>항목 합계</dt><dd id="itemsSubtotal">0원</dd></div><div><dt>일반관리비·이윤</dt><dd id="marginAmount">0원</dd></div><div><dt>공급가액</dt><dd id="supplyAmount">0원</dd></div><div><dt>부가세</dt><dd id="vatAmount">0원</dd></div><div class="grand"><dt>총 견적금액</dt><dd id="grandTotal">0원</dd></div></dl>
+      </section>
+
+      <section class="editor-card">
+        <div class="card-title"><span>05</span><div><h2>견적 조건·특기사항</h2><p>트라이 범위, 설계변경, 운송 및 검수 조건 등을 명확히 기록하세요.</p></div></div>
+        <textarea name="notes" rows="7" placeholder="예:&#10;- 트라이 2회 포함&#10;- 제품 설계변경에 따른 금형 수정비 별도&#10;- 운송비 별도"></textarea>
+      </section>
+    </form>
+
+    <aside class="quote-side">
+      <section class="side-card"><h2>로컬 저장 견적</h2><p>이 브라우저에 저장된 견적을 다시 불러올 수 있습니다.</p><select id="savedQuotes" aria-label="저장된 견적 목록"><option value="">저장된 견적 선택</option></select><div class="side-actions"><button type="button" id="loadSaved">불러오기</button><button type="button" id="deleteSaved" class="danger">삭제</button></div><small>브라우저 데이터 삭제·시크릿 모드에서는 사라질 수 있으므로 편집용 파일도 보관하세요.</small></section>
+      <section class="side-card" id="linked-calculators"><h2>연동 계산기</h2><p>계산 결과를 현재 견적서 항목으로 가져오는 기능을 연결할 예정입니다.</p><button class="calculator-link" type="button" disabled><span>금형소재 견적산출</span><small>준비중</small></button><button class="calculator-link" type="button" disabled><span>설계비용 견적산출</span><small>준비중</small></button></section>
+      <section class="side-card notice-card"><h2>사용 안내</h2><ul><li>본 도구는 견적서 서식과 계산 기능만 제공합니다.</li><li>단가와 금액은 작성자가 직접 입력하고 확인해야 합니다.</li><li>다운로드한 PDF에는 QDM 상호나 명판이 들어가지 않습니다.</li><li>중요 견적은 반드시 편집용 파일로 별도 백업하세요.</li></ul></section>
+    </aside>
+  </div>
+</main>
+
+<footer class="footer"><div class="wrap footer-inner"><div>프레스금형설계.박판성형해석.구조해석.제품설계</div><div>© QDM. All rights reserved.</div></div></footer>
+<script src="/assets/quotation.js?v=20260812-1"></script>
+</body>
+</html>

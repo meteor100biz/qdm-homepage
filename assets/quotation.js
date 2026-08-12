@@ -1,0 +1,397 @@
+(() => {
+  "use strict";
+
+  const FORM_FORMAT = "qdm.press-die-quotation";
+  const FORM_VERSION = 1;
+  const DB_NAME = "qdm-local-tools";
+  const STORE_NAME = "press-die-quotes";
+  const form = document.getElementById("quoteForm");
+  const itemsBody = document.getElementById("itemsBody");
+  const status = document.getElementById("saveStatus");
+  const savedQuotes = document.getElementById("savedQuotes");
+  let currentId = crypto.randomUUID();
+  let saveTimer;
+
+  const DEFAULT_ITEMS = [
+    ["금형 설계비", "공정검토 및 2D/3D 설계", 1, "식", 0],
+    ["금형 소재비", "플레이트 및 주요 금형강", 1, "식", 0],
+    ["표준부품비", "가이드·스프링·볼트 등", 1, "식", 0],
+    ["기계가공비", "밀링·선반·연삭", 1, "식", 0],
+    ["와이어·방전가공비", "와이어컷 및 방전", 1, "식", 0],
+    ["열처리·표면처리비", "열처리 및 코팅", 1, "식", 0],
+    ["조립·사상·트라이비", "조립, 사상 및 트라이", 1, "식", 0],
+    ["검사·운송·기타", "측정, 검사, 포장 및 운송", 1, "식", 0]
+  ];
+
+  function today(offsetDays = 0) {
+    const date = new Date();
+    date.setDate(date.getDate() + offsetDays);
+    return date.toISOString().slice(0, 10);
+  }
+
+  function defaultQuoteNumber() {
+    return `PD-${today().replaceAll("-", "")}-001`;
+  }
+
+  function blankData() {
+    return {
+      id: crypto.randomUUID(),
+      sellerCompany: "", sellerRepresentative: "", sellerBusinessNo: "", sellerContact: "",
+      sellerAddress: "", sellerPhone: "", sellerEmail: "", buyerCompany: "", buyerContact: "",
+      quoteNumber: defaultQuoteNumber(), quoteDate: today(), validUntil: today(30), delivery: "발주 후 협의",
+      projectName: "", dieType: "단발금형", dieQuantity: 1, productMaterial: "", pressSpec: "",
+      paymentTerms: "별도 협의", currency: "KRW", marginRate: 0, showMargin: true, vatMode: "excluded",
+      notes: "- 제품 또는 금형 사양 변경에 따른 추가 비용은 별도 협의합니다.\n- 납기와 트라이 범위는 발주 전 최종 협의합니다.",
+      items: DEFAULT_ITEMS.map(([name, description, qty, unit, price]) => ({ id: crypto.randomUUID(), name, description, qty, unit, price }))
+    };
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>'"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]);
+  }
+
+  function number(value) {
+    const result = Number(String(value ?? "").replaceAll(",", ""));
+    return Number.isFinite(result) ? result : 0;
+  }
+
+  function currencySymbol(currency) {
+    return currency === "JPY" ? "¥" : currency === "USD" ? "$" : "원";
+  }
+
+  function money(value, currency = form.elements.currency?.value || "KRW") {
+    const rounded = Math.round(number(value));
+    const formatted = new Intl.NumberFormat(currency === "JPY" ? "ja-JP" : currency === "USD" ? "en-US" : "ko-KR", { maximumFractionDigits: 0 }).format(rounded);
+    return currency === "KRW" ? `${formatted}원` : `${currencySymbol(currency)}${formatted}`;
+  }
+
+  function itemRow(item = {}) {
+    const tr = document.createElement("tr");
+    tr.dataset.id = item.id || crypto.randomUUID();
+    tr.innerHTML = `<td><input data-field="name" value="${escapeHtml(item.name)}" aria-label="견적 항목"></td><td><input data-field="description" value="${escapeHtml(item.description)}" aria-label="내용 및 사양"></td><td><input class="number" data-field="qty" type="number" min="0" step="0.01" value="${number(item.qty) || 1}" aria-label="수량"></td><td><input data-field="unit" value="${escapeHtml(item.unit || "식")}" aria-label="단위"></td><td><input class="number" data-field="price" type="number" min="0" step="1" value="${number(item.price)}" aria-label="단가"></td><td><output class="item-total">${money(number(item.qty) * number(item.price))}</output></td><td><button class="remove-item" type="button" aria-label="항목 삭제">×</button></td>`;
+    tr.querySelector(".remove-item").addEventListener("click", () => {
+      if (itemsBody.children.length <= 1) return;
+      tr.remove();
+      changed();
+    });
+    tr.querySelectorAll("input").forEach(input => input.addEventListener("input", changed));
+    return tr;
+  }
+
+  function renderItems(items) {
+    itemsBody.replaceChildren(...(items?.length ? items : DEFAULT_ITEMS.map(([name, description, qty, unit, price]) => ({ name, description, qty, unit, price }))).map(itemRow));
+  }
+
+  function readItems() {
+    return [...itemsBody.rows].map(row => ({
+      id: row.dataset.id,
+      name: row.querySelector('[data-field="name"]').value.trim(),
+      description: row.querySelector('[data-field="description"]').value.trim(),
+      qty: number(row.querySelector('[data-field="qty"]').value),
+      unit: row.querySelector('[data-field="unit"]').value.trim(),
+      price: number(row.querySelector('[data-field="price"]').value)
+    }));
+  }
+
+  function readData() {
+    const data = Object.fromEntries(new FormData(form).entries());
+    data.id = currentId;
+    data.dieQuantity = number(data.dieQuantity);
+    data.marginRate = number(data.marginRate);
+    data.showMargin = form.elements.showMargin.checked;
+    data.items = readItems();
+    data.updatedAt = new Date().toISOString();
+    return data;
+  }
+
+  function writeData(data) {
+    currentId = data.id || crypto.randomUUID();
+    [...form.elements].forEach(control => {
+      if (!control.name || control.type === "file") return;
+      if (control.type === "checkbox") control.checked = Boolean(data[control.name]);
+      else if (data[control.name] != null) control.value = data[control.name];
+    });
+    renderItems(data.items);
+    calculate();
+  }
+
+  function totals(data = readData()) {
+    const itemSubtotal = data.items.reduce((sum, item) => sum + number(item.qty) * number(item.price), 0);
+    const margin = Math.round(itemSubtotal * number(data.marginRate) / 100);
+    let supply = itemSubtotal + margin;
+    let vat = 0;
+    let grand = supply;
+    if (data.vatMode === "excluded") {
+      vat = Math.round(supply * 0.1);
+      grand = supply + vat;
+    } else if (data.vatMode === "included") {
+      grand = supply;
+      supply = Math.round(grand / 1.1);
+      vat = grand - supply;
+    }
+    return { itemSubtotal, margin, supply, vat, grand };
+  }
+
+  function calculate() {
+    const data = readData();
+    const result = totals(data);
+    [...itemsBody.rows].forEach((row, index) => row.querySelector(".item-total").value = money(number(data.items[index].qty) * number(data.items[index].price), data.currency));
+    document.getElementById("itemsSubtotal").textContent = money(result.itemSubtotal, data.currency);
+    document.getElementById("marginAmount").textContent = money(result.margin, data.currency);
+    document.getElementById("supplyAmount").textContent = money(result.supply, data.currency);
+    document.getElementById("vatAmount").textContent = money(result.vat, data.currency);
+    document.getElementById("grandTotal").textContent = money(result.grand, data.currency);
+  }
+
+  function setStatus(message, type = "") {
+    status.textContent = message;
+    status.className = `save-status ${type}`.trim();
+  }
+
+  function openDb() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(DB_NAME, 1);
+      request.onupgradeneeded = () => request.result.createObjectStore(STORE_NAME, { keyPath: "id" });
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async function dbRequest(mode, operation) {
+    const db = await openDb();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(STORE_NAME, mode);
+      const request = operation(transaction.objectStore(STORE_NAME));
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+      transaction.oncomplete = () => db.close();
+    });
+  }
+
+  async function saveLocal(showMessage = true) {
+    try {
+      const data = readData();
+      await dbRequest("readwrite", store => store.put(data));
+      await refreshSavedQuotes(data.id);
+      if (showMessage) setStatus(`자동 저장됨 · ${new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}`, "success");
+    } catch {
+      setStatus("브라우저 저장에 실패했습니다. 편집용 파일로 백업해 주세요.", "error");
+    }
+  }
+
+  async function refreshSavedQuotes(selected = "") {
+    try {
+      const list = await dbRequest("readonly", store => store.getAll());
+      list.sort((a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")));
+      savedQuotes.innerHTML = '<option value="">저장된 견적 선택</option>' + list.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.quoteNumber || "번호 없음")} · ${escapeHtml(item.buyerCompany || item.projectName || "미작성 견적")}</option>`).join("");
+      if (selected) savedQuotes.value = selected;
+    } catch { /* IndexedDB를 사용할 수 없는 환경에서는 파일 저장 기능을 이용한다. */ }
+  }
+
+  function changed() {
+    calculate();
+    setStatus("변경사항 저장 중...");
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => saveLocal(), 550);
+  }
+
+  function safeFilename(value, fallback) {
+    const cleaned = String(value || "").replace(/[\\/:*?"<>|]/g, "-").replace(/\s+/g, "-").slice(0, 70);
+    return cleaned || fallback;
+  }
+
+  function downloadBlob(blob, filename) {
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+  }
+
+  function exportEditable() {
+    const data = readData();
+    const file = { format: FORM_FORMAT, version: FORM_VERSION, exportedAt: new Date().toISOString(), data };
+    const filename = `${safeFilename(data.quoteNumber, "press-die-quotation")}.pressquote`;
+    downloadBlob(new Blob([JSON.stringify(file, null, 2)], { type: "application/json;charset=utf-8" }), filename);
+    setStatus("편집용 견적 파일을 저장했습니다.", "success");
+  }
+
+  async function importEditable(file) {
+    try {
+      const parsed = JSON.parse(await file.text());
+      if (parsed.format !== FORM_FORMAT || !parsed.data || parsed.version > FORM_VERSION) throw new Error("format");
+      const imported = { ...blankData(), ...parsed.data, id: crypto.randomUUID() };
+      writeData(imported);
+      await saveLocal(false);
+      setStatus("견적 파일을 불러왔습니다. 새 로컬 견적으로 저장했습니다.", "success");
+    } catch {
+      setStatus("지원하지 않거나 손상된 견적 파일입니다.", "error");
+    }
+  }
+
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
+    const paragraphs = String(text || "-").split(/\r?\n/);
+    const lines = [];
+    for (const paragraph of paragraphs) {
+      let line = "";
+      for (const char of paragraph || " ") {
+        const test = line + char;
+        if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = char; }
+        else line = test;
+      }
+      lines.push(line || " ");
+    }
+    lines.slice(0, maxLines).forEach((line, index) => ctx.fillText(index === maxLines - 1 && lines.length > maxLines ? `${line.slice(0, -1)}…` : line, x, y + index * lineHeight));
+    return Math.min(lines.length, maxLines);
+  }
+
+  function drawPdfCanvas(data) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 2480;
+    canvas.height = 3508;
+    const ctx = canvas.getContext("2d");
+    const total = totals(data);
+    const left = 160, right = 2320, width = right - left;
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.textBaseline = "middle";
+    const font = (size, weight = 400) => { ctx.font = `${weight} ${size}px Arial, "Malgun Gothic", "Noto Sans KR", sans-serif`; };
+    const line = (x1, y1, x2, y2, color = "#8fa1b9", thickness = 2) => { ctx.strokeStyle = color; ctx.lineWidth = thickness; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); };
+    const box = (x, y, w, h, fill = null, stroke = "#b8c5d5") => { if (fill) { ctx.fillStyle = fill; ctx.fillRect(x, y, w, h); } ctx.strokeStyle = stroke; ctx.lineWidth = 2; ctx.strokeRect(x, y, w, h); };
+    const labelValue = (label, value, x, y, w, h) => { ctx.fillStyle = "#eef3f9"; ctx.fillRect(x, y, 250, h); box(x, y, w, h, null); font(29, 700); ctx.fillStyle = "#36475e"; ctx.fillText(label, x + 22, y + h / 2); font(31, 400); ctx.fillStyle = "#111d2e"; ctx.fillText(String(value || "-"), x + 275, y + h / 2); };
+
+    font(66, 800); ctx.fillStyle = "#092a59"; ctx.textAlign = "center"; ctx.fillText("프레스금형 견적서", 1240, 185);
+    font(30, 700); ctx.fillStyle = "#52647c"; ctx.fillText("PRESS DIE QUOTATION", 1240, 252);
+    ctx.textAlign = "left"; font(42, 800); ctx.fillStyle = "#102b50"; ctx.fillText(data.sellerCompany || "작성 회사명", left, 350);
+    font(27, 400); ctx.fillStyle = "#4f6075";
+    const sellerLine = [data.sellerRepresentative && `대표 ${data.sellerRepresentative}`, data.sellerBusinessNo && `사업자 ${data.sellerBusinessNo}`, data.sellerContact && `담당 ${data.sellerContact}`].filter(Boolean).join("  ·  ");
+    ctx.fillText(sellerLine || " ", left, 405); ctx.fillText([data.sellerPhone, data.sellerEmail].filter(Boolean).join("  ·  ") || " ", left, 452);
+    ctx.textAlign = "right"; font(28, 500); ctx.fillText(data.sellerAddress || "", right, 405); ctx.textAlign = "left";
+    line(left, 500, right, 500, "#173d70", 5);
+
+    labelValue("수신", `${data.buyerCompany || "-"}  ${data.buyerContact || ""}`, left, 535, 1320, 78);
+    labelValue("견적번호", data.quoteNumber, 1500, 535, 820, 78);
+    labelValue("금형명", data.projectName, left, 613, 1320, 78);
+    labelValue("견적일", data.quoteDate, 1500, 613, 820, 78);
+    labelValue("금형 형식", `${data.dieType || "-"} / ${data.dieQuantity || 1}식`, left, 691, 1080, 78);
+    labelValue("유효기간", data.validUntil, 1240, 691, 1080, 78);
+    labelValue("제품 소재", data.productMaterial, left, 769, 1080, 78);
+    labelValue("납기", data.delivery, 1240, 769, 1080, 78);
+    labelValue("프레스", data.pressSpec, left, 847, 1080, 78);
+    labelValue("결제조건", data.paymentTerms, 1240, 847, 1080, 78);
+
+    const tableY = 980, headerH = 72, rowH = 104;
+    const columns = [left, left + 450, left + 1240, left + 1400, left + 1570, right];
+    box(left, tableY, width, headerH, "#153b6b", "#153b6b");
+    const headers = ["항목", "내용·사양", "수량", "단위", "금액"];
+    ctx.textAlign = "center"; font(29, 700); ctx.fillStyle = "#ffffff";
+    headers.forEach((header, i) => ctx.fillText(header, (columns[i] + columns[i + 1]) / 2, tableY + headerH / 2));
+    const visibleItems = data.items.filter(item => item.name || item.description || item.price).slice(0, 10);
+    visibleItems.forEach((item, index) => {
+      const y = tableY + headerH + index * rowH;
+      box(left, y, width, rowH, index % 2 ? "#f8fafc" : "#ffffff");
+      columns.slice(1, -1).forEach(x => line(x, y, x, y + rowH, "#c3cedc"));
+      ctx.textAlign = "left"; font(27, 600); ctx.fillStyle = "#172a45"; wrapCanvasText(ctx, item.name || "-", columns[0] + 18, y + 40, columns[1] - columns[0] - 36, 31, 2);
+      font(25, 400); ctx.fillStyle = "#405069"; wrapCanvasText(ctx, item.description || "-", columns[1] + 18, y + 40, columns[2] - columns[1] - 36, 31, 2);
+      ctx.textAlign = "center"; font(27, 400); ctx.fillStyle = "#172a45"; ctx.fillText(String(item.qty || 0), (columns[2] + columns[3]) / 2, y + rowH / 2); ctx.fillText(item.unit || "식", (columns[3] + columns[4]) / 2, y + rowH / 2);
+      ctx.textAlign = "right"; font(28, 700); ctx.fillText(money(number(item.qty) * number(item.price), data.currency), columns[5] - 18, y + rowH / 2);
+    });
+    const itemEndY = tableY + headerH + Math.max(visibleItems.length, 1) * rowH;
+    const summaryX = 1320, summaryW = right - summaryX, summaryRowH = 64;
+    const summary = [["항목 합계", total.itemSubtotal], ...(number(data.marginRate) > 0 && data.showMargin ? [[`일반관리비·이윤 (${data.marginRate}%)`, total.margin]] : []), ["공급가액", total.supply], [data.vatMode === "none" ? "부가세" : "부가세 (10%)", total.vat]];
+    let summaryY = itemEndY + 24;
+    summary.forEach(([label, value]) => { box(summaryX, summaryY, summaryW, summaryRowH, "#f5f8fc"); line(summaryX + 430, summaryY, summaryX + 430, summaryY + summaryRowH, "#c3cedc"); ctx.textAlign = "left"; font(26, 600); ctx.fillStyle = "#3c4d65"; ctx.fillText(label, summaryX + 20, summaryY + summaryRowH / 2); ctx.textAlign = "right"; font(28, 700); ctx.fillStyle = "#122947"; ctx.fillText(money(value, data.currency), right - 18, summaryY + summaryRowH / 2); summaryY += summaryRowH; });
+    box(summaryX, summaryY, summaryW, 82, "#153b6b", "#153b6b"); ctx.textAlign = "left"; font(31, 800); ctx.fillStyle = "#ffffff"; ctx.fillText("총 견적금액", summaryX + 20, summaryY + 41); ctx.textAlign = "right"; font(36, 800); ctx.fillText(money(total.grand, data.currency), right - 18, summaryY + 41);
+
+    const notesY = Math.max(summaryY + 125, itemEndY + 390);
+    ctx.textAlign = "left"; font(30, 800); ctx.fillStyle = "#16365f"; ctx.fillText("견적 조건 및 특기사항", left, notesY);
+    box(left, notesY + 42, width, 310, "#fbfcfe"); font(26, 400); ctx.fillStyle = "#33445c"; wrapCanvasText(ctx, data.notes || "-", left + 26, notesY + 85, width - 52, 40, 6);
+    line(left, 3360, right, 3360, "#9fadc0"); font(22, 400); ctx.fillStyle = "#68768a"; ctx.textAlign = "center"; ctx.fillText("본 견적서는 작성자가 입력한 조건과 금액을 기준으로 작성되었습니다.", 1240, 3405);
+    return canvas;
+  }
+
+  function concatBytes(chunks) {
+    const size = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+    const result = new Uint8Array(size); let offset = 0;
+    chunks.forEach(chunk => { result.set(chunk, offset); offset += chunk.length; });
+    return result;
+  }
+
+  async function canvasToPdf(canvas) {
+    const jpegBlob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.96));
+    const jpeg = new Uint8Array(await jpegBlob.arrayBuffer());
+    const enc = new TextEncoder();
+    const chunks = [enc.encode("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n")];
+    const offsets = [0];
+    let length = chunks[0].length;
+    const addObject = (id, bodyParts) => {
+      offsets[id] = length;
+      const parts = [enc.encode(`${id} 0 obj\n`), ...(Array.isArray(bodyParts) ? bodyParts : [enc.encode(bodyParts)]), enc.encode("\nendobj\n")];
+      chunks.push(...parts); length += parts.reduce((sum, part) => sum + part.length, 0);
+    };
+    addObject(1, "<< /Type /Catalog /Pages 2 0 R >>");
+    addObject(2, "<< /Type /Pages /Kids [3 0 R] /Count 1 >>");
+    addObject(3, "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>");
+    addObject(4, [enc.encode(`<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`), jpeg, enc.encode("\nendstream")]);
+    const stream = "q\n595.28 0 0 841.89 0 0 cm\n/Im0 Do\nQ\n";
+    addObject(5, `<< /Length ${enc.encode(stream).length} >>\nstream\n${stream}endstream`);
+    const xrefOffset = length;
+    let xref = "xref\n0 6\n0000000000 65535 f \n";
+    for (let id = 1; id <= 5; id += 1) xref += `${String(offsets[id]).padStart(10, "0")} 00000 n \n`;
+    xref += `trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+    chunks.push(enc.encode(xref));
+    return new Blob([concatBytes(chunks)], { type: "application/pdf" });
+  }
+
+  async function exportPdf() {
+    const data = readData();
+    if (!data.sellerCompany || !data.buyerCompany || !data.projectName) {
+      setStatus("PDF 작성 전에 작성 회사명, 납품 회사명, 금형명을 입력해 주세요.", "error");
+      form.reportValidity(); return;
+    }
+    const button = document.getElementById("downloadPdf");
+    button.disabled = true; button.textContent = "PDF 생성 중...";
+    try {
+      const canvas = drawPdfCanvas(data);
+      const pdf = await canvasToPdf(canvas);
+      downloadBlob(pdf, `${safeFilename(data.quoteNumber, "press-die-quotation")}.pdf`);
+      await saveLocal(false);
+      setStatus("PDF를 저장했습니다. 수정용 견적 파일도 함께 보관하세요.", "success");
+    } catch {
+      setStatus("PDF 생성에 실패했습니다. 브라우저를 확인해 주세요.", "error");
+    } finally {
+      button.disabled = false; button.textContent = "PDF 다운로드";
+    }
+  }
+
+  form.addEventListener("input", changed);
+  form.addEventListener("change", changed);
+  document.getElementById("addItem").addEventListener("click", () => { if (itemsBody.children.length >= 10) { setStatus("PDF 한 페이지 출력을 위해 견적 항목은 최대 10개까지 지원합니다.", "error"); return; } itemsBody.append(itemRow({ qty: 1, unit: "식", price: 0 })); changed(); });
+  document.getElementById("downloadQuote").addEventListener("click", exportEditable);
+  document.getElementById("downloadPdf").addEventListener("click", exportPdf);
+  document.getElementById("importQuote").addEventListener("change", event => { const file = event.target.files[0]; if (file) importEditable(file); event.target.value = ""; });
+  document.getElementById("newQuote").addEventListener("click", () => { if (!confirm("현재 견적서를 새 견적서로 바꾸시겠습니까? 자동 저장된 기존 견적은 목록에 남습니다.")) return; const data = blankData(); writeData(data); saveLocal(); });
+  document.getElementById("loadSaved").addEventListener("click", async () => { if (!savedQuotes.value) return setStatus("불러올 견적을 선택해 주세요.", "error"); const data = await dbRequest("readonly", store => store.get(savedQuotes.value)); if (data) { writeData(data); setStatus("저장된 견적을 불러왔습니다.", "success"); } });
+  document.getElementById("deleteSaved").addEventListener("click", async () => { if (!savedQuotes.value || !confirm("선택한 로컬 견적을 삭제하시겠습니까?")) return; await dbRequest("readwrite", store => store.delete(savedQuotes.value)); if (savedQuotes.value === currentId) { const data = blankData(); writeData(data); } await refreshSavedQuotes(); setStatus("선택한 로컬 견적을 삭제했습니다.", "success"); });
+
+  async function initialize() {
+    try {
+      const list = await dbRequest("readonly", store => store.getAll());
+      list.sort((a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")));
+      if (list[0]) {
+        writeData(list[0]);
+        await refreshSavedQuotes(list[0].id);
+        setStatus("마지막으로 작성한 로컬 견적을 불러왔습니다.", "success");
+        return;
+      }
+    } catch { /* 저장소가 차단된 환경에서는 새 견적으로 시작한다. */ }
+    const initial = blankData();
+    currentId = initial.id;
+    writeData(initial);
+    await saveLocal(false);
+    await refreshSavedQuotes(initial.id);
+  }
+
+  initialize();
+})();
