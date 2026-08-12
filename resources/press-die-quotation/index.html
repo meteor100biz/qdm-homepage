@@ -7,10 +7,10 @@
   <meta name="description" content="프레스금형 설계비, 소재비, 가공비와 부가세를 직접 입력해 견적서를 작성하고 PDF와 편집용 파일로 저장하는 무료 도구입니다. 입력 자료는 서버로 전송되지 않습니다.">
   <link rel="canonical" href="https://qdm.co.kr/resources/press-die-quotation/">
   <link rel="stylesheet" href="/assets/style.css?v=20260812-1">
-<link rel="stylesheet" href="/assets/quotation.css?v=20260812-8">
+<link rel="stylesheet" href="/assets/quotation.css?v=20260812-11">
 </head>
 <body>
-<header class="topbar"><div class="wrap nav"><a href="/" class="brand" aria-label="QDM home"><div class="logo">QDM</div><div class="tagline"><span class="tagline-press">프레스금형설계 · 박판성형해석</span> · <span class="tagline-product">구조해석 · 제품설계</span><br>QUALITY-DRIVEN DESIGN &amp; MANUFACTURING</div></a><nav class="menu" aria-label="주요 메뉴"><a class="hide-sm" href="/about/">회사소개</a><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/services/press-die-design/" aria-haspopup="menu">서비스<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel" role="menu"><a role="menuitem" href="/services/press-die-design/">프레스금형설계</a><a role="menuitem" href="/services/sheet-metal-forming-analysis/">박판성형해석</a><a role="menuitem" href="/services/structural-analysis/">구조해석</a><a role="menuitem" href="/services/product-design/">제품설계</a><a class="menu-dropdown-all" role="menuitem" href="/portfolio.html">전체 포트폴리오 보기</a></div></div><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/resources/press-die-quotation/" aria-haspopup="menu">자료실<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel resource-menu" role="menu"><a role="menuitem" href="/resources/press-die-quotation/">프레스금형 견적서 작성기</a><a role="menuitem" href="/resources/press-die-quotation/?tool=material">금형소재 견적산출 <small>계산기</small></a><a role="menuitem" href="#linked-calculators">설계비용 견적산출 <small>준비중</small></a></div></div><a class="hide-sm" href="/#blog">기술블로그</a><a href="/#contact">문의하기</a><a class="phone" href="tel:07080646621">☎ 070-8064-6621</a></nav></div></header>
+<header class="topbar"><div class="wrap nav"><a href="/" class="brand" aria-label="QDM home"><div class="logo">QDM</div><div class="tagline"><span class="tagline-press">프레스금형설계 · 박판성형해석</span> · <span class="tagline-product">구조해석 · 제품설계</span><br>QUALITY-DRIVEN DESIGN &amp; MANUFACTURING</div></a><nav class="menu" aria-label="주요 메뉴"><a class="hide-sm" href="/about/">회사소개</a><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/services/press-die-design/" aria-haspopup="menu">서비스<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel" role="menu"><a role="menuitem" href="/services/press-die-design/">프레스금형설계</a><a role="menuitem" href="/services/sheet-metal-forming-analysis/">박판성형해석</a><a role="menuitem" href="/services/structural-analysis/">구조해석</a><a role="menuitem" href="/services/product-design/">제품설계</a><a class="menu-dropdown-all" role="menuitem" href="/portfolio.html">전체 포트폴리오 보기</a></div></div><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/resources/press-die-quotation/" aria-haspopup="menu">자료실<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel resource-menu" role="menu"><a role="menuitem" href="/resources/press-die-quotation/">프레스금형 견적서 작성기</a><a role="menuitem" href="/resources/press-die-quotation/?tool=material">금형소재 견적산출 <small>계산기</small></a><a role="menuitem" href="/resources/press-die-quotation/?tool=processing">가공비용 견적산출 <small>계산기</small></a></div></div><a class="hide-sm" href="/#blog">기술블로그</a><a href="/#contact">문의하기</a><a class="phone" href="tel:07080646621">☎ 070-8064-6621</a></nav></div></header>
 
 <main class="quote-page">
   <section class="quote-hero">
@@ -59,6 +59,7 @@
 
       <section class="editor-card section-tone-3">
         <div class="card-title action-title"><span>03</span><div><h2>견적 항목</h2><p>수량과 단가를 직접 입력하거나 별도 계산기의 산출값을 가져올 수 있습니다.</p></div><button type="button" class="mini-button" id="addItem">항목 추가</button></div>
+        <p class="attachment-note"><strong>별첨 안내</strong> 금형소재 및 가공비용 산출명세는 견적서 본문과 분리된 별첨으로 함께 출력됩니다.</p>
         <div class="items-table-wrap"><table class="items-table"><thead><tr><th>항목</th><th>내용·사양</th><th>수량</th><th>단위</th><th>단가</th><th>금액</th><th aria-label="삭제"></th></tr></thead><tbody id="itemsBody"></tbody></table></div>
       </section>
 
@@ -90,6 +91,18 @@
         </div>
       </dialog>
 
+      <dialog class="material-dialog processing-dialog" id="processingDialog" aria-labelledby="processingDialogTitle">
+        <div class="material-dialog-shell">
+          <header class="material-dialog-header"><div><span>PROCESSING COST CALCULATOR</span><h2 id="processingDialogTitle">가공비용 견적 산출</h2><p>투입량과 임률을 입력하면 공정별 금액을 계산하고 견적 항목에 구분하여 반영합니다.</p></div><button type="button" class="dialog-close" id="closeProcessingDialog" aria-label="가공비용 견적 산출 닫기">×</button></header>
+          <div class="material-dialog-body">
+            <div class="material-table-actions"><button type="button" class="mini-button" id="restoreDefaultProcessing">권장 임률 복원</button><button type="button" class="mini-button primary" id="addProcessing">+ 가공 항목 추가</button></div>
+            <div class="processing-table-wrap"><table class="processing-table"><thead><tr><th>No.</th><th>구분</th><th>가공 항목</th><th>계산 방식</th><th>투입량</th><th>단위</th><th>임률·단가</th><th>금액</th><th aria-label="삭제"></th></tr></thead><tbody id="processingBody"></tbody></table></div>
+            <div class="processing-summary"><p><strong>열처리 권장식</strong>은 처리중량(kg) × kg당 단가입니다. 재질·목표경도·로트에 따라 단가 차이가 크므로 업체 단가를 입력하세요. 시간식과 일괄식도 선택할 수 있습니다.</p><dl><div><dt>기계가공비</dt><dd id="machiningCostTotal">0원</dd></div><div class="heat-total"><dt>열처리비</dt><dd id="heatCostTotal">0원</dd></div><div class="edm-total"><dt>와이어·방전비</dt><dd id="edmCostTotal">0원</dd></div><div><dt>가공비 합계</dt><dd id="processingCostTotal">0원</dd></div></dl></div>
+          </div>
+          <footer class="material-dialog-footer"><label class="check-label"><input name="includeProcessingPage" type="checkbox" checked><span>PDF 별첨에 가공명세 포함</span></label><div><button type="button" class="tool-button" id="cancelProcessingDialog">닫기</button><button type="button" class="tool-button primary" id="applyProcessingTotal">계산값을 견적서에 반영</button></div></footer>
+        </div>
+      </dialog>
+
       <dialog class="pdf-preview-dialog" id="pdfPreviewDialog" aria-labelledby="pdfPreviewTitle">
         <header><div><span>PRINT PREVIEW</span><h2 id="pdfPreviewTitle">견적서 PDF 미리보기</h2></div><button type="button" class="dialog-close" id="closePdfPreview" aria-label="PDF 미리보기 닫기">×</button></header>
         <div class="pdf-preview-pages" id="pdfPreviewPages"></div>
@@ -98,13 +111,13 @@
 
     <aside class="quote-side">
       <section class="side-card file-actions-card" aria-label="견적서 파일 작업"><h2>견적서 작업</h2><p>새로 작성하거나 저장된 편집용 파일을 불러옵니다.</p><div class="file-action-group start-actions"><button class="tool-button" type="button" id="newQuote">새 견적서</button><label class="tool-button file-button"><span>견적 파일<br>불러오기</span><input id="importQuote" type="file" accept=".pressquote,application/json"></label></div><div class="file-action-group"><button class="tool-button primary" type="button" id="downloadPdf">PDF 다운로드</button><button class="tool-button" type="button" id="downloadQuote">편집용 파일 저장</button></div><button class="tool-button preview-action" type="button" id="previewPdf">PDF 미리보기</button></section>
-      <section class="side-card" id="linked-calculators"><h2>연동 계산기</h2><p>필요한 계산기만 별도 화면으로 열어 견적서에 반영합니다.</p><button class="calculator-link active" id="openMaterialCalculator" type="button"><span>금형소재 견적산출</span><small>열기 →</small></button><button class="calculator-link" type="button" disabled><span>설계비용 견적산출</span><small>준비중</small></button></section>
+      <section class="side-card" id="linked-calculators"><h2>연동 계산기</h2><p>필요한 계산기만 별도 화면으로 열어 견적서에 반영합니다.</p><button class="calculator-link active" id="openMaterialCalculator" type="button"><span>금형소재 견적산출</span><small>열기 →</small></button><button class="calculator-link active" id="openProcessingCalculator" type="button"><span>가공비용 견적산출</span><small>열기 →</small></button></section>
       <section class="side-card notice-card"><h2>사용 안내</h2><ul><li>본 도구는 견적서 서식과 계산 기능만 제공합니다.</li><li>단가와 금액은 작성자가 직접 입력하고 확인해야 합니다.</li><li>다운로드한 PDF에는 QDM 상호나 명판이 들어가지 않습니다.</li><li>중요 견적은 반드시 편집용 파일로 별도 백업하세요.</li></ul></section>
     </aside>
   </div>
 </main>
 
 <footer class="footer"><div class="wrap footer-inner"><div>프레스금형설계.박판성형해석.구조해석.제품설계</div><div>© QDM. All rights reserved.</div></div></footer>
-<script src="/assets/quotation.js?v=20260812-9"></script>
+<script src="/assets/quotation.js?v=20260812-11"></script>
 </body>
 </html>

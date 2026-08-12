@@ -2,13 +2,15 @@
   "use strict";
 
   const FORM_FORMAT = "qdm.press-die-quotation";
-  const FORM_VERSION = 1;
+  const FORM_VERSION = 2;
   const DB_NAME = "qdm-local-tools";
   const STORE_NAME = "press-die-quotes";
   const form = document.getElementById("quoteForm");
   const itemsBody = document.getElementById("itemsBody");
   const materialsBody = document.getElementById("materialsBody");
   const materialDialog = document.getElementById("materialDialog");
+  const processingBody = document.getElementById("processingBody");
+  const processingDialog = document.getElementById("processingDialog");
   const status = document.getElementById("saveStatus");
   const savedQuotes = document.getElementById("savedQuotes");
   let currentId = crypto.randomUUID();
@@ -16,12 +18,12 @@
 
   const DEFAULT_ITEMS = [
     ["금형 설계비", "공정검토 및 2D/3D 설계", 1, "식", 0],
-    ["금형 소재비", "플레이트 및 주요 금형강", 1, "식", 0],
+    ["금형 소재비", "[별첨] 금형소재 산출명세 참조", 1, "식", 0],
     ["표준부품비", "가이드·스프링·볼트 등", 1, "식", 0],
-    ["기계가공비", "밀링·선반·연삭", 1, "식", 0],
-    ["와이어·방전가공비", "와이어컷 및 방전", 1, "식", 0],
-    ["열처리·표면처리비", "열처리 및 코팅", 1, "식", 0],
-    ["조립·사상·트라이비", "조립, 사상 및 트라이", 1, "식", 0],
+    ["기계가공비", "[별첨] 가공비용 산출명세 참조", 1, "식", 0],
+    ["와이어·방전가공비", "[별첨] 가공비용 산출명세 참조", 1, "식", 0],
+    ["열처리·표면처리비", "[별첨] 가공비용 산출명세 참조", 1, "식", 0],
+    ["조립·TRY비", "조립 및 TRY", 1, "식", 0],
     ["검사·운송·기타", "측정, 검사, 포장 및 운송", 1, "식", 0]
   ];
   const DEFAULT_MATERIALS = [
@@ -35,6 +37,17 @@
     ["L-HOLDER", "S45C"]
   ];
   const MATERIAL_DENSITY = { S45C: 7.85, SKD11: 7.85, STD11: 7.85 };
+  const DEFAULT_PROCESSING = [
+    { group: "machining", name: "밀링", method: "hour", qty: 0, rate: 45000 },
+    { group: "machining", name: "드릴링", method: "hour", qty: 0, rate: 30000 },
+    { group: "machining", name: "선반", method: "hour", qty: 0, rate: 40000 },
+    { group: "machining", name: "성형연마", method: "hour", qty: 0, rate: 55000 },
+    { group: "machining", name: "콘타", method: "hour", qty: 0, rate: 30000 },
+    { group: "machining", name: "사상", method: "hour", qty: 0, rate: 40000 },
+    { group: "heat", name: "열처리", method: "weight", qty: 0, rate: 0 },
+    { group: "edm", name: "와이어 가공", method: "hour", qty: 0, rate: 60000 },
+    { group: "edm", name: "방전가공(EDM)", method: "hour", qty: 0, rate: 70000 }
+  ];
 
   function today(offsetDays = 0) {
     const date = new Date();
@@ -53,10 +66,11 @@
       sellerAddress: "", sellerPhone: "", sellerEmail: "", buyerCompany: "", buyerContact: "",
       quoteNumber: defaultQuoteNumber(), quoteDate: today(), validUntil: today(30), delivery: "발주 후 협의",
       projectName: "", dieType: "단발금형", dieQuantity: 1, productMaterial: "", pressSpec: "",
-      paymentTerms: "별도 협의", currency: "KRW", marginRate: 0, showMargin: true, vatMode: "excluded", includeMaterialPage: true,
+      paymentTerms: "별도 협의", currency: "KRW", marginRate: 0, showMargin: true, vatMode: "excluded", includeMaterialPage: true, includeProcessingPage: true,
       notes: "- 제품 또는 금형 사양 변경에 따른 추가 비용은 별도 협의합니다.\n- 납기와 트라이 범위는 발주 전 최종 협의합니다.",
       items: DEFAULT_ITEMS.map(([name, description, qty, unit, price]) => ({ id: crypto.randomUUID(), name, description, qty, unit, price })),
-      materials: DEFAULT_MATERIALS.map(([name, grade]) => ({ id: crypto.randomUUID(), name, grade, x: 0, y: 0, t: 0, rawX: 0, rawY: 0, rawT: 0, qty: 1, unitPrice: 0 }))
+      materials: DEFAULT_MATERIALS.map(([name, grade]) => ({ id: crypto.randomUUID(), name, grade, x: 0, y: 0, t: 0, rawX: 0, rawY: 0, rawT: 0, qty: 1, unitPrice: 0 })),
+      processing: DEFAULT_PROCESSING.map(item => ({ ...item, id: crypto.randomUUID() }))
     };
   }
 
@@ -181,6 +195,77 @@
     return total;
   }
 
+  const PROCESSING_GROUPS = { machining: "기계가공", heat: "열처리", edm: "와이어·방전" };
+  const PROCESSING_METHODS = {
+    hour: { label: "시간식", unit: "시간", placeholder: "원/시간" },
+    weight: { label: "중량식", unit: "kg", placeholder: "원/kg" },
+    lump: { label: "일괄식", unit: "식", placeholder: "금액/식" }
+  };
+
+  function processingRow(item = {}, index = 0) {
+    const tr = document.createElement("tr");
+    tr.dataset.id = item.id || crypto.randomUUID();
+    tr.dataset.group = item.group || "machining";
+    const method = PROCESSING_METHODS[item.method] ? item.method : "hour";
+    tr.innerHTML = `<td>${index + 1}</td><td><select data-processing-field="group" aria-label="가공 ${index + 1} 구분"><option value="machining">기계가공</option><option value="heat">열처리</option><option value="edm">와이어·방전</option></select></td><td><input class="processing-name" data-processing-field="name" value="${escapeHtml(item.name || "")}" aria-label="가공 ${index + 1} 항목"></td><td><select data-processing-field="method" aria-label="가공 ${index + 1} 계산 방식"><option value="hour">시간식</option><option value="weight">중량식</option><option value="lump">일괄식</option></select></td><td><input class="processing-qty" data-processing-field="qty" type="number" min="0" step="0.1" value="${number(item.qty) || ""}" aria-label="가공 ${index + 1} 투입량"></td><td><output class="processing-unit">${PROCESSING_METHODS[method].unit}</output></td><td><input class="processing-rate" data-processing-field="rate" type="number" min="0" step="1" value="${number(item.rate) || ""}" placeholder="${PROCESSING_METHODS[method].placeholder}" aria-label="가공 ${index + 1} 임률 또는 단가"></td><td><output class="processing-cost">0원</output></td><td><button class="remove-processing" type="button" aria-label="가공 항목 삭제">×</button></td>`;
+    tr.querySelector('[data-processing-field="group"]').value = item.group || "machining";
+    tr.querySelector('[data-processing-field="method"]').value = method;
+    const refreshRowStyle = () => {
+      tr.dataset.group = tr.querySelector('[data-processing-field="group"]').value;
+      const selectedMethod = tr.querySelector('[data-processing-field="method"]').value;
+      tr.querySelector(".processing-unit").value = PROCESSING_METHODS[selectedMethod].unit;
+      tr.querySelector(".processing-rate").placeholder = PROCESSING_METHODS[selectedMethod].placeholder;
+      if (selectedMethod === "lump" && !number(tr.querySelector(".processing-qty").value)) tr.querySelector(".processing-qty").value = 1;
+      if (tr.dataset.group === "heat" && selectedMethod === "hour" && !number(tr.querySelector(".processing-rate").value)) tr.querySelector(".processing-rate").value = 65000;
+    };
+    tr.querySelectorAll("input,select").forEach(control => control.addEventListener("input", () => { refreshRowStyle(); changed(); }));
+    tr.querySelector(".remove-processing").addEventListener("click", () => {
+      if (processingBody.children.length <= 1) return;
+      tr.remove();
+      renumberProcessing();
+      changed();
+    });
+    refreshRowStyle();
+    return tr;
+  }
+
+  function renumberProcessing() {
+    [...processingBody.rows].forEach((row, index) => { row.cells[0].textContent = index + 1; });
+  }
+
+  function readProcessingRow(row) {
+    const value = field => row.querySelector(`[data-processing-field="${field}"]`).value;
+    return { id: row.dataset.id, group: value("group"), name: value("name").trim(), method: value("method"), qty: number(value("qty")), rate: number(value("rate")) };
+  }
+
+  function readProcessing() {
+    return [...processingBody.rows].map(readProcessingRow);
+  }
+
+  function renderProcessing(processing) {
+    const source = processing?.length ? processing : DEFAULT_PROCESSING;
+    processingBody.replaceChildren(...source.map(processingRow));
+  }
+
+  function processingTotals(processing = readProcessing()) {
+    return processing.reduce((total, item) => {
+      const cost = Math.round(Math.max(number(item.qty), 0) * Math.max(number(item.rate), 0));
+      total[item.group] = (total[item.group] || 0) + cost;
+      total.all += cost;
+      return total;
+    }, { machining: 0, heat: 0, edm: 0, all: 0 });
+  }
+
+  function calculateProcessing(processing = readProcessing(), currency = form.elements.currency?.value || "KRW") {
+    const total = processingTotals(processing);
+    [...processingBody.rows].forEach((row, index) => { row.querySelector(".processing-cost").value = money(number(processing[index].qty) * number(processing[index].rate), currency); });
+    document.getElementById("machiningCostTotal").textContent = money(total.machining, currency);
+    document.getElementById("heatCostTotal").textContent = money(total.heat, currency);
+    document.getElementById("edmCostTotal").textContent = money(total.edm, currency);
+    document.getElementById("processingCostTotal").textContent = money(total.all, currency);
+    return total;
+  }
+
   function readData() {
     const data = Object.fromEntries(new FormData(form).entries());
     data.id = currentId;
@@ -188,8 +273,10 @@
     data.marginRate = number(data.marginRate);
     data.showMargin = form.elements.showMargin.checked;
     data.includeMaterialPage = form.elements.includeMaterialPage.checked;
+    data.includeProcessingPage = form.elements.includeProcessingPage.checked;
     data.items = readItems();
     data.materials = readMaterials();
+    data.processing = readProcessing();
     data.updatedAt = new Date().toISOString();
     return data;
   }
@@ -198,7 +285,14 @@
     const defaults = blankData();
     const hasItems = Array.isArray(data.items) && data.items.some(item => String(item.name || item.description || "").trim() || number(item.price));
     const hasMaterials = Array.isArray(data.materials) && data.materials.some(item => String(item.name || item.grade || "").trim() || number(item.x) || number(item.y) || number(item.t));
-    data = { ...defaults, ...data, items: hasItems ? data.items : defaults.items, materials: hasMaterials ? data.materials : defaults.materials };
+    const hasProcessing = Array.isArray(data.processing) && data.processing.length;
+    data = { ...defaults, ...data, items: hasItems ? data.items : defaults.items, materials: hasMaterials ? data.materials : defaults.materials, processing: hasProcessing ? data.processing : defaults.processing };
+    data.items = data.items.map(item => {
+      if (item.name === "조립·사상·트라이비") return { ...item, name: "조립·TRY비", description: "조립 및 TRY" };
+      if (item.name === "금형 소재비" && !String(item.description || "").includes("[별첨]")) return { ...item, description: "[별첨] 금형소재 산출명세 참조" };
+      if (["기계가공비", "와이어·방전가공비", "열처리·표면처리비"].includes(item.name) && !String(item.description || "").includes("[별첨]")) return { ...item, description: "[별첨] 가공비용 산출명세 참조" };
+      return item;
+    });
     currentId = data.id || crypto.randomUUID();
     [...form.elements].forEach(control => {
       if (!control.name || control.type === "file") return;
@@ -207,6 +301,7 @@
     });
     renderItems(data.items);
     renderMaterials(data.materials);
+    renderProcessing(data.processing);
     calculate();
   }
 
@@ -231,6 +326,7 @@
     const data = readData();
     const result = totals(data);
     calculateMaterials(data.materials, data.currency);
+    calculateProcessing(data.processing, data.currency);
     [...itemsBody.rows].forEach((row, index) => row.querySelector(".item-total").value = money(number(data.items[index].qty) * number(data.items[index].price), data.currency));
     document.getElementById("itemsSubtotal").textContent = money(result.itemSubtotal, data.currency);
     document.getElementById("marginAmount").textContent = money(result.margin, data.currency);
@@ -325,7 +421,7 @@
     target.querySelector('[data-field="qty"]').value = 1;
     target.querySelector('[data-field="unit"]').value = "식";
     target.querySelector('[data-field="price"]').value = materialTotal.cost;
-    target.querySelector('[data-field="description"]').value = `금형소재 산출명세 ${data.materials.filter(item => materialWeight(item) > 0).length}종 합계`;
+    target.querySelector('[data-field="description"]').value = `[별첨] 금형소재 산출명세 ${data.materials.filter(item => materialWeight(item) > 0).length}종 합계`;
     changed();
     setStatus(`소재비 ${money(materialTotal.cost, data.currency)}을 견적 항목에 반영했습니다.`, "success");
     materialDialog.close();
@@ -335,9 +431,43 @@
     if (!materialDialog.open) materialDialog.showModal();
   }
 
+  function applyProcessingTotal() {
+    const data = readData();
+    const total = processingTotals(data.processing);
+    const targets = {
+      machining: [...itemsBody.rows].find(row => row.querySelector('[data-field="name"]').value === "기계가공비"),
+      heat: [...itemsBody.rows].find(row => row.querySelector('[data-field="name"]').value.includes("열처리")),
+      edm: [...itemsBody.rows].find(row => row.querySelector('[data-field="name"]').value.includes("와이어"))
+    };
+    if (Object.values(targets).some(target => !target)) {
+      setStatus("견적 항목에서 기계가공비·열처리비·와이어가공비 항목을 찾을 수 없습니다.", "error");
+      return;
+    }
+    Object.entries(targets).forEach(([group, target]) => {
+      target.querySelector('[data-field="qty"]').value = 1;
+      target.querySelector('[data-field="unit"]').value = "식";
+      target.querySelector('[data-field="price"]').value = total[group];
+      target.querySelector('[data-field="description"]').value = "[별첨] 가공비용 산출명세 참조";
+    });
+    changed();
+    setStatus(`가공비 합계 ${money(total.all, data.currency)}을 견적 항목별로 반영했습니다.`, "success");
+    processingDialog.close();
+  }
+
+  function openProcessingDialog() {
+    if (!processingDialog.open) processingDialog.showModal();
+  }
+
   function clearMaterialQuery() {
     const url = new URL(location.href);
     if (url.searchParams.get("tool") !== "material") return;
+    url.searchParams.delete("tool");
+    history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  }
+
+  function clearProcessingQuery() {
+    const url = new URL(location.href);
+    if (url.searchParams.get("tool") !== "processing") return;
     url.searchParams.delete("tool");
     history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
   }
@@ -412,9 +542,12 @@
     return { canvas, ctx, left, right, width, colors, font, line, box, footer };
   }
 
-  function drawPdfCanvas(data) {
+  function pdfPageCount(data) {
+    return 1 + (data.includeMaterialPage ? 1 : 0) + (data.includeProcessingPage ? 1 : 0);
+  }
+
+  function drawPdfCanvas(data, pageCount = pdfPageCount(data)) {
     const total = totals(data);
-    const pageCount = data.includeMaterialPage ? 2 : 1;
     const { canvas, ctx, left, right, width, colors, font, line, box, footer } = createQuotationPage(data, {
       pageNumber: 1,
       pageCount,
@@ -470,7 +603,8 @@
       box(left, y, width, rowH, index % 2 ? colors.wash : colors.white, colors.line);
       columns.slice(1, -1).forEach(x => line(x, y, x, y + rowH, colors.line));
       ctx.textAlign = "left"; font(25, 700); ctx.fillStyle = colors.ink; wrapCanvasText(ctx, item.name || "-", columns[0] + 18, y + 38, columns[1] - columns[0] - 36, 29, 2);
-      font(23, 400); ctx.fillStyle = colors.text; wrapCanvasText(ctx, item.description || "-", columns[1] + 18, y + 38, columns[2] - columns[1] - 36, 29, 2);
+      const isAttachment = String(item.description || "").includes("[별첨]");
+      font(23, isAttachment ? 800 : 400); ctx.fillStyle = isAttachment ? colors.blue : colors.text; wrapCanvasText(ctx, item.description || "-", columns[1] + 18, y + 38, columns[2] - columns[1] - 36, 29, 2);
       ctx.textAlign = "center"; font(25, 500); ctx.fillStyle = colors.ink; ctx.fillText(String(item.qty || 0), (columns[2] + columns[3]) / 2, y + rowH / 2); ctx.fillText(item.unit || "식", (columns[3] + columns[4]) / 2, y + rowH / 2);
       ctx.textAlign = "right"; font(28, 700); ctx.fillText(money(number(item.qty) * number(item.price), data.currency), columns[5] - 18, y + rowH / 2);
     });
@@ -488,14 +622,14 @@
     return canvas;
   }
 
-  function drawMaterialPdfCanvas(data) {
+  function drawMaterialPdfCanvas(data, pageNumber = 2, pageCount = pdfPageCount(data)) {
     const materials = data.materials || [];
     const materialTotal = materialTotals(materials);
     const { canvas, ctx, left, right, width, colors, font, line, box, footer } = createQuotationPage(data, {
-      pageNumber: 2,
-      pageCount: 2,
+      pageNumber,
+      pageCount,
       kicker: "DETAIL / MATERIAL COST",
-      title: "금형소재 견적 산출 명세서",
+      title: "별첨 · 금형소재 산출 명세서",
       subtitle: "PRESS DIE MATERIAL COST DETAIL",
       titleSize: 72
     });
@@ -534,6 +668,51 @@
     const tableEnd = tableY + headerH + Math.max(Math.min(materials.length, 10), 1) * rowH;
     box(left, tableEnd + 30, width, 138, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(left, tableEnd + 30, 9, 138); ctx.textAlign = "left"; font(28, 800); ctx.fillStyle = colors.navy; ctx.fillText("소재비 합계", left + 30, tableEnd + 99); ctx.textAlign = "right"; font(41, 800); ctx.fillText(money(materialTotal.cost, data.currency), right - 30, tableEnd + 99);
     const noteY = tableEnd + 220; ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.navy; ctx.fillText("산출 기준", left, noteY); font(21, 400); ctx.fillStyle = colors.muted; ctx.fillText("- 중량 = 추천 원소재 폭 × 길이 × 두께 × 수량 × 강재 밀도(7.85 g/cm³)", left, noteY + 44); ctx.fillText("- 추천 원소재는 참고 규격이며, 실제 견적·발주 시 공급사의 보유 규격과 가공여유를 확인해야 합니다.", left, noteY + 82);
+    footer();
+    return canvas;
+  }
+
+  function drawProcessingPdfCanvas(data, pageNumber, pageCount = pdfPageCount(data)) {
+    const processing = data.processing || [];
+    const total = processingTotals(processing);
+    const { canvas, ctx, left, right, width, colors, font, line, box, footer } = createQuotationPage(data, {
+      pageNumber,
+      pageCount,
+      kicker: "DETAIL / PROCESSING COST",
+      title: "별첨 · 가공비용 산출 명세서",
+      subtitle: "PRESS DIE PROCESSING COST DETAIL",
+      titleSize: 68
+    });
+    const projectY = 470;
+    box(left, projectY, width, 112, colors.white);
+    ctx.textAlign = "left"; font(21, 800); ctx.fillStyle = colors.blue; ctx.fillText("PROJECT / 금형명", left + 26, projectY + 34);
+    font(31, 800); ctx.fillStyle = colors.navy; ctx.fillText(data.projectName || "금형명 미입력", left + 26, projectY + 78);
+    ctx.textAlign = "right"; font(22, 600); ctx.fillStyle = colors.text; ctx.fillText(`${data.sellerCompany || "작성 회사"}  >  ${data.buyerCompany || "납품 회사"}`, right - 26, projectY + 58);
+
+    const cardY = 615, gap = 18, cardW = (width - gap * 3) / 4;
+    const cards = [["기계가공비", total.machining], ["열처리비", total.heat], ["와이어·방전비", total.edm], ["가공비 합계", total.all]];
+    cards.forEach(([label, value], index) => { const x = left + index * (cardW + gap); box(x, cardY, cardW, 142, index === 3 ? colors.pale : colors.white, colors.line); if (index === 3) { ctx.fillStyle = colors.blue; ctx.fillRect(x, cardY, 8, 142); } ctx.textAlign = "left"; font(19, 700); ctx.fillStyle = colors.muted; ctx.fillText(label, x + 22, cardY + 39); font(30, 800); ctx.fillStyle = index === 3 ? colors.navy : colors.ink; ctx.fillText(money(value, data.currency), x + 22, cardY + 95); });
+
+    const tableY = 800, headerH = 88, rowH = 150;
+    const columns = [left, left + 80, left + 350, left + 760, left + 1080, left + 1330, left + 1530, left + 1800, right];
+    const headers = ["NO.", "구분", "가공 항목", "계산 방식", "투입량", "단위", "임률·단가", "금액"];
+    box(left, tableY, width, headerH, colors.pale, colors.line); ctx.fillStyle = colors.blue; ctx.fillRect(left, tableY, width, 6);
+    ctx.textAlign = "center"; font(23, 800); ctx.fillStyle = colors.navy; headers.forEach((header, index) => ctx.fillText(header, (columns[index] + columns[index + 1]) / 2, tableY + headerH / 2));
+    processing.slice(0, 12).forEach((item, index) => {
+      const y = tableY + headerH + index * rowH;
+      const groupFill = item.group === "heat" ? "#fff8e8" : item.group === "edm" ? "#f3f0fb" : (index % 2 ? colors.wash : colors.white);
+      box(left, y, width, rowH, groupFill, colors.line); columns.slice(1, -1).forEach(x => line(x, y, x, y + rowH, colors.line));
+      const method = PROCESSING_METHODS[item.method] || PROCESSING_METHODS.hour;
+      const cost = Math.round(number(item.qty) * number(item.rate));
+      ctx.textAlign = "center"; font(23, 700); ctx.fillStyle = colors.muted; ctx.fillText(String(index + 1).padStart(2, "0"), (columns[0] + columns[1]) / 2, y + rowH / 2);
+      font(22, 800); ctx.fillStyle = item.group === "heat" ? "#9a5a00" : item.group === "edm" ? "#65458b" : colors.blue; wrapCanvasText(ctx, PROCESSING_GROUPS[item.group] || "기계가공", (columns[1] + columns[2]) / 2, y + rowH / 2, columns[2] - columns[1] - 20, 26, 2);
+      ctx.textAlign = "left"; font(25, 800); ctx.fillStyle = colors.ink; wrapCanvasText(ctx, item.name || "-", columns[2] + 18, y + rowH / 2, columns[3] - columns[2] - 36, 29, 2);
+      ctx.textAlign = "center"; font(23, 500); ctx.fillStyle = colors.text; ctx.fillText(method.label, (columns[3] + columns[4]) / 2, y + rowH / 2); ctx.fillText(new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 1 }).format(number(item.qty)), (columns[4] + columns[5]) / 2, y + rowH / 2); ctx.fillText(method.unit, (columns[5] + columns[6]) / 2, y + rowH / 2);
+      ctx.textAlign = "right"; ctx.fillText(new Intl.NumberFormat("ko-KR").format(number(item.rate)), columns[7] - 16, y + rowH / 2); font(25, 800); ctx.fillStyle = colors.ink; ctx.fillText(money(cost, data.currency), columns[8] - 16, y + rowH / 2);
+    });
+    const tableEnd = tableY + headerH + Math.max(Math.min(processing.length, 12), 1) * rowH;
+    box(left, tableEnd + 28, width, 132, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(left, tableEnd + 28, 9, 132); ctx.textAlign = "left"; font(28, 800); ctx.fillStyle = colors.navy; ctx.fillText("가공비 합계", left + 30, tableEnd + 94); ctx.textAlign = "right"; font(40, 800); ctx.fillText(money(total.all, data.currency), right - 30, tableEnd + 94);
+    const noteY = tableEnd + 210; ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.navy; ctx.fillText("산출 기준", left, noteY); font(21, 400); ctx.fillStyle = colors.muted; ctx.fillText("- 기계가공·와이어·방전: 투입시간 × 시간당 임률 / 일괄식: 수량 × 금액", left, noteY + 42); ctx.fillText("- 열처리 권장식: 처리중량(kg) × kg당 단가. 재질·경도·로트에 맞는 업체 단가를 적용합니다.", left, noteY + 80);
     footer();
     return canvas;
   }
@@ -586,8 +765,11 @@
     const button = document.getElementById("downloadPdf");
     button.disabled = true; button.textContent = "PDF 생성 중...";
     try {
-      const pages = [drawPdfCanvas(data)];
-      if (data.includeMaterialPage) pages.push(drawMaterialPdfCanvas(data));
+      const pageCount = pdfPageCount(data);
+      const pages = [drawPdfCanvas(data, pageCount)];
+      let pageNumber = 2;
+      if (data.includeMaterialPage) pages.push(drawMaterialPdfCanvas(data, pageNumber++, pageCount));
+      if (data.includeProcessingPage) pages.push(drawProcessingPdfCanvas(data, pageNumber, pageCount));
       const pdf = await canvasesToPdf(pages);
       downloadBlob(pdf, `${safeFilename(data.quoteNumber, "press-die-quotation")}.pdf`);
       await saveLocal(false);
@@ -602,8 +784,11 @@
   function previewPdf() {
     const data = readData();
     const dialog = document.getElementById("pdfPreviewDialog");
-    const pages = [drawPdfCanvas(data)];
-    if (data.includeMaterialPage) pages.push(drawMaterialPdfCanvas(data));
+    const pageCount = pdfPageCount(data);
+    const pages = [drawPdfCanvas(data, pageCount)];
+    let pageNumber = 2;
+    if (data.includeMaterialPage) pages.push(drawMaterialPdfCanvas(data, pageNumber++, pageCount));
+    if (data.includeProcessingPage) pages.push(drawProcessingPdfCanvas(data, pageNumber, pageCount));
     document.getElementById("pdfPreviewPages").replaceChildren(...pages.map((canvas, index) => {
       const figure = document.createElement("figure");
       figure.className = "pdf-preview-page";
@@ -611,7 +796,7 @@
       caption.textContent = `${index + 1}페이지 / ${pages.length}페이지`;
       const image = document.createElement("img");
       image.src = canvas.toDataURL("image/jpeg", 0.9);
-      image.alt = index === 0 ? "프레스금형 견적서 미리보기" : "금형소재 견적 산출 명세서 미리보기";
+      image.alt = index === 0 ? "프레스금형 견적서 미리보기" : `${caption.textContent} 별첨 명세서 미리보기`;
       figure.append(caption, image);
       return figure;
     }));
@@ -624,13 +809,22 @@
   document.getElementById("addItem").addEventListener("click", () => { if (itemsBody.children.length >= 10) { setStatus("PDF 한 페이지 출력을 위해 견적 항목은 최대 10개까지 지원합니다.", "error"); return; } itemsBody.append(itemRow({ qty: 1, unit: "식", price: 0 })); changed(); });
   document.getElementById("addMaterial").addEventListener("click", () => { if (materialsBody.children.length >= 10) { setStatus("PDF 한 페이지 출력을 위해 소재 항목은 최대 10개까지 지원합니다.", "error"); return; } materialsBody.append(materialRow({ qty: 1 }, materialsBody.children.length)); changed(); });
   document.getElementById("restoreDefaultMaterials").addEventListener("click", () => { if (!confirm("현재 소재 항목을 기본 8개 항목으로 바꾸시겠습니까?")) return; renderMaterials(DEFAULT_MATERIALS.map(([name, grade]) => ({ name, grade, qty: 1 }))); changed(); });
+  document.getElementById("addProcessing").addEventListener("click", () => { if (processingBody.children.length >= 12) { setStatus("PDF 한 페이지 출력을 위해 가공 항목은 최대 12개까지 지원합니다.", "error"); return; } processingBody.append(processingRow({ group: "machining", name: "", method: "hour", qty: 0, rate: 0 }, processingBody.children.length)); changed(); });
+  document.getElementById("restoreDefaultProcessing").addEventListener("click", () => { if (!confirm("현재 가공 항목과 임률을 권장 초기값으로 복원하시겠습니까?")) return; renderProcessing(DEFAULT_PROCESSING); changed(); });
   document.getElementById("applyMaterialTotal").addEventListener("click", applyMaterialTotal);
+  document.getElementById("applyProcessingTotal").addEventListener("click", applyProcessingTotal);
   document.getElementById("openMaterialCalculator").addEventListener("click", openMaterialDialog);
+  document.getElementById("openProcessingCalculator").addEventListener("click", openProcessingDialog);
   document.getElementById("closeMaterialDialog").addEventListener("click", () => materialDialog.close());
   document.getElementById("cancelMaterialDialog").addEventListener("click", () => materialDialog.close());
   materialDialog.addEventListener("click", event => { if (event.target === materialDialog) materialDialog.close(); });
   materialDialog.addEventListener("close", clearMaterialQuery);
+  document.getElementById("closeProcessingDialog").addEventListener("click", () => processingDialog.close());
+  document.getElementById("cancelProcessingDialog").addEventListener("click", () => processingDialog.close());
+  processingDialog.addEventListener("click", event => { if (event.target === processingDialog) processingDialog.close(); });
+  processingDialog.addEventListener("close", clearProcessingQuery);
   document.querySelectorAll('a[href*="?tool=material"]').forEach(link => link.addEventListener("click", event => { if (new URL(link.href).pathname === location.pathname) { event.preventDefault(); openMaterialDialog(); } }));
+  document.querySelectorAll('a[href*="?tool=processing"]').forEach(link => link.addEventListener("click", event => { if (new URL(link.href).pathname === location.pathname) { event.preventDefault(); openProcessingDialog(); } }));
   document.getElementById("downloadQuote").addEventListener("click", exportEditable);
   document.getElementById("downloadPdf").addEventListener("click", exportPdf);
   document.getElementById("previewPdf").addEventListener("click", previewPdf);
@@ -648,6 +842,7 @@
         await refreshSavedQuotes(list[0].id);
         setStatus("마지막으로 작성한 로컬 견적을 불러왔습니다.", "success");
         if (new URLSearchParams(location.search).get("tool") === "material") openMaterialDialog();
+        if (new URLSearchParams(location.search).get("tool") === "processing") openProcessingDialog();
         return;
       }
     } catch { /* 저장소가 차단된 환경에서는 새 견적으로 시작한다. */ }
@@ -657,6 +852,7 @@
     await saveLocal(false);
     await refreshSavedQuotes(initial.id);
     if (new URLSearchParams(location.search).get("tool") === "material") openMaterialDialog();
+    if (new URLSearchParams(location.search).get("tool") === "processing") openProcessingDialog();
   }
 
   initialize();
