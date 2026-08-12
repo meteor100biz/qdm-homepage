@@ -64,7 +64,7 @@
       id: crypto.randomUUID(),
       sellerCompany: "", sellerRepresentative: "", sellerBusinessNo: "", sellerContact: "",
       sellerAddress: "", sellerPhone: "", sellerEmail: "", buyerCompany: "", buyerContact: "",
-      quoteNumber: defaultQuoteNumber(), quoteDate: today(), validUntil: today(30), delivery: "발주 후 협의",
+      quoteNumber: defaultQuoteNumber(), quoteDate: today(), validUntil: "작성일로부터 30일", delivery: "발주 후 협의",
       projectName: "", dieType: "단발금형", dieQuantity: 1, productMaterial: "", pressSpec: "",
       paymentTerms: "별도 협의", currency: "KRW", marginRate: 0, showMargin: true, vatMode: "excluded", includeMaterialPage: true, includeProcessingPage: true,
       notes: "- 제품 또는 금형 사양 변경에 따른 추가 비용은 별도 협의합니다.\n- 납기와 트라이 범위는 발주 전 최종 협의합니다.",
@@ -316,6 +316,7 @@
       if (["기계가공비", "와이어·방전가공비", "열처리·표면처리비"].includes(item.name) && !String(item.description || "").includes("[별첨]")) return { ...item, description: "[별첨] 가공비용 산출명세 참조" };
       return item;
     });
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(data.validUntil || ""))) data.validUntil = "작성일로부터 30일";
     const standardPartIndex = data.items.findIndex(item => item.name === "표준부품비");
     if (standardPartIndex >= 0) {
       const [standardPart] = data.items.splice(standardPartIndex, 1);
@@ -514,7 +515,7 @@
     }
   }
 
-  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
+  function canvasTextLines(ctx, text, maxWidth, maxLines = 3) {
     const paragraphs = String(text || "-").split(/\r?\n/);
     const lines = [];
     for (const paragraph of paragraphs) {
@@ -526,8 +527,22 @@
       }
       lines.push(line || " ");
     }
-    lines.slice(0, maxLines).forEach((line, index) => ctx.fillText(index === maxLines - 1 && lines.length > maxLines ? `${line.slice(0, -1)}…` : line, x, y + index * lineHeight));
-    return Math.min(lines.length, maxLines);
+    const visible = lines.slice(0, maxLines);
+    if (lines.length > maxLines) visible[maxLines - 1] = `${visible[maxLines - 1].slice(0, -1)}…`;
+    return visible;
+  }
+
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
+    const lines = canvasTextLines(ctx, text, maxWidth, maxLines);
+    lines.forEach((line, index) => ctx.fillText(line, x, y + index * lineHeight));
+    return lines.length;
+  }
+
+  function centeredCanvasText(ctx, text, x, centerY, maxWidth, lineHeight, maxLines = 3) {
+    const lines = canvasTextLines(ctx, text, maxWidth, maxLines);
+    const firstY = centerY - (lines.length - 1) * lineHeight / 2;
+    lines.forEach((line, index) => ctx.fillText(line, x, firstY + index * lineHeight));
+    return lines.length;
   }
 
   function createQuotationPage(data, { pageNumber, pageCount, kicker, title, subtitle, titleSize = 88 }) {
@@ -549,26 +564,23 @@
     };
     ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.textBaseline = "middle";
-    const font = (size, weight = 400) => {
-      const printSize = size <= 40 ? Math.round(size * 1.7) : size;
-      ctx.font = `${weight} ${printSize}px Arial, "Malgun Gothic", "Noto Sans KR", sans-serif`;
-    };
+    const font = (size, weight = 400) => { ctx.font = `${weight} ${size}px Arial, "Malgun Gothic", "Noto Sans KR", sans-serif`; };
     const line = (x1, y1, x2, y2, color = colors.line, thickness = 2) => { ctx.strokeStyle = color; ctx.lineWidth = thickness; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); };
     const box = (x, y, w, h, fill = null, stroke = colors.line, thickness = 2) => { if (fill) { ctx.fillStyle = fill; ctx.fillRect(x, y, w, h); } ctx.strokeStyle = stroke; ctx.lineWidth = thickness; ctx.strokeRect(x, y, w, h); };
     const footer = () => {
       line(left, 3260, right, 3260, colors.line, 2);
-      font(21, 600); ctx.fillStyle = colors.muted; ctx.textAlign = "left"; ctx.fillText(data.sellerCompany || "작성 회사명", left, 3310);
+      font(28, 600); ctx.fillStyle = colors.muted; ctx.textAlign = "left"; ctx.fillText(data.sellerCompany || "작성 회사명", left, 3310);
       ctx.textAlign = "center"; ctx.fillText(data.quoteNumber || "-", 1240, 3310);
       ctx.textAlign = "right"; ctx.fillText(`${pageNumber} / ${pageCount}`, right, 3310);
     };
 
     ctx.fillStyle = colors.blue; ctx.fillRect(left, 132, 12, 238);
-    ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.blue; ctx.fillText(kicker, left + 46, 152);
+    ctx.textAlign = "left"; font(28, 800); ctx.fillStyle = colors.blue; ctx.fillText(kicker, left + 46, 152);
     font(titleSize, 800); ctx.fillStyle = colors.navy; ctx.fillText(title, left + 46, 245);
-    font(25, 700); ctx.fillStyle = colors.muted; ctx.fillText(subtitle, left + 49, 332);
+    font(30, 700); ctx.fillStyle = colors.muted; ctx.fillText(subtitle, left + 49, 332);
     ctx.textAlign = "right"; font(136, 800); ctx.fillStyle = "#edf3f8"; ctx.fillText(String(pageNumber).padStart(2, "0"), right, 198);
-    font(23, 700); ctx.fillStyle = colors.text; ctx.fillText(`NO. ${data.quoteNumber || "-"}`, right, 315);
-    font(22, 500); ctx.fillStyle = colors.muted; ctx.fillText(data.quoteDate || "-", right, 356);
+    font(28, 700); ctx.fillStyle = colors.text; ctx.fillText(`NO. ${data.quoteNumber || "-"}`, right, 315);
+    font(26, 500); ctx.fillStyle = colors.muted; ctx.fillText(data.quoteDate || "-", right, 356);
     line(left, 420, right, 420, colors.navy, 5);
 
     return { canvas, ctx, left, right, width, colors, font, line, box, footer };
@@ -591,15 +603,15 @@
     const infoCard = (label, title, details, x, y, w, h) => {
       box(x, y, w, h, colors.white);
       ctx.fillStyle = colors.pale; ctx.fillRect(x, y, w, 44);
-      ctx.textAlign = "left"; font(21, 800); ctx.fillStyle = colors.blue; ctx.fillText(label, x + 24, y + 23);
-      font(36, 800); ctx.fillStyle = colors.navy; ctx.fillText(title || "-", x + 24, y + 88);
-      font(22, 500); ctx.fillStyle = colors.text;
-      details.slice(0, 2).forEach((detail, index) => wrapCanvasText(ctx, detail || "-", x + 24, y + 131 + index * 38, w - 48, 38, 1));
+      ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.blue; ctx.fillText(label, x + 24, y + 23);
+      font(40, 800); ctx.fillStyle = colors.navy; centeredCanvasText(ctx, title || "-", x + 24, y + 88, w - 48, 42, 1);
+      font(27, 500); ctx.fillStyle = colors.text;
+      details.slice(0, 2).forEach((detail, index) => centeredCanvasText(ctx, detail || "-", x + 24, y + 135 + index * 35, w - 48, 34, 1));
     };
     const field = (label, value, x, y, w, h) => {
       box(x, y, w, h, colors.white);
-      ctx.textAlign = "left"; font(20, 700); ctx.fillStyle = colors.muted; ctx.fillText(label, x + 20, y + 23);
-      font(27, 700); ctx.fillStyle = colors.ink; wrapCanvasText(ctx, value || "-", x + 20, y + 58, w - 40, 42, 1);
+      ctx.textAlign = "left"; font(23, 700); ctx.fillStyle = colors.muted; ctx.fillText(label, x + 20, y + 21);
+      font(33, 700); ctx.fillStyle = colors.ink; centeredCanvasText(ctx, value || "-", x + 20, y + 57, w - 40, 38, 1);
     };
 
     const cardY = 470, cardGap = 24, cardW = (width - cardGap) / 2;
@@ -611,8 +623,8 @@
     const amountY = 705;
     box(left, amountY, width, 142, "#f7fafc", colors.line);
     ctx.fillStyle = colors.blue; ctx.fillRect(left, amountY, 10, 142);
-    ctx.textAlign = "left"; font(21, 800); ctx.fillStyle = colors.muted; ctx.fillText("PROPOSED TOTAL / 제안 금액", left + 34, amountY + 40);
-    font(29, 700); ctx.fillStyle = colors.ink; ctx.fillText(data.projectName || "프레스금형 제작", left + 34, amountY + 94);
+    ctx.textAlign = "left"; font(25, 800); ctx.fillStyle = colors.muted; ctx.fillText("PROPOSED TOTAL / 제안 금액", left + 34, amountY + 38);
+    font(34, 700); ctx.fillStyle = colors.ink; ctx.fillText(data.projectName || "프레스금형 제작", left + 34, amountY + 96);
     ctx.textAlign = "right"; font(46, 800); ctx.fillStyle = colors.navy; ctx.fillText(money(total.grand, data.currency), right - 28, amountY + 73);
 
     const fieldY = 877, fieldGap = 20, fieldW = (width - fieldGap * 2) / 3, fieldH = 80;
@@ -627,29 +639,29 @@
     box(left, tableY, width, headerH, colors.pale, colors.line);
     ctx.fillStyle = colors.blue; ctx.fillRect(left, tableY, width, 6);
     const headers = ["항목", "내용·사양", "수량", "단위", "금액"];
-    ctx.textAlign = "center"; font(27, 800); ctx.fillStyle = colors.navy;
+    ctx.textAlign = "center"; font(36, 800); ctx.fillStyle = colors.navy;
     headers.forEach((header, i) => ctx.fillText(header, (columns[i] + columns[i + 1]) / 2, tableY + headerH / 2));
     const visibleItems = data.items.filter(item => item.name || item.description || item.price).slice(0, 10);
     visibleItems.forEach((item, index) => {
       const y = tableY + headerH + index * rowH;
       box(left, y, width, rowH, index % 2 ? colors.wash : colors.white, colors.line);
       columns.slice(1, -1).forEach(x => line(x, y, x, y + rowH, colors.line));
-      ctx.textAlign = "left"; font(25, 700); ctx.fillStyle = colors.ink; wrapCanvasText(ctx, item.name || "-", columns[0] + 18, y + 38, columns[1] - columns[0] - 36, 45, 2);
+      ctx.textAlign = "left"; font(34, 700); ctx.fillStyle = colors.ink; centeredCanvasText(ctx, item.name || "-", columns[0] + 18, y + rowH / 2, columns[1] - columns[0] - 36, 40, 2);
       const isAttachment = String(item.description || "").includes("[별첨]");
-      font(23, isAttachment ? 800 : 400); ctx.fillStyle = isAttachment ? colors.blue : colors.text; wrapCanvasText(ctx, item.description || "-", columns[1] + 18, y + 38, columns[2] - columns[1] - 36, 43, 2);
-      ctx.textAlign = "center"; font(25, 500); ctx.fillStyle = colors.ink; ctx.fillText(String(item.qty || 0), (columns[2] + columns[3]) / 2, y + rowH / 2); ctx.fillText(item.unit || "식", (columns[3] + columns[4]) / 2, y + rowH / 2);
-      ctx.textAlign = "right"; font(28, 700); ctx.fillText(money(number(item.qty) * number(item.price), data.currency), columns[5] - 18, y + rowH / 2);
+      font(32, isAttachment ? 800 : 400); ctx.fillStyle = isAttachment ? colors.blue : colors.text; centeredCanvasText(ctx, item.description || "-", columns[1] + 18, y + rowH / 2, columns[2] - columns[1] - 36, 39, 2);
+      ctx.textAlign = "center"; font(32, 500); ctx.fillStyle = colors.ink; ctx.fillText(String(item.qty || 0), (columns[2] + columns[3]) / 2, y + rowH / 2); ctx.fillText(item.unit || "식", (columns[3] + columns[4]) / 2, y + rowH / 2);
+      ctx.textAlign = "right"; font(36, 700); ctx.fillText(money(number(item.qty) * number(item.price), data.currency), columns[5] - 18, y + rowH / 2);
     });
     const itemEndY = tableY + headerH + Math.max(visibleItems.length, 1) * rowH;
     const summaryX = 1320, summaryW = right - summaryX, summaryRowH = 64;
     const summary = [["항목 합계", total.itemSubtotal], ...(number(data.marginRate) > 0 && data.showMargin ? [[`일반관리비·이윤 (${data.marginRate}%)`, total.margin]] : []), ["공급가액", total.supply], [data.vatMode === "none" ? "부가세" : "부가세 (10%)", total.vat]];
     let summaryY = itemEndY + 24;
-    summary.forEach(([label, value]) => { box(summaryX, summaryY, summaryW, summaryRowH, colors.white); ctx.textAlign = "left"; font(24, 600); ctx.fillStyle = colors.text; ctx.fillText(label, summaryX + 20, summaryY + summaryRowH / 2); ctx.textAlign = "right"; font(27, 700); ctx.fillStyle = colors.ink; ctx.fillText(money(value, data.currency), right - 18, summaryY + summaryRowH / 2); summaryY += summaryRowH; });
-    box(summaryX, summaryY, summaryW, 94, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(summaryX, summaryY, 9, 94); ctx.textAlign = "left"; font(29, 800); ctx.fillStyle = colors.navy; ctx.fillText("총 견적금액", summaryX + 28, summaryY + 47); ctx.textAlign = "right"; font(38, 800); ctx.fillText(money(total.grand, data.currency), right - 20, summaryY + 47);
+    summary.forEach(([label, value]) => { box(summaryX, summaryY, summaryW, summaryRowH, colors.white); ctx.textAlign = "left"; font(29, 600); ctx.fillStyle = colors.text; ctx.fillText(label, summaryX + 20, summaryY + summaryRowH / 2); ctx.textAlign = "right"; font(33, 700); ctx.fillStyle = colors.ink; ctx.fillText(money(value, data.currency), right - 18, summaryY + summaryRowH / 2); summaryY += summaryRowH; });
+    box(summaryX, summaryY, summaryW, 94, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(summaryX, summaryY, 9, 94); ctx.textAlign = "left"; font(35, 800); ctx.fillStyle = colors.navy; ctx.fillText("총 견적금액", summaryX + 28, summaryY + 47); ctx.textAlign = "right"; font(46, 800); ctx.fillText(money(total.grand, data.currency), right - 20, summaryY + 47);
 
     const notesY = Math.max(summaryY + 130, itemEndY + 405);
-    ctx.textAlign = "left"; font(28, 800); ctx.fillStyle = colors.navy; ctx.fillText("견적 조건 및 특기사항", left, notesY);
-    box(left, notesY + 42, width, 300, colors.wash); font(24, 400); ctx.fillStyle = colors.text; wrapCanvasText(ctx, data.notes || "-", left + 26, notesY + 82, width - 52, 48, 5);
+    ctx.textAlign = "left"; font(34, 800); ctx.fillStyle = colors.navy; ctx.fillText("견적 조건 및 특기사항", left, notesY);
+    box(left, notesY + 42, width, 300, colors.wash); font(30, 400); ctx.fillStyle = colors.text; wrapCanvasText(ctx, data.notes || "-", left + 26, notesY + 86, width - 52, 46, 5);
     footer();
     return canvas;
   }
@@ -668,38 +680,38 @@
 
     const projectY = 470;
     box(left, projectY, width, 112, colors.white);
-    ctx.textAlign = "left"; font(21, 800); ctx.fillStyle = colors.blue; ctx.fillText("PROJECT / 금형명", left + 26, projectY + 34);
-    font(31, 800); ctx.fillStyle = colors.navy; ctx.fillText(data.projectName || "금형명 미입력", left + 26, projectY + 78);
-    ctx.textAlign = "right"; font(22, 600); ctx.fillStyle = colors.text; ctx.fillText(`${data.sellerCompany || "작성 회사"}  >  ${data.buyerCompany || "납품 회사"}`, right - 26, projectY + 58);
+    ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.blue; ctx.fillText("PROJECT / 금형명", left + 26, projectY + 32);
+    font(38, 800); ctx.fillStyle = colors.navy; ctx.fillText(data.projectName || "금형명 미입력", left + 26, projectY + 78);
+    ctx.textAlign = "right"; font(27, 600); ctx.fillStyle = colors.text; ctx.fillText(`${data.sellerCompany || "작성 회사"}  >  ${data.buyerCompany || "납품 회사"}`, right - 26, projectY + 58);
 
     const cardY = 615, gap = 22, cardW = (width - gap * 2) / 3;
     const summaryCards = [["산출 품목", `${materials.filter(item => materialWeight(item) > 0).length} 종`], ["총 원소재 중량", `${materialTotal.weight.toFixed(2)} kg`], ["금형 소재비 합계", money(materialTotal.cost, data.currency)]];
-    summaryCards.forEach(([label, value], index) => { const x = left + index * (cardW + gap); box(x, cardY, cardW, 142, index === 2 ? colors.pale : colors.white, colors.line); if (index === 2) { ctx.fillStyle = colors.blue; ctx.fillRect(x, cardY, 8, 142); } ctx.textAlign = "left"; font(21, 700); ctx.fillStyle = colors.muted; ctx.fillText(label, x + 26, cardY + 40); font(index === 2 ? 35 : 38, 800); ctx.fillStyle = index === 2 ? colors.navy : colors.ink; ctx.fillText(value, x + 26, cardY + 96); });
+    summaryCards.forEach(([label, value], index) => { const x = left + index * (cardW + gap); box(x, cardY, cardW, 142, index === 2 ? colors.pale : colors.white, colors.line); if (index === 2) { ctx.fillStyle = colors.blue; ctx.fillRect(x, cardY, 8, 142); } ctx.textAlign = "left"; font(24, 700); ctx.fillStyle = colors.muted; ctx.fillText(label, x + 26, cardY + 38); font(index === 2 ? 40 : 44, 800); ctx.fillStyle = index === 2 ? colors.navy : colors.ink; ctx.fillText(value, x + 26, cardY + 96); });
 
     const tableY = 800, headerH = 90, rowH = 180;
     const columns = [left, left + 80, left + 380, left + 550, left + 910, left + 1310, left + 1420, left + 1600, left + 1780, right];
     const headers = ["NO.", "명칭", "재질", "완성치수\n폭 × 길이 × 두께", "추천 원소재\n폭 × 길이 × 두께", "수량", "중량(kg)", "단가/kg", "금액"];
     box(left, tableY, width, headerH, colors.pale, colors.line);
     ctx.fillStyle = colors.blue; ctx.fillRect(left, tableY, width, 6);
-    ctx.textAlign = "center"; font(19, 800); ctx.fillStyle = colors.navy;
-    headers.forEach((header, index) => { const parts = header.split("\n"); parts.forEach((part, partIndex) => ctx.fillText(part, (columns[index] + columns[index + 1]) / 2, tableY + headerH / 2 + (partIndex - (parts.length - 1) / 2) * 35)); });
+    ctx.textAlign = "center"; font(28, 800); ctx.fillStyle = colors.navy;
+    headers.forEach((header, index) => { const parts = header.split("\n"); parts.forEach((part, partIndex) => ctx.fillText(part, (columns[index] + columns[index + 1]) / 2, tableY + headerH / 2 + (partIndex - (parts.length - 1) / 2) * 32)); });
     materials.slice(0, 10).forEach((material, index) => {
       const y = tableY + headerH + index * rowH;
       box(left, y, width, rowH, index % 2 ? colors.wash : colors.white, colors.line);
       columns.slice(1, -1).forEach(x => line(x, y, x, y + rowH, colors.line));
       const weight = materialWeight(material); const cost = Math.round(weight * number(material.unitPrice));
-      ctx.textAlign = "center"; font(24, 700); ctx.fillStyle = colors.muted; ctx.fillText(String(index + 1).padStart(2, "0"), (columns[0] + columns[1]) / 2, y + rowH / 2);
-      ctx.textAlign = "left"; font(22, 700); ctx.fillStyle = colors.ink; wrapCanvasText(ctx, material.name || "-", columns[1] + 15, y + 52, columns[2] - columns[1] - 30, 42, 3);
-      ctx.textAlign = "center"; font(25, 700); ctx.fillStyle = ["SKD11", "STD11"].includes(String(material.grade).toUpperCase()) ? "#9a5300" : colors.ink; ctx.fillText(material.grade || "-", (columns[2] + columns[3]) / 2, y + rowH / 2);
-      font(23, 500); ctx.fillStyle = colors.text; ctx.fillText(`${material.x || 0} × ${material.y || 0} × ${material.t || 0}`, (columns[3] + columns[4]) / 2, y + rowH / 2);
-      font(23, 700); ctx.fillStyle = colors.blue; ctx.fillText(`${material.rawX || 0} × ${material.rawY || 0} × ${material.rawT || 0}`, (columns[4] + columns[5]) / 2, y + rowH / 2);
-      font(24, 500); ctx.fillStyle = colors.text; ctx.fillText(String(material.qty || 0), (columns[5] + columns[6]) / 2, y + rowH / 2); ctx.fillText(weight.toFixed(2), (columns[6] + columns[7]) / 2, y + rowH / 2);
-      ctx.textAlign = "right"; ctx.fillText(new Intl.NumberFormat("ko-KR").format(number(material.unitPrice)), columns[8] - 14, y + rowH / 2); font(24, 800); ctx.fillStyle = colors.ink; ctx.fillText(money(cost, data.currency), columns[9] - 14, y + rowH / 2);
+      ctx.textAlign = "center"; font(30, 700); ctx.fillStyle = colors.muted; ctx.fillText(String(index + 1).padStart(2, "0"), (columns[0] + columns[1]) / 2, y + rowH / 2);
+      ctx.textAlign = "left"; font(30, 700); ctx.fillStyle = colors.ink; centeredCanvasText(ctx, material.name || "-", columns[1] + 15, y + rowH / 2, columns[2] - columns[1] - 30, 36, 3);
+      ctx.textAlign = "center"; font(32, 700); ctx.fillStyle = ["SKD11", "STD11"].includes(String(material.grade).toUpperCase()) ? "#9a5300" : colors.ink; ctx.fillText(material.grade || "-", (columns[2] + columns[3]) / 2, y + rowH / 2);
+      font(29, 500); ctx.fillStyle = colors.text; ctx.fillText(`${material.x || 0} × ${material.y || 0} × ${material.t || 0}`, (columns[3] + columns[4]) / 2, y + rowH / 2);
+      font(29, 700); ctx.fillStyle = colors.blue; ctx.fillText(`${material.rawX || 0} × ${material.rawY || 0} × ${material.rawT || 0}`, (columns[4] + columns[5]) / 2, y + rowH / 2);
+      font(30, 500); ctx.fillStyle = colors.text; ctx.fillText(String(material.qty || 0), (columns[5] + columns[6]) / 2, y + rowH / 2); ctx.fillText(weight.toFixed(2), (columns[6] + columns[7]) / 2, y + rowH / 2);
+      ctx.textAlign = "right"; ctx.fillText(new Intl.NumberFormat("ko-KR").format(number(material.unitPrice)), columns[8] - 14, y + rowH / 2); font(32, 800); ctx.fillStyle = colors.ink; ctx.fillText(money(cost, data.currency), columns[9] - 14, y + rowH / 2);
     });
 
     const tableEnd = tableY + headerH + Math.max(Math.min(materials.length, 10), 1) * rowH;
-    box(left, tableEnd + 30, width, 138, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(left, tableEnd + 30, 9, 138); ctx.textAlign = "left"; font(28, 800); ctx.fillStyle = colors.navy; ctx.fillText("소재비 합계", left + 30, tableEnd + 99); ctx.textAlign = "right"; font(41, 800); ctx.fillText(money(materialTotal.cost, data.currency), right - 30, tableEnd + 99);
-    const noteY = tableEnd + 220; ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.navy; ctx.fillText("산출 기준", left, noteY); font(21, 400); ctx.fillStyle = colors.muted; ctx.fillText("- 중량 = 추천 원소재 폭 × 길이 × 두께 × 수량 × 강재 밀도(7.85 g/cm³)", left, noteY + 44); ctx.fillText("- 추천 원소재는 참고 규격이며, 실제 견적·발주 시 공급사의 보유 규격과 가공여유를 확인해야 합니다.", left, noteY + 82);
+    box(left, tableEnd + 30, width, 138, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(left, tableEnd + 30, 9, 138); ctx.textAlign = "left"; font(36, 800); ctx.fillStyle = colors.navy; ctx.fillText("소재비 합계", left + 30, tableEnd + 99); ctx.textAlign = "right"; font(44, 800); ctx.fillText(money(materialTotal.cost, data.currency), right - 30, tableEnd + 99);
+    const noteY = tableEnd + 220; ctx.textAlign = "left"; font(30, 800); ctx.fillStyle = colors.navy; ctx.fillText("산출 기준", left, noteY); font(26, 400); ctx.fillStyle = colors.muted; ctx.fillText("- 중량 = 추천 원소재 폭 × 길이 × 두께 × 수량 × 강재 밀도(7.85 g/cm³)", left, noteY + 42); ctx.fillText("- 추천 원소재는 참고 규격이며, 실제 견적·발주 시 공급사의 보유 규격과 가공여유를 확인해야 합니다.", left, noteY + 80);
     footer();
     return canvas;
   }
@@ -717,34 +729,34 @@
     });
     const projectY = 470;
     box(left, projectY, width, 112, colors.white);
-    ctx.textAlign = "left"; font(21, 800); ctx.fillStyle = colors.blue; ctx.fillText("PROJECT / 금형명", left + 26, projectY + 34);
-    font(31, 800); ctx.fillStyle = colors.navy; ctx.fillText(data.projectName || "금형명 미입력", left + 26, projectY + 78);
-    ctx.textAlign = "right"; font(22, 600); ctx.fillStyle = colors.text; ctx.fillText(`${data.sellerCompany || "작성 회사"}  >  ${data.buyerCompany || "납품 회사"}`, right - 26, projectY + 58);
+    ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.blue; ctx.fillText("PROJECT / 금형명", left + 26, projectY + 32);
+    font(38, 800); ctx.fillStyle = colors.navy; ctx.fillText(data.projectName || "금형명 미입력", left + 26, projectY + 78);
+    ctx.textAlign = "right"; font(27, 600); ctx.fillStyle = colors.text; ctx.fillText(`${data.sellerCompany || "작성 회사"}  >  ${data.buyerCompany || "납품 회사"}`, right - 26, projectY + 58);
 
     const cardY = 615, gap = 18, cardW = (width - gap * 3) / 4;
     const cards = [["기계가공비", total.machining], ["열처리비", total.heat], ["와이어·방전비", total.edm], ["가공비 합계", total.all]];
-    cards.forEach(([label, value], index) => { const x = left + index * (cardW + gap); box(x, cardY, cardW, 142, index === 3 ? colors.pale : colors.white, colors.line); if (index === 3) { ctx.fillStyle = colors.blue; ctx.fillRect(x, cardY, 8, 142); } ctx.textAlign = "left"; font(19, 700); ctx.fillStyle = colors.muted; ctx.fillText(label, x + 22, cardY + 39); font(30, 800); ctx.fillStyle = index === 3 ? colors.navy : colors.ink; ctx.fillText(money(value, data.currency), x + 22, cardY + 95); });
+    cards.forEach(([label, value], index) => { const x = left + index * (cardW + gap); box(x, cardY, cardW, 142, index === 3 ? colors.pale : colors.white, colors.line); if (index === 3) { ctx.fillStyle = colors.blue; ctx.fillRect(x, cardY, 8, 142); } ctx.textAlign = "left"; font(22, 700); ctx.fillStyle = colors.muted; ctx.fillText(label, x + 22, cardY + 37); font(36, 800); ctx.fillStyle = index === 3 ? colors.navy : colors.ink; centeredCanvasText(ctx, money(value, data.currency), x + 22, cardY + 96, cardW - 44, 38, 1); });
 
     const tableY = 800, headerH = 88, rowH = 150;
     const columns = [left, left + 80, left + 350, left + 760, left + 1080, left + 1330, left + 1530, left + 1800, right];
     const headers = ["NO.", "구분", "가공 항목", "계산 방식", "투입량", "단위", "임률·단가", "금액"];
     box(left, tableY, width, headerH, colors.pale, colors.line); ctx.fillStyle = colors.blue; ctx.fillRect(left, tableY, width, 6);
-    ctx.textAlign = "center"; font(23, 800); ctx.fillStyle = colors.navy; headers.forEach((header, index) => ctx.fillText(header, (columns[index] + columns[index + 1]) / 2, tableY + headerH / 2));
+    ctx.textAlign = "center"; font(30, 800); ctx.fillStyle = colors.navy; headers.forEach((header, index) => ctx.fillText(header, (columns[index] + columns[index + 1]) / 2, tableY + headerH / 2));
     processing.slice(0, 12).forEach((item, index) => {
       const y = tableY + headerH + index * rowH;
       const groupFill = item.group === "heat" ? "#fff8e8" : item.group === "edm" ? "#f3f0fb" : (index % 2 ? colors.wash : colors.white);
       box(left, y, width, rowH, groupFill, colors.line); columns.slice(1, -1).forEach(x => line(x, y, x, y + rowH, colors.line));
       const method = PROCESSING_METHODS[item.method] || PROCESSING_METHODS.hour;
       const cost = Math.round(number(item.qty) * number(item.rate));
-      ctx.textAlign = "center"; font(23, 700); ctx.fillStyle = colors.muted; ctx.fillText(String(index + 1).padStart(2, "0"), (columns[0] + columns[1]) / 2, y + rowH / 2);
-      font(22, 800); ctx.fillStyle = item.group === "heat" ? "#9a5a00" : item.group === "edm" ? "#65458b" : colors.blue; wrapCanvasText(ctx, PROCESSING_GROUPS[item.group] || "기계가공", (columns[1] + columns[2]) / 2, y + rowH / 2 - 20, columns[2] - columns[1] - 20, 42, 2);
-      ctx.textAlign = "left"; font(25, 800); ctx.fillStyle = colors.ink; wrapCanvasText(ctx, item.name || "-", columns[2] + 18, y + rowH / 2 - 20, columns[3] - columns[2] - 36, 44, 2);
-      ctx.textAlign = "center"; font(23, 500); ctx.fillStyle = colors.text; ctx.fillText(method.label, (columns[3] + columns[4]) / 2, y + rowH / 2); ctx.fillText(new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 1 }).format(number(item.qty)), (columns[4] + columns[5]) / 2, y + rowH / 2); ctx.fillText(method.unit, (columns[5] + columns[6]) / 2, y + rowH / 2);
-      ctx.textAlign = "right"; ctx.fillText(new Intl.NumberFormat("ko-KR").format(number(item.rate)), columns[7] - 16, y + rowH / 2); font(25, 800); ctx.fillStyle = colors.ink; ctx.fillText(money(cost, data.currency), columns[8] - 16, y + rowH / 2);
+      ctx.textAlign = "center"; font(29, 700); ctx.fillStyle = colors.muted; ctx.fillText(String(index + 1).padStart(2, "0"), (columns[0] + columns[1]) / 2, y + rowH / 2);
+      font(29, 800); ctx.fillStyle = item.group === "heat" ? "#9a5a00" : item.group === "edm" ? "#65458b" : colors.blue; centeredCanvasText(ctx, PROCESSING_GROUPS[item.group] || "기계가공", (columns[1] + columns[2]) / 2, y + rowH / 2, columns[2] - columns[1] - 20, 36, 2);
+      ctx.textAlign = "left"; font(32, 800); ctx.fillStyle = colors.ink; centeredCanvasText(ctx, item.name || "-", columns[2] + 18, y + rowH / 2, columns[3] - columns[2] - 36, 38, 2);
+      ctx.textAlign = "center"; font(29, 500); ctx.fillStyle = colors.text; ctx.fillText(method.label, (columns[3] + columns[4]) / 2, y + rowH / 2); ctx.fillText(new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 1 }).format(number(item.qty)), (columns[4] + columns[5]) / 2, y + rowH / 2); ctx.fillText(method.unit, (columns[5] + columns[6]) / 2, y + rowH / 2);
+      ctx.textAlign = "right"; ctx.fillText(new Intl.NumberFormat("ko-KR").format(number(item.rate)), columns[7] - 16, y + rowH / 2); font(32, 800); ctx.fillStyle = colors.ink; ctx.fillText(money(cost, data.currency), columns[8] - 16, y + rowH / 2);
     });
     const tableEnd = tableY + headerH + Math.max(Math.min(processing.length, 12), 1) * rowH;
-    box(left, tableEnd + 28, width, 132, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(left, tableEnd + 28, 9, 132); ctx.textAlign = "left"; font(28, 800); ctx.fillStyle = colors.navy; ctx.fillText("가공비 합계", left + 30, tableEnd + 94); ctx.textAlign = "right"; font(40, 800); ctx.fillText(money(total.all, data.currency), right - 30, tableEnd + 94);
-    const noteY = tableEnd + 210; ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.navy; ctx.fillText("산출 기준", left, noteY); font(21, 400); ctx.fillStyle = colors.muted; ctx.fillText("- 기계가공·와이어·방전: 투입시간 × 시간당 임률 / 일괄식: 수량 × 금액", left, noteY + 42); ctx.fillText("- 열처리 권장식: 처리중량(kg) × kg당 단가. 재질·경도·로트에 맞는 업체 단가를 적용합니다.", left, noteY + 80);
+    box(left, tableEnd + 28, width, 132, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(left, tableEnd + 28, 9, 132); ctx.textAlign = "left"; font(36, 800); ctx.fillStyle = colors.navy; ctx.fillText("가공비 합계", left + 30, tableEnd + 94); ctx.textAlign = "right"; font(46, 800); ctx.fillText(money(total.all, data.currency), right - 30, tableEnd + 94);
+    const noteY = tableEnd + 210; ctx.textAlign = "left"; font(30, 800); ctx.fillStyle = colors.navy; ctx.fillText("산출 기준", left, noteY); font(26, 400); ctx.fillStyle = colors.muted; ctx.fillText("- 기계가공·와이어·방전: 투입시간 × 시간당 임률 / 일괄식: 수량 × 금액", left, noteY + 42); ctx.fillText("- 열처리 권장식: 처리중량(kg) × kg당 단가. 재질·경도·로트에 맞는 업체 단가를 적용합니다.", left, noteY + 80);
     footer();
     return canvas;
   }
