@@ -15,7 +15,7 @@
   const savedQuotes = document.getElementById("savedQuotes");
   let currentId = crypto.randomUUID();
   let saveTimer;
-  const requestedLocale = new URLSearchParams(location.search).get("lang");
+  const requestedLocale = new URLSearchParams(location.search).get("lang") || (document.documentElement.lang.toLowerCase().startsWith("ja") ? "ja" : "ko");
   const initialLocale = ["ko", "ja", "en"].includes(requestedLocale) ? requestedLocale : "ko";
   const CURRENCY_BY_LOCALE = { ko: "KRW", ja: "JPY", en: "USD" };
 
@@ -292,13 +292,15 @@
     tr.dataset.id = item.id || crypto.randomUUID();
     tr.dataset.group = item.group || "machining";
     const method = PROCESSING_METHODS[item.method] ? item.method : "hour";
-    tr.innerHTML = `<td>${index + 1}</td><td><select data-processing-field="group" aria-label="가공 ${index + 1} 구분"><option value="machining">기계가공</option><option value="heat">열처리</option><option value="edm">와이어·방전</option></select></td><td><input class="processing-name" data-processing-field="name" value="${escapeHtml(item.name || "")}" aria-label="가공 ${index + 1} 항목"></td><td><select data-processing-field="method" aria-label="가공 ${index + 1} 계산 방식"><option value="hour">시간식</option><option value="weight">중량식</option><option value="lump">일괄식</option></select></td><td><input class="processing-qty" data-processing-field="qty" type="number" min="0" step="0.1" value="${number(item.qty) || ""}" aria-label="가공 ${index + 1} 투입량"></td><td><output class="processing-unit">${PROCESSING_METHODS[method].unit}</output></td><td><input class="processing-rate" data-processing-field="rate" type="number" min="0" step="1" value="${number(item.rate) || ""}" placeholder="${PROCESSING_METHODS[method].placeholder}" aria-label="가공 ${index + 1} 임률 또는 단가"></td><td><output class="processing-cost">0원</output></td><td><div class="row-order-actions"><button class="move-processing-up" type="button" aria-label="가공 항목 위로 이동">↑</button><button class="move-processing-down" type="button" aria-label="가공 항목 아래로 이동">↓</button><button class="remove-processing" type="button" aria-label="가공 항목 삭제">×</button></div></td>`;
+    const locale = documentLocale();
+    const localized = textSet();
+    tr.innerHTML = `<td>${index + 1}</td><td><select data-processing-field="group" aria-label="${locale === "ja" ? "加工区分" : "가공 구분"} ${index + 1}"><option value="machining">${localized.groups.machining}</option><option value="heat">${localized.groups.heat}</option><option value="edm">${localized.groups.edm}</option></select></td><td><input class="processing-name" data-processing-field="name" value="${escapeHtml(translatedKnown(item.name || "", PROCESS_NAME_TRANSLATIONS, locale))}" aria-label="${locale === "ja" ? "加工項目" : "가공 항목"} ${index + 1}"></td><td><select data-processing-field="method" aria-label="${locale === "ja" ? "計算方式" : "계산 방식"} ${index + 1}"><option value="hour">${localized.methods.hour[0]}</option><option value="weight">${localized.methods.weight[0]}</option><option value="lump">${localized.methods.lump[0]}</option></select></td><td><input class="processing-qty" data-processing-field="qty" type="number" min="0" step="0.1" value="${number(item.qty) || ""}"></td><td><output class="processing-unit">${localized.methods[method][1]}</output></td><td><input class="processing-rate" data-processing-field="rate" type="number" min="0" step="1" value="${number(item.rate) || ""}" placeholder="${PROCESSING_METHODS[method].placeholder}"></td><td><output class="processing-cost">${money(0)}</output></td><td><div class="row-order-actions"><button class="move-processing-up" type="button" aria-label="上へ移動">↑</button><button class="move-processing-down" type="button" aria-label="下へ移動">↓</button><button class="remove-processing" type="button" aria-label="削除">×</button></div></td>`;
     tr.querySelector('[data-processing-field="group"]').value = item.group || "machining";
     tr.querySelector('[data-processing-field="method"]').value = method;
     const refreshRowStyle = () => {
       tr.dataset.group = tr.querySelector('[data-processing-field="group"]').value;
       const selectedMethod = tr.querySelector('[data-processing-field="method"]').value;
-      tr.querySelector(".processing-unit").value = PROCESSING_METHODS[selectedMethod].unit;
+      tr.querySelector(".processing-unit").value = textSet().methods[selectedMethod][1];
       tr.querySelector(".processing-rate").placeholder = PROCESSING_METHODS[selectedMethod].placeholder;
       if (selectedMethod === "lump" && !number(tr.querySelector(".processing-qty").value)) tr.querySelector(".processing-qty").value = 1;
       if (tr.dataset.group === "heat" && selectedMethod === "hour" && !number(tr.querySelector(".processing-rate").value)) tr.querySelector(".processing-rate").value = 65000;
@@ -387,19 +389,26 @@
     data = { ...defaults, ...data, items: hasItems ? data.items : defaults.items, materials: hasMaterials ? data.materials : defaults.materials, processing: hasProcessing ? data.processing : defaults.processing };
     if (!PDF_TEXT[data.documentLocale]) data.documentLocale = data.currency === "JPY" ? "ja" : data.currency === "USD" ? "en" : initialLocale;
     data.currency = CURRENCY_BY_LOCALE[data.documentLocale];
+    const locale = data.documentLocale;
     data.items = data.items.map(item => {
       if (item.name === "조립·사상·트라이비") return { ...item, name: "조립·TRY비", description: "조립 및 TRY" };
-      if (item.name === "금형 소재비") {
+      if (itemKey(item.name) === "material") {
         const description = String(item.description || "").trim();
         return { ...item, description: description ? (/^\[별첨\d*\]/.test(description) ? description.replace(/^\[별첨\d*\]/, "[별첨1]") : `[별첨1] ${description}`) : "[별첨1] 금형소재 산출명세 참조" };
       }
-      if (["기계가공비", "와이어·방전가공비", "열처리·표면처리비"].includes(item.name)) {
+      if (["machining", "edm", "heat"].includes(itemKey(item.name))) {
         const description = String(item.description || "").trim();
         return { ...item, description: description ? (/^\[별첨\d*\]/.test(description) ? description.replace(/^\[별첨\d*\]/, "[별첨2]") : `[별첨2] ${description}`) : "[별첨2] 가공비용 산출명세 참조" };
       }
       return item;
-    });
-    if (/^\d{4}-\d{2}-\d{2}$/.test(String(data.validUntil || ""))) data.validUntil = "작성일로부터 30일";
+    }).map(item => ({ ...item, name: translatedKnown(item.name, QUOTE_ITEM_TRANSLATIONS, locale), description: localizedDescription(item.description, locale), unit: item.unit === "식" || item.unit === "式" || item.unit === "lot" ? PDF_TEXT[locale].unitEach : item.unit }));
+    data.dieType = translatedKnown(data.dieType, DIE_TYPE_TRANSLATIONS, locale);
+    data.validUntil = translatedKnown(data.validUntil, DEFAULT_VALUE_TRANSLATIONS.validUntil, locale);
+    data.delivery = translatedKnown(data.delivery, DEFAULT_VALUE_TRANSLATIONS.delivery, locale);
+    data.paymentTerms = translatedKnown(data.paymentTerms, DEFAULT_VALUE_TRANSLATIONS.paymentTerms, locale);
+    data.notes = translatedKnown(data.notes, DEFAULT_VALUE_TRANSLATIONS.notes, locale);
+    data.processing = data.processing.map(item => ({ ...item, name: translatedKnown(item.name, PROCESS_NAME_TRANSLATIONS, locale) }));
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(data.validUntil || ""))) data.validUntil = translatedKnown("작성일로부터 30일", DEFAULT_VALUE_TRANSLATIONS.validUntil, locale);
     const standardPartIndex = data.items.findIndex(item => item.name === "표준부품비");
     if (standardPartIndex >= 0) {
       const [standardPart] = data.items.splice(standardPartIndex, 1);

@@ -1,6 +1,6 @@
 (() => {
   const path = location.pathname || "/";
-  const quotationPage = /^\/resources\/press-die-quotation\/?$/.test(path);
+  const quotationPage = /^\/(?:ja\/)?resources\/press-die-quotation\/?$/.test(path);
   const requestedLanguage = quotationPage ? new URLSearchParams(location.search).get("lang") : "";
   const isJapanese = document.documentElement.lang.toLowerCase().startsWith("ja") || requestedLanguage === "ja";
   const alternateUrl = (language) => {
@@ -15,7 +15,8 @@
   };
   const quotationLanguagePath = (language) => {
     const url = new URL(location.href);
-    url.searchParams.set("lang", language);
+    url.pathname = language === "ja" ? "/ja/resources/press-die-quotation/" : "/resources/press-die-quotation/";
+    url.searchParams.delete("lang");
     return `${url.pathname}${url.search}${url.hash}`;
   };
   const fallbackKoreanPath = quotationPage ? quotationLanguagePath("ko") : (isJapanese ? (path.replace(/^\/ja(?=\/|$)/, "") || "/") : path);
