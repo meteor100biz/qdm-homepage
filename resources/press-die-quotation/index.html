@@ -10,13 +10,13 @@
   <link rel="stylesheet" href="/assets/quotation.css?v=20260812-2">
 </head>
 <body>
-<header class="topbar"><div class="wrap nav"><a href="/" class="brand" aria-label="QDM home"><div class="logo">QDM</div><div class="tagline">제품설계.구조해석.박판성형해석.프레스금형설계<br>QUALITY-DRIVEN DESIGN &amp; MANUFACTURING</div></a><nav class="menu" aria-label="주요 메뉴"><a class="hide-sm" href="/about/">회사소개</a><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/services/press-die-design/" aria-haspopup="menu">서비스<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel" role="menu"><a role="menuitem" href="/services/press-die-design/">프레스금형설계</a><a role="menuitem" href="/services/sheet-metal-forming-analysis/">박판성형해석</a><a role="menuitem" href="/services/structural-analysis/">구조해석</a><a role="menuitem" href="/services/product-design/">제품설계</a><a class="menu-dropdown-all" role="menuitem" href="/portfolio.html">전체 포트폴리오 보기</a></div></div><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/resources/press-die-quotation/" aria-haspopup="menu">자료실<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel resource-menu" role="menu"><a role="menuitem" href="/resources/press-die-quotation/">프레스금형 견적서 작성기</a><a role="menuitem" href="#linked-calculators">금형소재 견적산출 <small>준비중</small></a><a role="menuitem" href="#linked-calculators">설계비용 견적산출 <small>준비중</small></a></div></div><a class="hide-sm" href="/#blog">기술블로그</a><a href="/#contact">문의하기</a><a class="phone" href="tel:07080646621">☎ 070-8064-6621</a></nav></div></header>
+<header class="topbar"><div class="wrap nav"><a href="/" class="brand" aria-label="QDM home"><div class="logo">QDM</div><div class="tagline">제품설계.구조해석.박판성형해석.프레스금형설계<br>QUALITY-DRIVEN DESIGN &amp; MANUFACTURING</div></a><nav class="menu" aria-label="주요 메뉴"><a class="hide-sm" href="/about/">회사소개</a><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/services/press-die-design/" aria-haspopup="menu">서비스<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel" role="menu"><a role="menuitem" href="/services/press-die-design/">프레스금형설계</a><a role="menuitem" href="/services/sheet-metal-forming-analysis/">박판성형해석</a><a role="menuitem" href="/services/structural-analysis/">구조해석</a><a role="menuitem" href="/services/product-design/">제품설계</a><a class="menu-dropdown-all" role="menuitem" href="/portfolio.html">전체 포트폴리오 보기</a></div></div><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/resources/press-die-quotation/" aria-haspopup="menu">자료실<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel resource-menu" role="menu"><a role="menuitem" href="/resources/press-die-quotation/">프레스금형 견적서 작성기</a><a role="menuitem" href="/resources/press-die-quotation/?tool=material">금형소재 견적산출 <small>계산기</small></a><a role="menuitem" href="#linked-calculators">설계비용 견적산출 <small>준비중</small></a></div></div><a class="hide-sm" href="/#blog">기술블로그</a><a href="/#contact">문의하기</a><a class="phone" href="tel:07080646621">☎ 070-8064-6621</a></nav></div></header>
 
 <main class="quote-page">
   <section class="quote-hero">
     <div class="wrap quote-hero-inner">
       <div><span class="quote-kicker">LOCAL-ONLY QUOTATION TOOL</span><h1>프레스금형 견적서 작성기</h1><p>회사 정보와 금액을 직접 입력해 제출용 PDF와 다시 편집할 수 있는 견적 파일을 함께 만듭니다.</p></div>
-      <div class="privacy-chip"><strong>서버 저장 없음</strong><span>입력 자료는 이 브라우저에만 보관됩니다.</span></div>
+      <div class="privacy-chip"><strong>서버 저장 없음</strong><span>입력 자료는 사용자의 PC에만 보관됩니다.</span></div>
     </div>
   </section>
 
@@ -62,19 +62,13 @@
         </div>
       </section>
 
-      <section class="editor-card material-card" id="material-calculator">
-        <div class="card-title material-title"><span>03</span><div><h2>금형소재 견적 산출</h2><p>완성치수를 입력하면 가공여유를 포함한 추천 원소재와 중량을 계산합니다. 추천 규격은 직접 수정할 수 있습니다.</p></div><div class="material-options"><label class="check-label"><input name="includeMaterialPage" type="checkbox" checked><span>PDF 2페이지에 소재명세 포함</span></label><button type="button" class="mini-button" id="applyMaterialTotal">소재비로 반영</button></div></div>
-        <div class="material-table-wrap"><table class="material-table"><thead><tr><th>No.</th><th>명칭</th><th>재질</th><th>완성치수 X × Y × T</th><th>추천 원소재 X × Y × T</th><th>수량</th><th>중량(kg)</th><th>단가/kg</th><th>금액</th></tr></thead><tbody id="materialsBody"></tbody></table></div>
-        <div class="material-summary"><p><strong>추천 원소재</strong>는 일반 가공여유와 유통 두께 계열을 적용한 참고치입니다. 실제 발주 전 보유 규격·절단 공차를 확인하세요.</p><dl><div><dt>총 소재중량</dt><dd id="materialWeightTotal">0 kg</dd></div><div><dt>소재비 합계</dt><dd id="materialCostTotal">0원</dd></div></dl></div>
-      </section>
-
       <section class="editor-card">
-        <div class="card-title action-title"><span>04</span><div><h2>견적 항목</h2><p>수량과 단가를 직접 입력하거나 위 소재 산출 합계를 가져올 수 있습니다.</p></div><button type="button" class="mini-button" id="addItem">항목 추가</button></div>
+        <div class="card-title action-title"><span>03</span><div><h2>견적 항목</h2><p>수량과 단가를 직접 입력하거나 별도 계산기의 산출값을 가져올 수 있습니다.</p></div><button type="button" class="mini-button" id="addItem">항목 추가</button></div>
         <div class="items-table-wrap"><table class="items-table"><thead><tr><th>항목</th><th>내용·사양</th><th>수량</th><th>단위</th><th>단가</th><th>금액</th><th aria-label="삭제"></th></tr></thead><tbody id="itemsBody"></tbody></table></div>
       </section>
 
       <section class="editor-card amount-card">
-        <div class="card-title"><span>05</span><div><h2>경비·세금·합계</h2><p>마진은 내부 계산에만 쓰고 PDF에서 숨길 수도 있습니다.</p></div></div>
+        <div class="card-title"><span>04</span><div><h2>경비·세금·합계</h2><p>마진은 내부 계산에만 쓰고 PDF에서 숨길 수도 있습니다.</p></div></div>
         <div class="amount-settings">
           <label>일반관리비·마진율 (%)<input name="marginRate" type="number" min="0" step="0.1" value="0"></label>
           <label class="check-label"><input name="showMargin" type="checkbox" checked><span>PDF에 일반관리비·이윤 항목 표시</span></label>
@@ -84,20 +78,32 @@
       </section>
 
       <section class="editor-card">
-        <div class="card-title"><span>06</span><div><h2>견적 조건·특기사항</h2><p>트라이 범위, 설계변경, 운송 및 검수 조건 등을 명확히 기록하세요.</p></div></div>
+        <div class="card-title"><span>05</span><div><h2>견적 조건·특기사항</h2><p>트라이 범위, 설계변경, 운송 및 검수 조건 등을 명확히 기록하세요.</p></div></div>
         <textarea name="notes" rows="7" placeholder="예:&#10;- 트라이 2회 포함&#10;- 제품 설계변경에 따른 금형 수정비 별도&#10;- 운송비 별도"></textarea>
       </section>
+
+      <dialog class="material-dialog" id="materialDialog" aria-labelledby="materialDialogTitle">
+        <div class="material-dialog-shell">
+          <header class="material-dialog-header"><div><span>MATERIAL COST CALCULATOR</span><h2 id="materialDialogTitle">금형소재 견적 산출</h2><p>완성치수와 단가를 입력하면 추천 원소재, 중량과 금액을 계산합니다.</p></div><button type="button" class="dialog-close" id="closeMaterialDialog" aria-label="금형소재 견적 산출 닫기">×</button></header>
+          <div class="material-dialog-body">
+            <datalist id="materialGradeOptions"><option value="S45C"><option value="SKD11"><option value="STD11"><option value="SB41P"></datalist>
+            <div class="material-table-wrap"><table class="material-table"><thead><tr><th>No.</th><th>명칭</th><th>재질</th><th>완성치수<br>폭 × 길이 × 두께</th><th>추천 원소재<br>폭 × 길이 × 두께</th><th>수량</th><th>중량(kg)</th><th>단가/kg</th><th>금액</th></tr></thead><tbody id="materialsBody"></tbody></table></div>
+            <div class="material-summary"><p><strong>추천 원소재</strong>는 일반 가공여유와 유통 두께 계열을 적용한 참고치입니다. 중량은 입력한 재질을 강재로 보고 밀도 7.85 g/cm³를 적용합니다. 실제 발주 전 보유 규격·절단 공차를 확인하세요.</p><dl><div><dt>총 소재중량</dt><dd id="materialWeightTotal">0 kg</dd></div><div><dt>소재비 합계</dt><dd id="materialCostTotal">0원</dd></div></dl></div>
+          </div>
+          <footer class="material-dialog-footer"><label class="check-label"><input name="includeMaterialPage" type="checkbox" checked><span>PDF 2페이지에 소재명세 포함</span></label><div><button type="button" class="tool-button" id="cancelMaterialDialog">닫기</button><button type="button" class="tool-button primary" id="applyMaterialTotal">계산값을 견적서에 반영</button></div></footer>
+        </div>
+      </dialog>
     </form>
 
     <aside class="quote-side">
       <section class="side-card"><h2>로컬 저장 견적</h2><p>이 브라우저에 저장된 견적을 다시 불러올 수 있습니다.</p><select id="savedQuotes" aria-label="저장된 견적 목록"><option value="">저장된 견적 선택</option></select><div class="side-actions"><button type="button" id="loadSaved">불러오기</button><button type="button" id="deleteSaved" class="danger">삭제</button></div><small>브라우저 데이터 삭제·시크릿 모드에서는 사라질 수 있으므로 편집용 파일도 보관하세요.</small></section>
-      <section class="side-card" id="linked-calculators"><h2>연동 계산기</h2><p>계산 결과를 현재 견적서 항목으로 가져올 수 있습니다.</p><a class="calculator-link active" href="#material-calculator"><span>금형소재 견적산출</span><small>사용하기 →</small></a><button class="calculator-link" type="button" disabled><span>설계비용 견적산출</span><small>준비중</small></button></section>
+      <section class="side-card" id="linked-calculators"><h2>연동 계산기</h2><p>필요한 계산기만 별도 화면으로 열어 견적서에 반영합니다.</p><button class="calculator-link active" id="openMaterialCalculator" type="button"><span>금형소재 견적산출</span><small>열기 →</small></button><button class="calculator-link" type="button" disabled><span>설계비용 견적산출</span><small>준비중</small></button></section>
       <section class="side-card notice-card"><h2>사용 안내</h2><ul><li>본 도구는 견적서 서식과 계산 기능만 제공합니다.</li><li>단가와 금액은 작성자가 직접 입력하고 확인해야 합니다.</li><li>다운로드한 PDF에는 QDM 상호나 명판이 들어가지 않습니다.</li><li>중요 견적은 반드시 편집용 파일로 별도 백업하세요.</li></ul></section>
     </aside>
   </div>
 </main>
 
 <footer class="footer"><div class="wrap footer-inner"><div>프레스금형설계.박판성형해석.구조해석.제품설계</div><div>© QDM. All rights reserved.</div></div></footer>
-<script src="/assets/quotation.js?v=20260812-4"></script>
+<script src="/assets/quotation.js?v=20260812-6"></script>
 </body>
 </html>

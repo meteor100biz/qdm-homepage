@@ -8,6 +8,7 @@
   const form = document.getElementById("quoteForm");
   const itemsBody = document.getElementById("itemsBody");
   const materialsBody = document.getElementById("materialsBody");
+  const materialDialog = document.getElementById("materialDialog");
   const status = document.getElementById("saveStatus");
   const savedQuotes = document.getElementById("savedQuotes");
   let currentId = crypto.randomUUID();
@@ -109,28 +110,28 @@
   function suggestedRawDimensions(material) {
     const x = number(material.x), y = number(material.y), t = number(material.t);
     if (!x || !y || !t) return { rawX: 0, rawY: 0, rawT: 0 };
-    if (["SKD11", "STD11"].includes(material.grade)) {
+    if (["SKD11", "STD11"].includes(String(material.grade || "").trim().toUpperCase())) {
       return { rawX: Math.round((x + 0.3) * 10) / 10, rawY: Math.round((y + 0.3) * 10) / 10, rawT: Math.round((t + 0.3) * 10) / 10 };
     }
     return { rawX: Math.ceil(x + 3), rawY: Math.ceil(y + 3), rawT: Math.ceil(t + 3) };
   }
 
   function materialWeight(material) {
-    const density = MATERIAL_DENSITY[material.grade] || 7.85;
+    const density = MATERIAL_DENSITY[String(material.grade || "").trim().toUpperCase()] || 7.85;
     return number(material.rawX) * number(material.rawY) * number(material.rawT) * Math.max(number(material.qty), 0) * density / 1000000;
   }
 
   function materialRow(material = {}, index = 0) {
     const tr = document.createElement("tr");
     tr.dataset.id = material.id || crypto.randomUUID();
-    tr.innerHTML = `<td>${index + 1}</td><td><input class="material-name" data-material-field="name" value="${escapeHtml(material.name)}" aria-label="소재 ${index + 1} 명칭"></td><td><select class="material-grade" data-material-field="grade" aria-label="소재 ${index + 1} 재질"><option value="S45C"${material.grade === "S45C" ? " selected" : ""}>S45C</option><option value="SKD11"${material.grade === "SKD11" ? " selected" : ""}>SKD11</option><option value="STD11"${material.grade === "STD11" ? " selected" : ""}>STD11</option></select></td><td><div class="material-dims"><input data-material-field="x" type="number" min="0" step="0.1" value="${number(material.x) || ""}" placeholder="X" aria-label="소재 ${index + 1} 완성 가로"><input data-material-field="y" type="number" min="0" step="0.1" value="${number(material.y) || ""}" placeholder="Y" aria-label="소재 ${index + 1} 완성 세로"><input data-material-field="t" type="number" min="0" step="0.1" value="${number(material.t) || ""}" placeholder="T" aria-label="소재 ${index + 1} 완성 두께"></div></td><td><div class="material-dims raw-dims"><input data-material-field="rawX" type="number" min="0" step="0.1" value="${number(material.rawX) || ""}" placeholder="X" aria-label="소재 ${index + 1} 원소재 가로"><input data-material-field="rawY" type="number" min="0" step="0.1" value="${number(material.rawY) || ""}" placeholder="Y" aria-label="소재 ${index + 1} 원소재 세로"><input data-material-field="rawT" type="number" min="0" step="0.1" value="${number(material.rawT) || ""}" placeholder="T" aria-label="소재 ${index + 1} 원소재 두께"></div></td><td><input class="material-qty" data-material-field="qty" type="number" min="0" step="1" value="${number(material.qty) || 1}" aria-label="소재 ${index + 1} 수량"></td><td><output class="material-weight">0.00</output></td><td><input class="material-price" data-material-field="unitPrice" type="number" min="0" step="1" value="${number(material.unitPrice) || ""}" placeholder="원/kg" aria-label="소재 ${index + 1} kg 단가"></td><td><output class="material-cost">0원</output></td>`;
+    tr.innerHTML = `<td>${index + 1}</td><td><input class="material-name" data-material-field="name" value="${escapeHtml(material.name)}" aria-label="소재 ${index + 1} 명칭"></td><td><input class="material-grade" data-material-field="grade" list="materialGradeOptions" value="${escapeHtml(material.grade || "")}" placeholder="직접 입력" aria-label="소재 ${index + 1} 재질"></td><td><div class="material-dims"><input data-material-field="x" type="number" min="0" step="0.1" value="${number(material.x) || ""}" placeholder="폭" aria-label="소재 ${index + 1} 완성 폭"><input data-material-field="y" type="number" min="0" step="0.1" value="${number(material.y) || ""}" placeholder="길이" aria-label="소재 ${index + 1} 완성 길이"><input data-material-field="t" type="number" min="0" step="0.1" value="${number(material.t) || ""}" placeholder="두께" aria-label="소재 ${index + 1} 완성 두께"></div></td><td><div class="material-dims raw-dims"><input data-material-field="rawX" type="number" min="0" step="0.1" value="${number(material.rawX) || ""}" placeholder="폭" aria-label="소재 ${index + 1} 원소재 폭"><input data-material-field="rawY" type="number" min="0" step="0.1" value="${number(material.rawY) || ""}" placeholder="길이" aria-label="소재 ${index + 1} 원소재 길이"><input data-material-field="rawT" type="number" min="0" step="0.1" value="${number(material.rawT) || ""}" placeholder="두께" aria-label="소재 ${index + 1} 원소재 두께"></div></td><td><input class="material-qty" data-material-field="qty" type="number" min="0" step="1" value="${number(material.qty) || 1}" aria-label="소재 ${index + 1} 수량"></td><td><output class="material-weight">0.00</output></td><td><input class="material-price" data-material-field="unitPrice" type="number" min="0" step="1" value="${number(material.unitPrice) || ""}" placeholder="원/kg" aria-label="소재 ${index + 1} kg 단가"></td><td><output class="material-cost">0원</output></td>`;
     const refreshSuggestion = () => {
       const current = readMaterialRow(tr);
       const suggested = suggestedRawDimensions(current);
       ["rawX", "rawY", "rawT"].forEach(field => { tr.querySelector(`[data-material-field="${field}"]`).value = suggested[field] || ""; });
     };
     tr.querySelectorAll('[data-material-field="x"],[data-material-field="y"],[data-material-field="t"]').forEach(input => input.addEventListener("input", () => { refreshSuggestion(); changed(); }));
-    tr.querySelector('[data-material-field="grade"]').addEventListener("change", () => { refreshSuggestion(); changed(); });
+    tr.querySelector('[data-material-field="grade"]').addEventListener("input", () => { refreshSuggestion(); changed(); });
     tr.querySelectorAll("input,select").forEach(input => { if (!["x", "y", "t", "grade"].includes(input.dataset.materialField)) input.addEventListener("input", changed); });
     return tr;
   }
@@ -315,6 +316,18 @@
     target.querySelector('[data-field="description"]').value = `금형소재 산출명세 ${data.materials.filter(item => materialWeight(item) > 0).length}종 합계`;
     changed();
     setStatus(`소재비 ${money(materialTotal.cost, data.currency)}을 견적 항목에 반영했습니다.`, "success");
+    materialDialog.close();
+  }
+
+  function openMaterialDialog() {
+    if (!materialDialog.open) materialDialog.showModal();
+  }
+
+  function clearMaterialQuery() {
+    const url = new URL(location.href);
+    if (url.searchParams.get("tool") !== "material") return;
+    url.searchParams.delete("tool");
+    history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
   }
 
   async function importEditable(file) {
@@ -437,7 +450,7 @@
 
     const tableY = 780, headerH = 88, rowH = 185;
     const columns = [left, left + 82, left + 410, left + 620, left + 1030, left + 1440, left + 1570, left + 1780, left + 1990, right];
-    const headers = ["NO.", "명칭", "재질", "완성치수\nX × Y × T", "추천 원소재\nX × Y × T", "수량", "중량(kg)", "단가/kg", "금액"];
+    const headers = ["NO.", "명칭", "재질", "완성치수\n폭 × 길이 × 두께", "추천 원소재\n폭 × 길이 × 두께", "수량", "중량(kg)", "단가/kg", "금액"];
     box(left, tableY, width, headerH, "#163f71", "#163f71");
     ctx.textAlign = "center"; font(24, 700); ctx.fillStyle = "#ffffff";
     headers.forEach((header, index) => { const parts = header.split("\n"); parts.forEach((part, partIndex) => ctx.fillText(part, (columns[index] + columns[index + 1]) / 2, tableY + headerH / 2 + (partIndex - (parts.length - 1) / 2) * 29)); });
@@ -457,7 +470,7 @@
 
     const tableEnd = tableY + headerH + Math.max(materials.length, 1) * rowH;
     box(left, tableEnd + 30, width, 150, "#eef5ff", "#b9cee9"); ctx.textAlign = "left"; font(28, 700); ctx.fillStyle = "#315273"; ctx.fillText("소재비 합계", left + 30, tableEnd + 105); ctx.textAlign = "right"; font(43, 800); ctx.fillStyle = "#0b4fb3"; ctx.fillText(money(materialTotal.cost, data.currency), right - 30, tableEnd + 105);
-    const noteY = tableEnd + 235; ctx.textAlign = "left"; font(24, 700); ctx.fillStyle = "#4a5f78"; ctx.fillText("산출 기준", left, noteY); font(22, 400); ctx.fillStyle = "#65758a"; ctx.fillText("• 중량 = 추천 원소재 가로 × 세로 × 두께 × 수량 × 밀도(7.85 g/cm³)", left, noteY + 48); ctx.fillText("• 추천 원소재는 참고 규격이며 실제 견적·발주 시 공급사의 보유 규격과 가공여유를 확인해야 합니다.", left, noteY + 88);
+    const noteY = tableEnd + 235; ctx.textAlign = "left"; font(24, 700); ctx.fillStyle = "#4a5f78"; ctx.fillText("산출 기준", left, noteY); font(22, 400); ctx.fillStyle = "#65758a"; ctx.fillText("• 중량 = 추천 원소재 폭 × 길이 × 두께 × 수량 × 강재 밀도(7.85 g/cm³)", left, noteY + 48); ctx.fillText("• 추천 원소재는 참고 규격이며 실제 견적·발주 시 공급사의 보유 규격과 가공여유를 확인해야 합니다.", left, noteY + 88);
     line(left, 3360, right, 3360, "#9fadc0"); font(22, 600); ctx.fillStyle = "#68768a"; ctx.textAlign = "right"; ctx.fillText("2 / 2", right, 3405);
     return canvas;
   }
@@ -523,10 +536,17 @@
     }
   }
 
+  form.addEventListener("submit", event => event.preventDefault());
   form.addEventListener("input", changed);
   form.addEventListener("change", changed);
   document.getElementById("addItem").addEventListener("click", () => { if (itemsBody.children.length >= 10) { setStatus("PDF 한 페이지 출력을 위해 견적 항목은 최대 10개까지 지원합니다.", "error"); return; } itemsBody.append(itemRow({ qty: 1, unit: "식", price: 0 })); changed(); });
   document.getElementById("applyMaterialTotal").addEventListener("click", applyMaterialTotal);
+  document.getElementById("openMaterialCalculator").addEventListener("click", openMaterialDialog);
+  document.getElementById("closeMaterialDialog").addEventListener("click", () => materialDialog.close());
+  document.getElementById("cancelMaterialDialog").addEventListener("click", () => materialDialog.close());
+  materialDialog.addEventListener("click", event => { if (event.target === materialDialog) materialDialog.close(); });
+  materialDialog.addEventListener("close", clearMaterialQuery);
+  document.querySelectorAll('a[href*="?tool=material"]').forEach(link => link.addEventListener("click", event => { if (new URL(link.href).pathname === location.pathname) { event.preventDefault(); openMaterialDialog(); } }));
   document.getElementById("downloadQuote").addEventListener("click", exportEditable);
   document.getElementById("downloadPdf").addEventListener("click", exportPdf);
   document.getElementById("importQuote").addEventListener("change", event => { const file = event.target.files[0]; if (file) importEditable(file); event.target.value = ""; });
@@ -542,6 +562,7 @@
         writeData(list[0]);
         await refreshSavedQuotes(list[0].id);
         setStatus("마지막으로 작성한 로컬 견적을 불러왔습니다.", "success");
+        if (new URLSearchParams(location.search).get("tool") === "material") openMaterialDialog();
         return;
       }
     } catch { /* 저장소가 차단된 환경에서는 새 견적으로 시작한다. */ }
@@ -550,6 +571,7 @@
     writeData(initial);
     await saveLocal(false);
     await refreshSavedQuotes(initial.id);
+    if (new URLSearchParams(location.search).get("tool") === "material") openMaterialDialog();
   }
 
   initialize();
