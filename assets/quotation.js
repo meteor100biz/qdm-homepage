@@ -2,7 +2,7 @@
   "use strict";
 
   const FORM_FORMAT = "qdm.press-die-quotation";
-  const FORM_VERSION = 2;
+  const FORM_VERSION = 4;
   const DB_NAME = "qdm-local-tools";
   const STORE_NAME = "press-die-quotes";
   const form = document.getElementById("quoteForm");
@@ -15,6 +15,53 @@
   const savedQuotes = document.getElementById("savedQuotes");
   let currentId = crypto.randomUUID();
   let saveTimer;
+  const requestedLocale = new URLSearchParams(location.search).get("lang");
+  const initialLocale = ["ko", "ja", "en"].includes(requestedLocale) ? requestedLocale : "ko";
+  const CURRENCY_BY_LOCALE = { ko: "KRW", ja: "JPY", en: "USD" };
+
+  const PDF_TEXT = {
+    ko: {
+      locale: "ko-KR", quoteTitle: "프레스금형 견적서", quoteSubtitle: "PRESS DIE QUOTATION", supplier: "SUPPLIER / 공급자", recipient: "RECIPIENT / 수신자",
+      representative: "대표", businessNo: "사업자", contact: "담당", project: "프로젝트", missingSeller: "작성 회사명", missingBuyer: "납품 회사명", missingContact: "담당자 미입력", missingProject: "금형명 미입력",
+      proposed: "PROPOSED TOTAL / 제안 금액", defaultProject: "프레스금형 제작", dieType: "금형 형식", productMaterial: "제품 소재", pressSpec: "프레스 사양", validUntil: "견적 유효기간", delivery: "납기", payment: "결제조건",
+      itemHeaders: ["항목", "내용·사양", "수량", "단위", "금액"], subtotal: "항목 합계", overhead: "일반관리비·이윤", supply: "공급가액", vat: "부가세", grand: "총 견적금액", notes: "견적 조건 및 특기사항",
+      materialTitle: "별첨1 · 금형소재 산출 명세서", materialSubtitle: "PRESS DIE MATERIAL COST DETAIL", projectLabel: "PROJECT / 금형명", materialCards: ["산출 품목", "총 원소재 중량", "금형 소재비 합계"], kinds: "종",
+      materialHeaders: ["NO.", "명칭", "재질", "완성치수\n폭 × 길이 × 두께", "추천 원소재\n폭 × 길이 × 두께", "수량", "중량(kg)", "단가/kg", "금액"], rounding: "반올림 계산", notApplied: "미적용", roundingUnits: { 100: "백원", 1000: "천원", 10000: "만원" }, unitSuffix: "단위", materialTotal: "소재비 합계", basis: "산출 기준",
+      materialNotes: ["- 중량 = 추천 원소재 폭 × 길이 × 두께 × 수량 × 강재 밀도(7.85 g/cm³)", "- 추천 원소재는 참고 규격이며, 실제 견적·발주 시 공급사의 보유 규격과 가공여유를 확인해야 합니다."],
+      processingTitle: "별첨2 · 가공비용 산출 명세서", processingSubtitle: "PRESS DIE PROCESSING COST DETAIL", processingCards: ["기계가공비", "열처리비", "와이어·방전비", "가공비 합계"], processingHeaders: ["NO.", "구분", "가공 항목", "계산 방식", "투입량", "단위", "임률·단가", "금액"], processingTotal: "가공비 합계",
+      processingNotes: ["- 기계가공·와이어·방전: 투입시간 × 시간당 임률 / 일괄식: 수량 × 금액", "- 열처리 권장식: 처리중량(kg) × kg당 단가. 재질·경도·로트에 맞는 업체 단가를 적용합니다."],
+      groups: { machining: "기계가공", heat: "열처리", edm: "와이어·방전" }, methods: { hour: ["시간식", "시간"], weight: ["중량식", "kg"], lump: ["일괄식", "식"] }, unitEach: "식", attachment1: "[별첨1]", attachment2: "[별첨2]"
+    },
+    ja: {
+      locale: "ja-JP", quoteTitle: "プレス金型 御見積書", quoteSubtitle: "PRESS DIE QUOTATION", supplier: "SUPPLIER / 見積者", recipient: "RECIPIENT / 提出先",
+      representative: "代表者", businessNo: "登録番号", contact: "担当", project: "案件", missingSeller: "見積会社名", missingBuyer: "提出先会社名", missingContact: "ご担当者未入力", missingProject: "金型名未入力",
+      proposed: "PROPOSED TOTAL / 御見積金額", defaultProject: "プレス金型製作", dieType: "金型形式", productMaterial: "製品材質", pressSpec: "プレス仕様", validUntil: "見積有効期限", delivery: "納期", payment: "支払条件",
+      itemHeaders: ["項目", "内容・仕様", "数量", "単位", "金額"], subtotal: "項目合計", overhead: "一般管理費・利益", supply: "税抜金額", vat: "消費税", grand: "御見積金額", notes: "見積条件・特記事項",
+      materialTitle: "別紙1 · 金型材料費明細書", materialSubtitle: "PRESS DIE MATERIAL COST DETAIL", projectLabel: "PROJECT / 金型名", materialCards: ["算出品目", "材料総重量", "金型材料費合計"], kinds: "品目",
+      materialHeaders: ["NO.", "名称", "材質", "仕上寸法\n幅 × 長さ × 厚さ", "推奨素材寸法\n幅 × 長さ × 厚さ", "数量", "重量(kg)", "単価/kg", "金額"], rounding: "端数処理", notApplied: "適用なし", roundingUnits: { 100: "百円", 1000: "千円", 10000: "万円" }, unitSuffix: "単位", materialTotal: "材料費合計", basis: "算出基準",
+      materialNotes: ["- 重量 = 推奨素材の幅 × 長さ × 厚さ × 数量 × 鋼材密度(7.85 g/cm³)", "- 推奨素材寸法は参考値です。見積・発注前に供給元の在庫寸法と加工余裕をご確認ください。"],
+      processingTitle: "別紙2 · 加工費明細書", processingSubtitle: "PRESS DIE PROCESSING COST DETAIL", processingCards: ["機械加工費", "熱処理費", "ワイヤー・放電加工費", "加工費合計"], processingHeaders: ["NO.", "区分", "加工項目", "計算方式", "投入量", "単位", "工賃・単価", "金額"], processingTotal: "加工費合計",
+      processingNotes: ["- 機械加工・ワイヤー・放電：投入時間 × 時間単価 / 一式：数量 × 金額", "- 熱処理推奨式：処理重量(kg) × kg単価。材質・硬度・ロットに応じた業者単価を適用してください。"],
+      groups: { machining: "機械加工", heat: "熱処理", edm: "ワイヤー・放電" }, methods: { hour: ["時間式", "時間"], weight: ["重量式", "kg"], lump: ["一式", "式"] }, unitEach: "式", attachment1: "[別紙1]", attachment2: "[別紙2]"
+    },
+    en: {
+      locale: "en-US", quoteTitle: "PRESS DIE QUOTATION", quoteSubtitle: "QUOTATION / PRESS DIE", supplier: "SUPPLIER", recipient: "RECIPIENT",
+      representative: "Representative", businessNo: "Registration No.", contact: "Contact", project: "Project", missingSeller: "Supplier name", missingBuyer: "Recipient name", missingContact: "Contact not entered", missingProject: "Project not entered",
+      proposed: "PROPOSED TOTAL", defaultProject: "Press Die Manufacturing", dieType: "Die Type", productMaterial: "Product Material", pressSpec: "Press Specification", validUntil: "Quotation Validity", delivery: "Delivery", payment: "Payment Terms",
+      itemHeaders: ["Item", "Description / Specification", "Qty", "Unit", "Amount"], subtotal: "Item Subtotal", overhead: "Overhead / Profit", supply: "Net Amount", vat: "VAT", grand: "TOTAL QUOTATION", notes: "Terms and Special Notes",
+      materialTitle: "APPENDIX 1 · MATERIAL COST DETAIL", materialSubtitle: "PRESS DIE MATERIAL COST DETAIL", projectLabel: "PROJECT / DIE NAME", materialCards: ["Costed Items", "Total Material Weight", "Material Cost Total"], kinds: "items",
+      materialHeaders: ["NO.", "Name", "Grade", "Finished Size\nW × L × T", "Recommended Stock\nW × L × T", "Qty", "Weight(kg)", "Rate/kg", "Amount"], rounding: "Rounding", notApplied: "Not applied", roundingUnits: { 100: "hundreds", 1000: "thousands", 10000: "ten-thousands" }, unitSuffix: "", materialTotal: "Material Cost Total", basis: "Calculation Basis",
+      materialNotes: ["- Weight = recommended stock width × length × thickness × quantity × steel density (7.85 g/cm³)", "- Recommended stock sizes are references. Confirm supplier stock sizes and machining allowance before ordering."],
+      processingTitle: "APPENDIX 2 · PROCESSING COST DETAIL", processingSubtitle: "PRESS DIE PROCESSING COST DETAIL", processingCards: ["Machining", "Heat Treatment", "Wire / EDM", "Processing Total"], processingHeaders: ["NO.", "Category", "Process", "Method", "Input", "Unit", "Rate", "Amount"], processingTotal: "Processing Cost Total",
+      processingNotes: ["- Machining, wire and EDM: input hours × hourly rate / Lump sum: quantity × amount", "- Heat treatment: processed weight (kg) × rate/kg. Apply the supplier rate for the grade, hardness and lot."],
+      groups: { machining: "Machining", heat: "Heat Treatment", edm: "Wire / EDM" }, methods: { hour: ["Hourly", "hr"], weight: ["By weight", "kg"], lump: ["Lump sum", "lot"] }, unitEach: "lot", attachment1: "[Appendix 1]", attachment2: "[Appendix 2]"
+    }
+  };
+  const UI_TEXT = {
+    ko: { hero: "프레스금형 견적서 작성기", work: "견적서 작업", workHelp: "새로 작성하거나 저장된 편집용 파일을 불러옵니다.", language: "언어 (통화)", newQuote: "새 견적서", load: "견적 파일|불러오기", pdf: "PDF 다운로드", edit: "편집용 파일 저장", preview: "PDF 미리보기", previewTitle: "견적서 PDF 미리보기", calculators: "연동 계산기", calculatorHelp: "필요한 계산기만 별도 화면으로 열어 견적서에 반영합니다.", material: "금형소재 견적산출", processing: "가공비용 견적산출", open: "열기 →", notice: "사용 안내" },
+    ja: { hero: "プレス金型 見積書作成ツール", work: "見積書操作", workHelp: "新規作成、または保存した編集用ファイルを読み込みます。", language: "言語（通貨）", newQuote: "新規見積書", load: "見積ファイル|読込", pdf: "PDFダウンロード", edit: "編集用ファイル保存", preview: "PDFプレビュー", previewTitle: "見積書 PDFプレビュー", calculators: "連動計算ツール", calculatorHelp: "必要な計算ツールを開き、算出金額を見積書へ反映します。", material: "金型材料費算出", processing: "加工費算出", open: "開く →", notice: "ご利用案内" },
+    en: { hero: "Press Die Quotation Builder", work: "Quotation Files", workHelp: "Start a new quotation or load a saved editable file.", language: "Language (Currency)", newQuote: "New Quotation", load: "Load Quotation|File", pdf: "Download PDF", edit: "Save Editable File", preview: "PDF Preview", previewTitle: "Quotation PDF Preview", calculators: "Linked Calculators", calculatorHelp: "Open a calculator and apply its result to the quotation.", material: "Material Cost Calculator", processing: "Processing Cost Calculator", open: "Open →", notice: "Instructions" }
+  };
 
   const DEFAULT_ITEMS = [
     ["금형 설계비", "공정검토 및 2D/3D 설계", 1, "식", 0],
@@ -60,13 +107,14 @@
   }
 
   function blankData() {
+    const documentLocale = initialLocale;
     return {
       id: crypto.randomUUID(),
       sellerCompany: "", sellerRepresentative: "", sellerBusinessNo: "", sellerContact: "",
       sellerAddress: "", sellerPhone: "", sellerEmail: "", buyerCompany: "", buyerContact: "",
       quoteNumber: defaultQuoteNumber(), quoteDate: today(), validUntil: "작성일로부터 30일", delivery: "발주 후 협의",
       projectName: "", dieType: "단발금형", dieQuantity: 1, productMaterial: "", pressSpec: "",
-      paymentTerms: "별도 협의", currency: "KRW", marginRate: 0, showMargin: true, vatMode: "excluded", includeMaterialPage: true, includeProcessingPage: true,
+      paymentTerms: "별도 협의", documentLocale, currency: CURRENCY_BY_LOCALE[documentLocale], marginRate: 0, showMargin: true, vatMode: "excluded", includeMaterialPage: true, includeProcessingPage: true, materialRoundingEnabled: false, materialRoundingUnit: 1000,
       notes: "- 제품 또는 금형 사양 변경에 따른 추가 비용은 별도 협의합니다.\n- 납기와 트라이 범위는 발주 전 최종 협의합니다.",
       items: DEFAULT_ITEMS.map(([name, description, qty, unit, price]) => ({ id: crypto.randomUUID(), name, description, qty, unit, price })),
       materials: DEFAULT_MATERIALS.map(([name, grade]) => ({ id: crypto.randomUUID(), name, grade, x: 0, y: 0, t: 0, rawX: 0, rawY: 0, rawT: 0, qty: 1, unitPrice: 0 })),
@@ -85,6 +133,15 @@
 
   function currencySymbol(currency) {
     return currency === "JPY" ? "¥" : currency === "USD" ? "$" : "원";
+  }
+
+  function documentLocale(data = null) {
+    const value = data?.documentLocale || form.elements.documentLocale?.value || "ko";
+    return PDF_TEXT[value] ? value : "ko";
+  }
+
+  function textSet(data = null) {
+    return PDF_TEXT[documentLocale(data)];
   }
 
   function money(value, currency = form.elements.currency?.value || "KRW") {
@@ -190,24 +247,36 @@
     renumberMaterials();
   }
 
-  function materialTotals(materials = readMaterials()) {
-    return materials.reduce((total, material) => {
+  function materialTotals(materials = readMaterials(), roundingEnabled = form.elements.materialRoundingEnabled?.checked, roundingUnit = form.elements.materialRoundingUnit?.value) {
+    const total = materials.reduce((result, material) => {
       const weight = materialWeight(material);
-      total.weight += weight;
-      total.cost += Math.round(weight * number(material.unitPrice));
-      return total;
-    }, { weight: 0, cost: 0 });
+      result.weight += weight;
+      result.rawCost += Math.round(weight * number(material.unitPrice));
+      return result;
+    }, { weight: 0, rawCost: 0, cost: 0 });
+    const unit = [100, 1000, 10000].includes(number(roundingUnit)) ? number(roundingUnit) : 1000;
+    total.roundingEnabled = Boolean(roundingEnabled);
+    total.roundingUnit = unit;
+    total.cost = total.roundingEnabled ? Math.round(total.rawCost / unit) * unit : total.rawCost;
+    return total;
   }
 
-  function calculateMaterials(materials = readMaterials(), currency = form.elements.currency?.value || "KRW") {
-    const total = materialTotals(materials);
+  function roundingUnitLabel(unit, data = null) {
+    return textSet(data).roundingUnits[number(unit)] || textSet(data).roundingUnits[1000];
+  }
+
+  function calculateMaterials(materials = readMaterials(), currency = form.elements.currency?.value || "KRW", roundingEnabled = form.elements.materialRoundingEnabled?.checked, roundingUnit = form.elements.materialRoundingUnit?.value) {
+    const total = materialTotals(materials, roundingEnabled, roundingUnit);
     [...materialsBody.rows].forEach((row, index) => {
       const weight = materialWeight(materials[index]);
       row.querySelector(".material-weight").value = weight.toFixed(2);
       row.querySelector(".material-cost").value = money(Math.round(weight * number(materials[index].unitPrice)), currency);
+      row.querySelector(".material-price").placeholder = `${currency}/kg`;
     });
     document.getElementById("materialWeightTotal").textContent = `${total.weight.toFixed(2)} kg`;
     document.getElementById("materialCostTotal").textContent = money(total.cost, currency);
+    document.getElementById("materialRawCostTotal").textContent = money(total.rawCost, currency);
+    document.getElementById("materialRoundedCostTotal").textContent = money(total.cost, currency);
     return total;
   }
 
@@ -281,7 +350,11 @@
 
   function calculateProcessing(processing = readProcessing(), currency = form.elements.currency?.value || "KRW") {
     const total = processingTotals(processing);
-    [...processingBody.rows].forEach((row, index) => { row.querySelector(".processing-cost").value = money(number(processing[index].qty) * number(processing[index].rate), currency); });
+    [...processingBody.rows].forEach((row, index) => {
+      row.querySelector(".processing-cost").value = money(number(processing[index].qty) * number(processing[index].rate), currency);
+      const method = processing[index].method;
+      row.querySelector(".processing-rate").placeholder = method === "lump" ? `${currency}/lot` : `${currency}/${method === "weight" ? "kg" : "hr"}`;
+    });
     document.getElementById("machiningCostTotal").textContent = money(total.machining, currency);
     document.getElementById("heatCostTotal").textContent = money(total.heat, currency);
     document.getElementById("edmCostTotal").textContent = money(total.edm, currency);
@@ -297,6 +370,8 @@
     data.showMargin = form.elements.showMargin.checked;
     data.includeMaterialPage = form.elements.includeMaterialPage.checked;
     data.includeProcessingPage = form.elements.includeProcessingPage.checked;
+    data.materialRoundingEnabled = form.elements.materialRoundingEnabled.checked;
+    data.materialRoundingUnit = number(form.elements.materialRoundingUnit.value) || 1000;
     data.items = readItems();
     data.materials = readMaterials();
     data.processing = readProcessing();
@@ -310,6 +385,8 @@
     const hasMaterials = Array.isArray(data.materials) && data.materials.some(item => String(item.name || item.grade || "").trim() || number(item.x) || number(item.y) || number(item.t));
     const hasProcessing = Array.isArray(data.processing) && data.processing.length;
     data = { ...defaults, ...data, items: hasItems ? data.items : defaults.items, materials: hasMaterials ? data.materials : defaults.materials, processing: hasProcessing ? data.processing : defaults.processing };
+    if (!PDF_TEXT[data.documentLocale]) data.documentLocale = data.currency === "JPY" ? "ja" : data.currency === "USD" ? "en" : initialLocale;
+    data.currency = CURRENCY_BY_LOCALE[data.documentLocale];
     data.items = data.items.map(item => {
       if (item.name === "조립·사상·트라이비") return { ...item, name: "조립·TRY비", description: "조립 및 TRY" };
       if (item.name === "금형 소재비") {
@@ -338,6 +415,8 @@
     renderItems(data.items);
     renderMaterials(data.materials);
     renderProcessing(data.processing);
+    document.getElementById("documentLocale").value = data.documentLocale;
+    applyInterfaceLocale(data.documentLocale);
     calculate();
   }
 
@@ -358,10 +437,123 @@
     return { itemSubtotal, margin, supply, vat, grand };
   }
 
+  const ITEM_ALIASES = {
+    material: ["금형 소재비", "金型材料費", "Material Cost"],
+    machining: ["기계가공비", "機械加工費", "Machining Cost"],
+    heat: ["열처리·표면처리비", "熱処理・表面処理費", "Heat / Surface Treatment"],
+    edm: ["와이어·방전가공비", "ワイヤー・放電加工費", "Wire / EDM Cost"]
+  };
+  const QUOTE_ITEM_TRANSLATIONS = [
+    ["금형 설계비", "金型設計費", "Die Design Cost"], ["금형 소재비", "金型材料費", "Material Cost"], ["기계가공비", "機械加工費", "Machining Cost"],
+    ["와이어·방전가공비", "ワイヤー・放電加工費", "Wire / EDM Cost"], ["열처리·표면처리비", "熱処理・表面処理費", "Heat / Surface Treatment"], ["표준부품비", "標準部品費", "Standard Parts"],
+    ["조립·TRY비", "組立・TRY費", "Assembly / TRY"], ["검사·운송·기타", "検査・運送・その他", "Inspection / Shipping / Other"]
+  ];
+  const DESCRIPTION_TRANSLATIONS = [
+    ["공정검토 및 2D/3D 설계", "工程検討および2D/3D設計", "Process review and 2D/3D design"], ["가이드·스프링·볼트 등", "ガイド・スプリング・ボルト等", "Guides, springs, bolts, etc."],
+    ["조립 및 TRY", "組立およびTRY", "Assembly and TRY"], ["측정, 검사, 포장 및 운송", "測定、検査、梱包および運送", "Measurement, inspection, packing and shipping"]
+  ];
+  const DIE_TYPE_TRANSLATIONS = [
+    ["단발금형", "単発金型", "Single-operation die"], ["순차이송금형", "順送金型", "Progressive die"], ["트랜스퍼금형", "トランスファー金型", "Transfer die"], ["복합금형", "複合金型", "Compound die"], ["기타", "その他", "Other"]
+  ];
+  const PROCESS_NAME_TRANSLATIONS = [
+    ["밀링", "フライス加工", "Milling"], ["드릴링", "穴あけ", "Drilling"], ["선반", "旋盤", "Turning"], ["성형연마", "成形研削", "Form Grinding"], ["콘타", "コンター加工", "Contour Saw"],
+    ["사상", "仕上げ", "Finishing"], ["열처리", "熱処理", "Heat Treatment"], ["와이어 가공", "ワイヤーカット", "Wire Cutting"], ["방전가공(EDM)", "放電加工(EDM)", "EDM"]
+  ];
+  const DEFAULT_VALUE_TRANSLATIONS = {
+    validUntil: [["작성일로부터 30일", "作成日から30日間", "30 days from issue date"]],
+    delivery: [["발주 후 협의", "ご発注後に協議", "To be agreed after order"]],
+    paymentTerms: [["별도 협의", "別途協議", "To be agreed"]],
+    notes: [["- 제품 또는 금형 사양 변경에 따른 추가 비용은 별도 협의합니다.\n- 납기와 트라이 범위는 발주 전 최종 협의합니다.", "- 製品または金型仕様の変更に伴う追加費用は別途協議とします。\n- 納期およびTRY範囲はご発注前に最終確認します。", "- Additional costs caused by product or die specification changes will be quoted separately.\n- Delivery and TRY scope will be finalized before order."]]
+  };
+
+  function translatedKnown(value, sets, locale) {
+    const index = locale === "ja" ? 1 : locale === "en" ? 2 : 0;
+    const normalized = String(value || "").trim().toLowerCase();
+    const found = sets.find(set => set.some(entry => entry.toLowerCase() === normalized));
+    return found ? found[index] : value;
+  }
+
+  function localizedDescription(value, locale) {
+    const text = String(value || "");
+    if (/^\[(별첨|別紙|Appendix)\s*1\]/i.test(text)) return locale === "ja" ? "[別紙1] 金型材料費明細書参照" : locale === "en" ? "[Appendix 1] See material cost detail" : "[별첨1] 금형소재 산출명세 참조";
+    if (/^\[(별첨|別紙|Appendix)\s*2\]/i.test(text)) return locale === "ja" ? "[別紙2] 加工費明細書参照" : locale === "en" ? "[Appendix 2] See processing cost detail" : "[별첨2] 가공비용 산출명세 참조";
+    return translatedKnown(text, DESCRIPTION_TRANSLATIONS, locale);
+  }
+
+  function itemKey(name) {
+    const normalized = String(name || "").trim().toLowerCase();
+    return Object.keys(ITEM_ALIASES).find(key => ITEM_ALIASES[key].some(alias => alias.toLowerCase() === normalized)) || "";
+  }
+
+  function quoteLineAmount(item) {
+    return Math.round(number(item?.qty) * number(item?.price));
+  }
+
+  function setSyncStatus(id, synced, locale = documentLocale()) {
+    const badge = document.getElementById(id);
+    if (!badge) return;
+    badge.textContent = synced ? (locale === "ja" ? "反映済" : locale === "en" ? "Applied" : "반영") : (locale === "ja" ? "未反映" : locale === "en" ? "Not applied" : "미반영");
+    badge.classList.toggle("synced", synced);
+    badge.classList.toggle("pending", !synced);
+  }
+
+  function updateCalculatorSyncStatus(data) {
+    const material = materialTotals(data.materials, data.materialRoundingEnabled, data.materialRoundingUnit);
+    const materialItem = data.items.find(item => itemKey(item.name) === "material");
+    const materialSynced = material.rawCost > 0 && Boolean(materialItem) && quoteLineAmount(materialItem) === material.cost;
+    const processing = processingTotals(data.processing);
+    const processingSynced = processing.all > 0 && ["machining", "heat", "edm"].every(key => {
+      const item = data.items.find(candidate => itemKey(candidate.name) === key);
+      return Boolean(item) && quoteLineAmount(item) === processing[key];
+    });
+    setSyncStatus("materialSyncStatus", materialSynced, documentLocale(data));
+    setSyncStatus("processingSyncStatus", processingSynced, documentLocale(data));
+  }
+
+  function applyInterfaceLocale(locale) {
+    const ui = UI_TEXT[locale] || UI_TEXT.ko;
+    document.documentElement.lang = locale === "ja" ? "ja" : locale === "en" ? "en" : "ko";
+    document.querySelector(".quote-hero h1").textContent = ui.hero;
+    const work = document.querySelector(".file-actions-card");
+    work.querySelector("h2").textContent = ui.work;
+    work.querySelector(":scope > p").textContent = ui.workHelp;
+    work.querySelector(".document-locale-field > span").textContent = ui.language;
+    document.getElementById("newQuote").textContent = ui.newQuote;
+    document.querySelector(".file-button > span").innerHTML = ui.load.replace("|", "<br>");
+    document.getElementById("downloadPdf").textContent = ui.pdf;
+    document.getElementById("downloadQuote").textContent = ui.edit;
+    document.getElementById("previewPdf").textContent = ui.preview;
+    document.getElementById("pdfPreviewTitle").textContent = ui.previewTitle;
+    const calculators = document.getElementById("linked-calculators");
+    calculators.querySelector("h2").textContent = ui.calculators;
+    calculators.querySelector(":scope > p").textContent = ui.calculatorHelp;
+    document.querySelector("#openMaterialCalculator > span:first-child").textContent = ui.material;
+    document.querySelector("#openProcessingCalculator > span:first-child").textContent = ui.processing;
+    calculators.querySelectorAll(".calculator-link-meta small").forEach(element => { element.textContent = ui.open; });
+    document.querySelector(".notice-card h2").textContent = ui.notice;
+    const roundingUi = locale === "ja" ? ["材料費の端数処理を適用", "端数処理単位", "百円単位", "千円単位", "万円単位", "計算材料費", "最終材料費"] : locale === "en" ? ["Apply material cost rounding", "Rounding unit", "Hundreds", "Thousands", "Ten-thousands", "Calculated material cost", "Final material cost"] : ["소재비 반올림 적용", "반올림 단위", "백원 단위", "천원 단위", "만원 단위", "계산 소재비", "최종 소재비"];
+    const rounding = document.querySelector(".material-rounding");
+    rounding.querySelector(".check-label span").textContent = roundingUi[0];
+    const unitLabel = rounding.querySelector("label:not(.check-label)");
+    [...unitLabel.childNodes].find(node => node.nodeType === Node.TEXT_NODE).nodeValue = roundingUi[1];
+    [...unitLabel.querySelectorAll("option")].forEach((option, index) => { option.textContent = roundingUi[index + 2]; });
+    const roundingLabels = rounding.querySelectorAll(":scope > p > span:not([aria-hidden])");
+    roundingLabels[0].textContent = roundingUi[5];
+    roundingLabels[1].textContent = roundingUi[6];
+  }
+
+  function changeDocumentLocale(locale) {
+    const normalized = PDF_TEXT[locale] ? locale : "ko";
+    form.elements.documentLocale.value = normalized;
+    form.elements.currency.value = CURRENCY_BY_LOCALE[normalized];
+    document.getElementById("documentLocale").value = normalized;
+    applyInterfaceLocale(normalized);
+  }
+
   function calculate() {
     const data = readData();
     const result = totals(data);
-    calculateMaterials(data.materials, data.currency);
+    calculateMaterials(data.materials, data.currency, data.materialRoundingEnabled, data.materialRoundingUnit);
     calculateProcessing(data.processing, data.currency);
     [...itemsBody.rows].forEach((row, index) => row.querySelector(".item-total").value = money(number(data.items[index].qty) * number(data.items[index].price), data.currency));
     document.getElementById("itemsSubtotal").textContent = money(result.itemSubtotal, data.currency);
@@ -369,6 +561,7 @@
     document.getElementById("supplyAmount").textContent = money(result.supply, data.currency);
     document.getElementById("vatAmount").textContent = money(result.vat, data.currency);
     document.getElementById("grandTotal").textContent = money(result.grand, data.currency);
+    updateCalculatorSyncStatus(data);
   }
 
   function setStatus(message, type = "") {
@@ -448,18 +641,20 @@
 
   function applyMaterialTotal() {
     const data = readData();
-    const materialTotal = materialTotals(data.materials);
-    const target = [...itemsBody.rows].find(row => row.querySelector('[data-field="name"]').value.includes("소재"));
+    const materialTotal = materialTotals(data.materials, data.materialRoundingEnabled, data.materialRoundingUnit);
+    const target = [...itemsBody.rows].find(row => itemKey(row.querySelector('[data-field="name"]').value) === "material");
     if (!target) {
       setStatus("견적 항목에서 금형 소재비 항목을 찾을 수 없습니다.", "error");
       return;
     }
     target.querySelector('[data-field="qty"]').value = 1;
-    target.querySelector('[data-field="unit"]').value = "식";
+    target.querySelector('[data-field="unit"]').value = textSet(data).unitEach;
     target.querySelector('[data-field="price"]').value = materialTotal.cost;
-    target.querySelector('[data-field="description"]').value = `[별첨1] 금형소재 산출명세 ${data.materials.filter(item => materialWeight(item) > 0).length}종 합계`;
+    const locale = documentLocale(data);
+    const count = data.materials.filter(item => materialWeight(item) > 0).length;
+    target.querySelector('[data-field="description"]').value = locale === "ja" ? `[別紙1] 金型材料費明細 ${count}品目 合計` : locale === "en" ? `[Appendix 1] Material cost detail, ${count} items total` : `[별첨1] 금형소재 산출명세 ${count}종 합계`;
     changed();
-    setStatus(`소재비 ${money(materialTotal.cost, data.currency)}을 견적 항목에 반영했습니다.`, "success");
+    setStatus(`최종 소재비 ${money(materialTotal.cost, data.currency)}을 견적 항목에 반영했습니다.`, "success");
     materialDialog.close();
   }
 
@@ -471,9 +666,9 @@
     const data = readData();
     const total = processingTotals(data.processing);
     const targets = {
-      machining: [...itemsBody.rows].find(row => row.querySelector('[data-field="name"]').value === "기계가공비"),
-      heat: [...itemsBody.rows].find(row => row.querySelector('[data-field="name"]').value.includes("열처리")),
-      edm: [...itemsBody.rows].find(row => row.querySelector('[data-field="name"]').value.includes("와이어"))
+      machining: [...itemsBody.rows].find(row => itemKey(row.querySelector('[data-field="name"]').value) === "machining"),
+      heat: [...itemsBody.rows].find(row => itemKey(row.querySelector('[data-field="name"]').value) === "heat"),
+      edm: [...itemsBody.rows].find(row => itemKey(row.querySelector('[data-field="name"]').value) === "edm")
     };
     if (Object.values(targets).some(target => !target)) {
       setStatus("견적 항목에서 기계가공비·열처리비·와이어가공비 항목을 찾을 수 없습니다.", "error");
@@ -481,9 +676,10 @@
     }
     Object.entries(targets).forEach(([group, target]) => {
       target.querySelector('[data-field="qty"]').value = 1;
-      target.querySelector('[data-field="unit"]').value = "식";
+      target.querySelector('[data-field="unit"]').value = textSet(data).unitEach;
       target.querySelector('[data-field="price"]').value = total[group];
-      target.querySelector('[data-field="description"]').value = "[별첨2] 가공비용 산출명세 참조";
+      const locale = documentLocale(data);
+      target.querySelector('[data-field="description"]').value = locale === "ja" ? "[別紙2] 加工費明細書参照" : locale === "en" ? "[Appendix 2] See processing cost detail" : "[별첨2] 가공비용 산출명세 참조";
     });
     changed();
     setStatus(`가공비 합계 ${money(total.all, data.currency)}을 견적 항목별로 반영했습니다.`, "success");
@@ -582,12 +778,12 @@
     };
     ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.textBaseline = "middle";
-    const font = (size, weight = 400) => { ctx.font = `${weight} ${size}px Arial, "Malgun Gothic", "Noto Sans KR", sans-serif`; };
+    const font = (size, weight = 400) => { ctx.font = `${weight} ${size}px Arial, "Malgun Gothic", "Yu Gothic", Meiryo, "Noto Sans JP", "Noto Sans KR", sans-serif`; };
     const line = (x1, y1, x2, y2, color = colors.line, thickness = 2) => { ctx.strokeStyle = color; ctx.lineWidth = thickness; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); };
     const box = (x, y, w, h, fill = null, stroke = colors.line, thickness = 2) => { if (fill) { ctx.fillStyle = fill; ctx.fillRect(x, y, w, h); } ctx.strokeStyle = stroke; ctx.lineWidth = thickness; ctx.strokeRect(x, y, w, h); };
     const footer = () => {
       line(left, 3260, right, 3260, colors.line, 2);
-      font(28, 400); ctx.fillStyle = colors.muted; ctx.textAlign = "left"; ctx.fillText(data.sellerCompany || "작성 회사명", left, 3310);
+      font(28, 400); ctx.fillStyle = colors.muted; ctx.textAlign = "left"; ctx.fillText(data.sellerCompany || textSet(data).missingSeller, left, 3310);
       ctx.textAlign = "center"; ctx.fillText(data.quoteNumber || "-", 1240, 3310);
       ctx.textAlign = "right"; ctx.fillText(`${pageNumber} / ${pageCount}`, right, 3310);
     };
@@ -610,12 +806,13 @@
 
   function drawPdfCanvas(data, pageCount = pdfPageCount(data)) {
     const total = totals(data);
+    const t = textSet(data), locale = documentLocale(data);
     const { canvas, ctx, left, right, width, colors, font, line, box, footer } = createQuotationPage(data, {
       pageNumber: 1,
       pageCount,
       kicker: "QUOTATION / PRESS DIE",
-      title: "프레스금형 견적서",
-      subtitle: "PRESS DIE QUOTATION",
+      title: t.quoteTitle,
+      subtitle: t.quoteSubtitle,
       titleSize: 92
     });
     const infoCard = (label, title, details, x, y, w, h) => {
@@ -633,22 +830,22 @@
     };
 
     const cardY = 470, cardGap = 24, cardW = (width - cardGap) / 2;
-    const sellerDetail1 = [data.sellerRepresentative && `대표 ${data.sellerRepresentative}`, data.sellerBusinessNo && `사업자 ${data.sellerBusinessNo}`, data.sellerContact && `담당 ${data.sellerContact}`].filter(Boolean).join(" / ");
+    const sellerDetail1 = [data.sellerRepresentative && `${t.representative} ${data.sellerRepresentative}`, data.sellerBusinessNo && `${t.businessNo} ${data.sellerBusinessNo}`, data.sellerContact && `${t.contact} ${data.sellerContact}`].filter(Boolean).join(" / ");
     const sellerDetail2 = [data.sellerPhone, data.sellerEmail, data.sellerAddress].filter(Boolean).join(" / ");
-    infoCard("SUPPLIER / 공급자", data.sellerCompany || "작성 회사명", [sellerDetail1 || "-", sellerDetail2 || "-"], left, cardY, cardW, 280);
-    infoCard("RECIPIENT / 수신자", data.buyerCompany || "납품 회사명", [data.buyerContact ? `담당 ${data.buyerContact}` : "담당자 미입력", data.projectName ? `프로젝트 ${data.projectName}` : "금형명 미입력"], left + cardW + cardGap, cardY, cardW, 280);
+    infoCard(t.supplier, data.sellerCompany || t.missingSeller, [sellerDetail1 || "-", sellerDetail2 || "-"], left, cardY, cardW, 280);
+    infoCard(t.recipient, data.buyerCompany || t.missingBuyer, [data.buyerContact ? `${t.contact} ${data.buyerContact}` : t.missingContact, data.projectName ? `${t.project} ${data.projectName}` : t.missingProject], left + cardW + cardGap, cardY, cardW, 280);
 
     const amountY = 780;
     box(left, amountY, width, 142, "#f7fafc", colors.line);
     ctx.fillStyle = colors.blue; ctx.fillRect(left, amountY, 10, 142);
-    ctx.textAlign = "left"; font(25, 800); ctx.fillStyle = colors.muted; ctx.fillText("PROPOSED TOTAL / 제안 금액", left + 34, amountY + 38);
-    font(34, 400); ctx.fillStyle = colors.ink; ctx.fillText(data.projectName || "프레스금형 제작", left + 34, amountY + 96);
+    ctx.textAlign = "left"; font(25, 800); ctx.fillStyle = colors.muted; ctx.fillText(t.proposed, left + 34, amountY + 38);
+    font(34, 400); ctx.fillStyle = colors.ink; ctx.fillText(data.projectName || t.defaultProject, left + 34, amountY + 96);
     ctx.textAlign = "right"; font(46, 400); ctx.fillStyle = colors.navy; ctx.fillText(money(total.grand, data.currency), right - 28, amountY + 73);
 
     const fieldY = 950, fieldGap = 20, fieldW = (width - fieldGap * 2) / 3, fieldH = 110;
     const fields = [
-      ["금형 형식", `${data.dieType || "-"} / ${data.dieQuantity || 1}식`], ["제품 소재", data.productMaterial], ["프레스 사양", data.pressSpec],
-      ["견적 유효기간", data.validUntil], ["납기", data.delivery], ["결제조건", data.paymentTerms]
+      [t.dieType, `${translatedKnown(data.dieType || "-", DIE_TYPE_TRANSLATIONS, locale)} / ${data.dieQuantity || 1}${t.unitEach}`], [t.productMaterial, data.productMaterial], [t.pressSpec, data.pressSpec],
+      [t.validUntil, translatedKnown(data.validUntil, DEFAULT_VALUE_TRANSLATIONS.validUntil, locale)], [t.delivery, translatedKnown(data.delivery, DEFAULT_VALUE_TRANSLATIONS.delivery, locale)], [t.payment, translatedKnown(data.paymentTerms, DEFAULT_VALUE_TRANSLATIONS.paymentTerms, locale)]
     ];
     fields.forEach(([label, value], index) => field(label, value, left + (index % 3) * (fieldW + fieldGap), fieldY + Math.floor(index / 3) * (fieldH + 20), fieldW, fieldH));
 
@@ -657,59 +854,60 @@
     const columns = [left, left + 430, left + 1170, left + 1330, left + 1490, right];
     box(left, tableY, width, headerH, colors.pale, colors.line);
     ctx.fillStyle = colors.blue; ctx.fillRect(left, tableY, width, 6);
-    const headers = ["항목", "내용·사양", "수량", "단위", "금액"];
+    const headers = t.itemHeaders;
     ctx.textAlign = "center"; font(36, 800); ctx.fillStyle = colors.navy;
     headers.forEach((header, i) => ctx.fillText(header, (columns[i] + columns[i + 1]) / 2, tableY + headerH / 2));
     visibleItems.forEach((item, index) => {
       const y = tableY + headerH + index * rowH;
       box(left, y, width, rowH, index % 2 ? colors.wash : colors.white, colors.line);
       columns.slice(1, -1).forEach(x => line(x, y, x, y + rowH, colors.line));
-      ctx.textAlign = "left"; font(34, 400); ctx.fillStyle = colors.ink; centeredCanvasText(ctx, item.name || "-", columns[0] + 18, y + rowH / 2, columns[1] - columns[0] - 36, 40, 2);
-      const isAttachment = /^\[별첨\d*\]/.test(String(item.description || ""));
-      font(32, 400); ctx.fillStyle = isAttachment ? colors.blue : colors.text; centeredCanvasText(ctx, item.description || "-", columns[1] + 18, y + rowH / 2, columns[2] - columns[1] - 36, 39, 2);
-      ctx.textAlign = "center"; font(32, 400); ctx.fillStyle = colors.ink; ctx.fillText(String(item.qty || 0), (columns[2] + columns[3]) / 2, y + rowH / 2); ctx.fillText(item.unit || "식", (columns[3] + columns[4]) / 2, y + rowH / 2);
+      ctx.textAlign = "left"; font(34, 400); ctx.fillStyle = colors.ink; centeredCanvasText(ctx, translatedKnown(item.name || "-", QUOTE_ITEM_TRANSLATIONS, locale), columns[0] + 18, y + rowH / 2, columns[1] - columns[0] - 36, 40, 2);
+      const isAttachment = /^\[(별첨|別紙|Appendix)\s*\d+\]/i.test(String(item.description || ""));
+      font(32, 400); ctx.fillStyle = isAttachment ? colors.blue : colors.text; centeredCanvasText(ctx, localizedDescription(item.description || "-", locale), columns[1] + 18, y + rowH / 2, columns[2] - columns[1] - 36, 39, 2);
+      ctx.textAlign = "center"; font(32, 400); ctx.fillStyle = colors.ink; ctx.fillText(String(item.qty || 0), (columns[2] + columns[3]) / 2, y + rowH / 2); ctx.fillText(item.unit === "식" ? t.unitEach : (item.unit || t.unitEach), (columns[3] + columns[4]) / 2, y + rowH / 2);
       ctx.textAlign = "right"; font(36, 400); ctx.fillText(money(number(item.qty) * number(item.price), data.currency), columns[5] - 18, y + rowH / 2);
     });
     const itemEndY = tableY + headerH + Math.max(visibleItems.length, 1) * rowH;
     const summaryX = 1320, summaryW = right - summaryX, summaryRowH = 82;
-    const summary = [["항목 합계", total.itemSubtotal], ...(number(data.marginRate) > 0 && data.showMargin ? [[`일반관리비·이윤 (${data.marginRate}%)`, total.margin]] : []), ["공급가액", total.supply], [data.vatMode === "none" ? "부가세" : "부가세 (10%)", total.vat]];
+    const summary = [[t.subtotal, total.itemSubtotal], ...(number(data.marginRate) > 0 && data.showMargin ? [[`${t.overhead} (${data.marginRate}%)`, total.margin]] : []), [t.supply, total.supply], [data.vatMode === "none" ? t.vat : `${t.vat} (10%)`, total.vat]];
     let summaryY = itemEndY + 24;
     summary.forEach(([label, value]) => { box(summaryX, summaryY, summaryW, summaryRowH, colors.white); ctx.textAlign = "left"; font(32, 600); ctx.fillStyle = colors.text; ctx.fillText(label, summaryX + 20, summaryY + summaryRowH / 2); ctx.textAlign = "right"; font(32, 400); ctx.fillStyle = colors.ink; ctx.fillText(money(value, data.currency), right - 18, summaryY + summaryRowH / 2); summaryY += summaryRowH; });
-    box(summaryX, summaryY, summaryW, 104, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(summaryX, summaryY, 9, 104); ctx.textAlign = "left"; font(35, 800); ctx.fillStyle = colors.navy; ctx.fillText("총 견적금액", summaryX + 28, summaryY + 52); ctx.textAlign = "right"; font(46, 400); ctx.fillText(money(total.grand, data.currency), right - 20, summaryY + 52);
+    box(summaryX, summaryY, summaryW, 104, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(summaryX, summaryY, 9, 104); ctx.textAlign = "left"; font(35, 800); ctx.fillStyle = colors.navy; ctx.fillText(t.grand, summaryX + 28, summaryY + 52); ctx.textAlign = "right"; font(46, 400); ctx.fillText(money(total.grand, data.currency), right - 20, summaryY + 52);
 
     const notesY = Math.max(summaryY + 144, itemEndY + 405);
-    ctx.textAlign = "left"; font(34, 800); ctx.fillStyle = colors.navy; ctx.fillText("견적 조건 및 특기사항", left, notesY);
-    box(left, notesY + 42, width, 300, colors.wash); font(30, 400); ctx.fillStyle = colors.text; wrapCanvasText(ctx, data.notes || "-", left + 26, notesY + 86, width - 52, 46, 5);
+    ctx.textAlign = "left"; font(34, 800); ctx.fillStyle = colors.navy; ctx.fillText(t.notes, left, notesY);
+    box(left, notesY + 42, width, 300, colors.wash); font(30, 400); ctx.fillStyle = colors.text; wrapCanvasText(ctx, translatedKnown(data.notes || "-", DEFAULT_VALUE_TRANSLATIONS.notes, locale), left + 26, notesY + 86, width - 52, 46, 5);
     footer();
     return canvas;
   }
 
   function drawMaterialPdfCanvas(data, pageNumber = 2, pageCount = pdfPageCount(data)) {
     const materials = data.materials || [];
-    const materialTotal = materialTotals(materials);
+    const materialTotal = materialTotals(materials, data.materialRoundingEnabled, data.materialRoundingUnit);
+    const t = textSet(data);
     const { canvas, ctx, left, right, width, colors, font, line, box, footer } = createQuotationPage(data, {
       pageNumber,
       pageCount,
       kicker: "DETAIL / MATERIAL COST",
-      title: "별첨1 · 금형소재 산출 명세서",
-      subtitle: "PRESS DIE MATERIAL COST DETAIL",
+      title: t.materialTitle,
+      subtitle: t.materialSubtitle,
       titleSize: 72
     });
 
     const projectY = 470;
     box(left, projectY, width, 112, colors.white);
-    ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.blue; ctx.fillText("PROJECT / 금형명", left + 26, projectY + 32);
-    font(38, 400); ctx.fillStyle = colors.navy; ctx.fillText(data.projectName || "금형명 미입력", left + 26, projectY + 78);
-    ctx.textAlign = "right"; font(27, 400); ctx.fillStyle = colors.text; ctx.fillText(`${data.sellerCompany || "작성 회사"}  >  ${data.buyerCompany || "납품 회사"}`, right - 26, projectY + 58);
+    ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.blue; ctx.fillText(t.projectLabel, left + 26, projectY + 32);
+    font(38, 400); ctx.fillStyle = colors.navy; ctx.fillText(data.projectName || t.missingProject, left + 26, projectY + 78);
+    ctx.textAlign = "right"; font(27, 400); ctx.fillStyle = colors.text; ctx.fillText(`${data.sellerCompany || t.missingSeller}  >  ${data.buyerCompany || t.missingBuyer}`, right - 26, projectY + 58);
 
     const cardY = 615, gap = 22, cardW = (width - gap * 2) / 3;
-    const summaryCards = [["산출 품목", `${materials.filter(item => materialWeight(item) > 0).length} 종`], ["총 원소재 중량", `${materialTotal.weight.toFixed(2)} kg`], ["금형 소재비 합계", money(materialTotal.cost, data.currency)]];
+    const summaryCards = [[t.materialCards[0], `${materials.filter(item => materialWeight(item) > 0).length} ${t.kinds}`], [t.materialCards[1], `${materialTotal.weight.toFixed(2)} kg`], [t.materialCards[2], money(materialTotal.cost, data.currency)]];
     summaryCards.forEach(([label, value], index) => { const x = left + index * (cardW + gap); box(x, cardY, cardW, 142, index === 2 ? colors.pale : colors.white, colors.line); if (index === 2) { ctx.fillStyle = colors.blue; ctx.fillRect(x, cardY, 8, 142); } ctx.textAlign = "left"; font(24, 700); ctx.fillStyle = colors.muted; ctx.fillText(label, x + 26, cardY + 38); font(index === 2 ? 40 : 44, 400); ctx.fillStyle = index === 2 ? colors.navy : colors.ink; ctx.fillText(value, x + 26, cardY + 96); });
 
     const visibleMaterials = materials.slice(0, 10);
     const tableY = 800, headerH = 90, rowH = adaptivePdfRowHeight(visibleMaterials.length);
     const columns = [left, left + 80, left + 380, left + 550, left + 910, left + 1310, left + 1420, left + 1600, left + 1780, right];
-    const headers = ["NO.", "명칭", "재질", "완성치수\n폭 × 길이 × 두께", "추천 원소재\n폭 × 길이 × 두께", "수량", "중량(kg)", "단가/kg", "금액"];
+    const headers = t.materialHeaders;
     box(left, tableY, width, headerH, colors.pale, colors.line);
     ctx.fillStyle = colors.blue; ctx.fillRect(left, tableY, width, 6);
     ctx.textAlign = "center"; font(28, 800); ctx.fillStyle = colors.navy;
@@ -725,12 +923,15 @@
       font(29, 400); ctx.fillStyle = colors.text; ctx.fillText(`${material.x || 0} × ${material.y || 0} × ${material.t || 0}`, (columns[3] + columns[4]) / 2, y + rowH / 2);
       font(29, 400); ctx.fillStyle = colors.blue; ctx.fillText(`${material.rawX || 0} × ${material.rawY || 0} × ${material.rawT || 0}`, (columns[4] + columns[5]) / 2, y + rowH / 2);
       font(30, 400); ctx.fillStyle = colors.text; ctx.fillText(String(material.qty || 0), (columns[5] + columns[6]) / 2, y + rowH / 2); ctx.fillText(weight.toFixed(2), (columns[6] + columns[7]) / 2, y + rowH / 2);
-      ctx.textAlign = "right"; ctx.fillText(new Intl.NumberFormat("ko-KR").format(number(material.unitPrice)), columns[8] - 14, y + rowH / 2); font(32, 400); ctx.fillStyle = colors.ink; ctx.fillText(money(cost, data.currency), columns[9] - 14, y + rowH / 2);
+      ctx.textAlign = "right"; ctx.fillText(new Intl.NumberFormat(t.locale).format(number(material.unitPrice)), columns[8] - 14, y + rowH / 2); font(32, 400); ctx.fillStyle = colors.ink; ctx.fillText(money(cost, data.currency), columns[9] - 14, y + rowH / 2);
     });
 
     const tableEnd = tableY + headerH + Math.max(visibleMaterials.length, 1) * rowH;
-    box(left, tableEnd + 30, width, 138, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(left, tableEnd + 30, 9, 138); ctx.textAlign = "left"; font(36, 800); ctx.fillStyle = colors.navy; ctx.fillText("소재비 합계", left + 30, tableEnd + 99); ctx.textAlign = "right"; font(44, 400); ctx.fillText(money(materialTotal.cost, data.currency), right - 30, tableEnd + 99);
-    const noteY = tableEnd + 220; ctx.textAlign = "left"; font(30, 800); ctx.fillStyle = colors.navy; ctx.fillText("산출 기준", left, noteY); font(26, 400); ctx.fillStyle = colors.muted; ctx.fillText("- 중량 = 추천 원소재 폭 × 길이 × 두께 × 수량 × 강재 밀도(7.85 g/cm³)", left, noteY + 42); ctx.fillText("- 추천 원소재는 참고 규격이며, 실제 견적·발주 시 공급사의 보유 규격과 가공여유를 확인해야 합니다.", left, noteY + 80);
+    const roundingY = tableEnd + 26;
+    box(left, roundingY, width, 76, colors.white, colors.line); ctx.textAlign = "left"; font(28, 700); ctx.fillStyle = colors.text; ctx.fillText(materialTotal.roundingEnabled ? `${t.rounding} (${roundingUnitLabel(materialTotal.roundingUnit, data)} ${t.unitSuffix})` : `${t.rounding} (${t.notApplied})`, left + 28, roundingY + 38); ctx.textAlign = "right"; font(30, 400); ctx.fillStyle = colors.ink; ctx.fillText(materialTotal.roundingEnabled ? `${money(materialTotal.rawCost, data.currency)} → ${money(materialTotal.cost, data.currency)}` : money(materialTotal.rawCost, data.currency), right - 28, roundingY + 38);
+    const totalY = roundingY + 88;
+    box(left, totalY, width, 138, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(left, totalY, 9, 138); ctx.textAlign = "left"; font(36, 800); ctx.fillStyle = colors.navy; ctx.fillText(t.materialTotal, left + 30, totalY + 69); ctx.textAlign = "right"; font(44, 400); ctx.fillText(money(materialTotal.cost, data.currency), right - 30, totalY + 69);
+    const noteY = totalY + 190; ctx.textAlign = "left"; font(30, 800); ctx.fillStyle = colors.navy; ctx.fillText(t.basis, left, noteY); font(26, 400); ctx.fillStyle = colors.muted; ctx.fillText(t.materialNotes[0], left, noteY + 42); ctx.fillText(t.materialNotes[1], left, noteY + 80);
     footer();
     return canvas;
   }
@@ -738,28 +939,29 @@
   function drawProcessingPdfCanvas(data, pageNumber, pageCount = pdfPageCount(data)) {
     const processing = data.processing || [];
     const total = processingTotals(processing);
+    const t = textSet(data), locale = documentLocale(data);
     const { canvas, ctx, left, right, width, colors, font, line, box, footer } = createQuotationPage(data, {
       pageNumber,
       pageCount,
       kicker: "DETAIL / PROCESSING COST",
-      title: "별첨2 · 가공비용 산출 명세서",
-      subtitle: "PRESS DIE PROCESSING COST DETAIL",
+      title: t.processingTitle,
+      subtitle: t.processingSubtitle,
       titleSize: 68
     });
     const projectY = 470;
     box(left, projectY, width, 112, colors.white);
-    ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.blue; ctx.fillText("PROJECT / 금형명", left + 26, projectY + 32);
-    font(38, 400); ctx.fillStyle = colors.navy; ctx.fillText(data.projectName || "금형명 미입력", left + 26, projectY + 78);
-    ctx.textAlign = "right"; font(27, 400); ctx.fillStyle = colors.text; ctx.fillText(`${data.sellerCompany || "작성 회사"}  >  ${data.buyerCompany || "납품 회사"}`, right - 26, projectY + 58);
+    ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.blue; ctx.fillText(t.projectLabel, left + 26, projectY + 32);
+    font(38, 400); ctx.fillStyle = colors.navy; ctx.fillText(data.projectName || t.missingProject, left + 26, projectY + 78);
+    ctx.textAlign = "right"; font(27, 400); ctx.fillStyle = colors.text; ctx.fillText(`${data.sellerCompany || t.missingSeller}  >  ${data.buyerCompany || t.missingBuyer}`, right - 26, projectY + 58);
 
     const cardY = 615, gap = 18, cardW = (width - gap * 3) / 4;
-    const cards = [["기계가공비", total.machining], ["열처리비", total.heat], ["와이어·방전비", total.edm], ["가공비 합계", total.all]];
+    const cards = t.processingCards.map((label, index) => [label, [total.machining, total.heat, total.edm, total.all][index]]);
     cards.forEach(([label, value], index) => { const x = left + index * (cardW + gap); box(x, cardY, cardW, 142, index === 3 ? colors.pale : colors.white, colors.line); if (index === 3) { ctx.fillStyle = colors.blue; ctx.fillRect(x, cardY, 8, 142); } ctx.textAlign = "left"; font(22, 700); ctx.fillStyle = colors.muted; ctx.fillText(label, x + 22, cardY + 37); font(36, 400); ctx.fillStyle = index === 3 ? colors.navy : colors.ink; centeredCanvasText(ctx, money(value, data.currency), x + 22, cardY + 96, cardW - 44, 38, 1); });
 
     const visibleProcessing = processing.slice(0, 12);
     const tableY = 800, headerH = 88, rowH = adaptivePdfRowHeight(visibleProcessing.length);
     const columns = [left, left + 80, left + 350, left + 760, left + 1080, left + 1330, left + 1530, left + 1800, right];
-    const headers = ["NO.", "구분", "가공 항목", "계산 방식", "투입량", "단위", "임률·단가", "금액"];
+    const headers = t.processingHeaders;
     box(left, tableY, width, headerH, colors.pale, colors.line); ctx.fillStyle = colors.blue; ctx.fillRect(left, tableY, width, 6);
     ctx.textAlign = "center"; font(30, 800); ctx.fillStyle = colors.navy; headers.forEach((header, index) => ctx.fillText(header, (columns[index] + columns[index + 1]) / 2, tableY + headerH / 2));
     visibleProcessing.forEach((item, index) => {
@@ -769,14 +971,15 @@
       const method = PROCESSING_METHODS[item.method] || PROCESSING_METHODS.hour;
       const cost = Math.round(number(item.qty) * number(item.rate));
       ctx.textAlign = "center"; font(29, 400); ctx.fillStyle = colors.muted; ctx.fillText(String(index + 1).padStart(2, "0"), (columns[0] + columns[1]) / 2, y + rowH / 2);
-      font(29, 400); ctx.fillStyle = item.group === "heat" ? "#9a5a00" : item.group === "edm" ? "#65458b" : colors.blue; centeredCanvasText(ctx, PROCESSING_GROUPS[item.group] || "기계가공", (columns[1] + columns[2]) / 2, y + rowH / 2, columns[2] - columns[1] - 20, 36, 2);
-      ctx.textAlign = "left"; font(32, 400); ctx.fillStyle = colors.ink; centeredCanvasText(ctx, item.name || "-", columns[2] + 18, y + rowH / 2, columns[3] - columns[2] - 36, 38, 2);
-      ctx.textAlign = "center"; font(29, 400); ctx.fillStyle = colors.text; ctx.fillText(method.label, (columns[3] + columns[4]) / 2, y + rowH / 2); ctx.fillText(new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 1 }).format(number(item.qty)), (columns[4] + columns[5]) / 2, y + rowH / 2); ctx.fillText(method.unit, (columns[5] + columns[6]) / 2, y + rowH / 2);
-      ctx.textAlign = "right"; ctx.fillText(new Intl.NumberFormat("ko-KR").format(number(item.rate)), columns[7] - 16, y + rowH / 2); font(32, 400); ctx.fillStyle = colors.ink; ctx.fillText(money(cost, data.currency), columns[8] - 16, y + rowH / 2);
+      font(29, 400); ctx.fillStyle = item.group === "heat" ? "#9a5a00" : item.group === "edm" ? "#65458b" : colors.blue; centeredCanvasText(ctx, t.groups[item.group] || t.groups.machining, (columns[1] + columns[2]) / 2, y + rowH / 2, columns[2] - columns[1] - 20, 36, 2);
+      ctx.textAlign = "left"; font(32, 400); ctx.fillStyle = colors.ink; centeredCanvasText(ctx, translatedKnown(item.name || "-", PROCESS_NAME_TRANSLATIONS, locale), columns[2] + 18, y + rowH / 2, columns[3] - columns[2] - 36, 38, 2);
+      const localizedMethod = t.methods[item.method] || t.methods.hour;
+      ctx.textAlign = "center"; font(29, 400); ctx.fillStyle = colors.text; ctx.fillText(localizedMethod[0], (columns[3] + columns[4]) / 2, y + rowH / 2); ctx.fillText(new Intl.NumberFormat(t.locale, { maximumFractionDigits: 1 }).format(number(item.qty)), (columns[4] + columns[5]) / 2, y + rowH / 2); ctx.fillText(localizedMethod[1], (columns[5] + columns[6]) / 2, y + rowH / 2);
+      ctx.textAlign = "right"; ctx.fillText(new Intl.NumberFormat(t.locale).format(number(item.rate)), columns[7] - 16, y + rowH / 2); font(32, 400); ctx.fillStyle = colors.ink; ctx.fillText(money(cost, data.currency), columns[8] - 16, y + rowH / 2);
     });
     const tableEnd = tableY + headerH + Math.max(visibleProcessing.length, 1) * rowH;
-    box(left, tableEnd + 28, width, 132, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(left, tableEnd + 28, 9, 132); ctx.textAlign = "left"; font(36, 800); ctx.fillStyle = colors.navy; ctx.fillText("가공비 합계", left + 30, tableEnd + 94); ctx.textAlign = "right"; font(46, 400); ctx.fillText(money(total.all, data.currency), right - 30, tableEnd + 94);
-    const noteY = tableEnd + 210; ctx.textAlign = "left"; font(30, 800); ctx.fillStyle = colors.navy; ctx.fillText("산출 기준", left, noteY); font(26, 400); ctx.fillStyle = colors.muted; ctx.fillText("- 기계가공·와이어·방전: 투입시간 × 시간당 임률 / 일괄식: 수량 × 금액", left, noteY + 42); ctx.fillText("- 열처리 권장식: 처리중량(kg) × kg당 단가. 재질·경도·로트에 맞는 업체 단가를 적용합니다.", left, noteY + 80);
+    box(left, tableEnd + 28, width, 132, colors.pale, colors.blue, 3); ctx.fillStyle = colors.blue; ctx.fillRect(left, tableEnd + 28, 9, 132); ctx.textAlign = "left"; font(36, 800); ctx.fillStyle = colors.navy; ctx.fillText(t.processingTotal, left + 30, tableEnd + 94); ctx.textAlign = "right"; font(46, 400); ctx.fillText(money(total.all, data.currency), right - 30, tableEnd + 94);
+    const noteY = tableEnd + 210; ctx.textAlign = "left"; font(30, 800); ctx.fillStyle = colors.navy; ctx.fillText(t.basis, left, noteY); font(26, 400); ctx.fillStyle = colors.muted; ctx.fillText(t.processingNotes[0], left, noteY + 42); ctx.fillText(t.processingNotes[1], left, noteY + 80);
     footer();
     return canvas;
   }
@@ -841,12 +1044,13 @@
     } catch {
       setStatus("PDF 생성에 실패했습니다. 브라우저를 확인해 주세요.", "error");
     } finally {
-      button.disabled = false; button.textContent = "PDF 다운로드";
+      button.disabled = false; button.textContent = UI_TEXT[documentLocale()]?.pdf || UI_TEXT.ko.pdf;
     }
   }
 
   function previewPdf() {
     const data = readData();
+    const locale = documentLocale(data);
     const dialog = document.getElementById("pdfPreviewDialog");
     const pageCount = pdfPageCount(data);
     const pages = [drawPdfCanvas(data, pageCount)];
@@ -857,10 +1061,10 @@
       const figure = document.createElement("figure");
       figure.className = "pdf-preview-page";
       const caption = document.createElement("figcaption");
-      caption.textContent = `${index + 1}페이지 / ${pages.length}페이지`;
+      caption.textContent = locale === "ja" ? `${index + 1}ページ / ${pages.length}ページ` : locale === "en" ? `Page ${index + 1} / ${pages.length}` : `${index + 1}페이지 / ${pages.length}페이지`;
       const image = document.createElement("img");
       image.src = canvas.toDataURL("image/jpeg", 0.9);
-      image.alt = index === 0 ? "프레스금형 견적서 미리보기" : `${caption.textContent} 별첨 명세서 미리보기`;
+      image.alt = locale === "ja" ? `${caption.textContent} 見積書プレビュー` : locale === "en" ? `${caption.textContent} quotation preview` : (index === 0 ? "프레스금형 견적서 미리보기" : `${caption.textContent} 별첨 명세서 미리보기`);
       figure.append(caption, image);
       return figure;
     }));
@@ -868,6 +1072,7 @@
   }
 
   form.addEventListener("submit", event => event.preventDefault());
+  document.getElementById("documentLocale").addEventListener("change", event => { changeDocumentLocale(event.target.value); changed(); });
   form.addEventListener("input", changed);
   form.addEventListener("change", changed);
   document.getElementById("addItem").addEventListener("click", () => { if (itemsBody.children.length >= 10) { setStatus("PDF 한 페이지 출력을 위해 견적 항목은 최대 10개까지 지원합니다.", "error"); return; } itemsBody.append(itemRow({ qty: 1, unit: "식", price: 0 })); changed(); });
@@ -902,7 +1107,8 @@
       const list = await dbRequest("readonly", store => store.getAll());
       list.sort((a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")));
       if (list[0]) {
-        writeData(list[0]);
+        const latest = requestedLocale && PDF_TEXT[requestedLocale] ? { ...list[0], documentLocale: requestedLocale, currency: CURRENCY_BY_LOCALE[requestedLocale] } : list[0];
+        writeData(latest);
         await refreshSavedQuotes(list[0].id);
         setStatus("마지막으로 작성한 로컬 견적을 불러왔습니다.", "success");
         if (new URLSearchParams(location.search).get("tool") === "material") openMaterialDialog();

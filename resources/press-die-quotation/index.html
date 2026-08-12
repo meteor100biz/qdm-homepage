@@ -7,7 +7,7 @@
   <meta name="description" content="프레스금형 설계비, 소재비, 가공비와 부가세를 직접 입력해 견적서를 작성하고 PDF와 편집용 파일로 저장하는 무료 도구입니다. 입력 자료는 서버로 전송되지 않습니다.">
   <link rel="canonical" href="https://qdm.co.kr/resources/press-die-quotation/">
   <link rel="stylesheet" href="/assets/style.css?v=20260812-1">
-<link rel="stylesheet" href="/assets/quotation.css?v=20260812-12">
+<link rel="stylesheet" href="/assets/quotation.css?v=20260812-14">
 </head>
 <body>
 <header class="topbar"><div class="wrap nav"><a href="/" class="brand" aria-label="QDM home"><div class="logo">QDM</div><div class="tagline"><span class="tagline-press">프레스금형설계 · 박판성형해석</span> · <span class="tagline-product">구조해석 · 제품설계</span><br>QUALITY-DRIVEN DESIGN &amp; MANUFACTURING</div></a><nav class="menu" aria-label="주요 메뉴"><a class="hide-sm" href="/about/">회사소개</a><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/services/press-die-design/" aria-haspopup="menu">서비스<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel" role="menu"><a role="menuitem" href="/services/press-die-design/">프레스금형설계</a><a role="menuitem" href="/services/sheet-metal-forming-analysis/">박판성형해석</a><a role="menuitem" href="/services/structural-analysis/">구조해석</a><a role="menuitem" href="/services/product-design/">제품설계</a><a class="menu-dropdown-all" role="menuitem" href="/portfolio.html">전체 포트폴리오 보기</a></div></div><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/resources/press-die-quotation/" aria-haspopup="menu">자료실<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel resource-menu" role="menu"><a role="menuitem" href="/resources/press-die-quotation/">프레스금형 견적서 작성기</a><a role="menuitem" href="/resources/press-die-quotation/?tool=material">금형소재 견적산출 <small>계산기</small></a><a role="menuitem" href="/resources/press-die-quotation/?tool=processing">가공비용 견적산출 <small>계산기</small></a></div></div><a class="hide-sm" href="/#blog">기술블로그</a><a href="/#contact">문의하기</a><a class="phone" href="tel:07080646621">☎ 070-8064-6621</a></nav></div></header>
@@ -53,7 +53,8 @@
           <label>제품 소재<input name="productMaterial" placeholder="예: SPFC980Y 1.2t"></label>
           <label>프레스 사양<input name="pressSpec" placeholder="예: 400 ton / BED 2500"></label>
           <label>결제 조건<input name="paymentTerms" placeholder="예: 계약금 30%, 납품 후 70%"></label>
-          <label>통화<select name="currency"><option value="KRW">KRW (원)</option><option value="JPY">JPY (엔)</option><option value="USD">USD (달러)</option></select></label>
+          <input name="documentLocale" type="hidden" value="ko">
+          <input name="currency" type="hidden" value="KRW">
         </div>
       </section>
 
@@ -85,7 +86,8 @@
             <datalist id="materialGradeOptions"><option value="S45C"><option value="SKD11"><option value="STD11"><option value="SB41P"></datalist>
             <div class="material-table-actions"><button type="button" class="mini-button" id="restoreDefaultMaterials">기본 항목 복원</button><button type="button" class="mini-button primary" id="addMaterial">+ 소재 항목 추가</button></div>
             <div class="material-table-wrap"><table class="material-table"><thead><tr><th>No.</th><th>명칭</th><th>재질</th><th>완성치수<br>폭 × 길이 × 두께</th><th>추천 원소재<br>폭 × 길이 × 두께</th><th>수량</th><th>중량(kg)</th><th>단가/kg</th><th>금액</th><th aria-label="순서 이동 및 삭제">순서</th></tr></thead><tbody id="materialsBody"></tbody></table></div>
-            <div class="material-summary"><p><strong>추천 원소재</strong>는 일반 가공여유와 유통 두께 계열을 적용한 참고치입니다. 중량은 입력한 재질을 강재로 보고 밀도 7.85 g/cm³를 적용합니다. 실제 발주 전 보유 규격·절단 공차를 확인하세요.</p><dl><div><dt>총 소재중량</dt><dd id="materialWeightTotal">0 kg</dd></div><div><dt>소재비 합계</dt><dd id="materialCostTotal">0원</dd></div></dl></div>
+            <div class="material-rounding"><label class="check-label"><input name="materialRoundingEnabled" type="checkbox"><span>소재비 반올림 적용</span></label><label>반올림 단위<select name="materialRoundingUnit"><option value="100">백원 단위</option><option value="1000" selected>천원 단위</option><option value="10000">만원 단위</option></select></label><p><span>계산 소재비</span><strong id="materialRawCostTotal">0원</strong><span aria-hidden="true">→</span><span>최종 소재비</span><strong id="materialRoundedCostTotal">0원</strong></p></div>
+            <div class="material-summary"><p><strong>추천 원소재</strong>는 일반 가공여유와 유통 두께 계열을 적용한 참고치입니다. 중량은 입력한 재질을 강재로 보고 밀도 7.85 g/cm³를 적용합니다. 실제 발주 전 보유 규격·절단 공차를 확인하세요.</p><dl><div><dt>총 소재중량</dt><dd id="materialWeightTotal">0 kg</dd></div><div><dt>최종 소재비</dt><dd id="materialCostTotal">0원</dd></div></dl></div>
           </div>
           <footer class="material-dialog-footer"><label class="check-label"><input name="includeMaterialPage" type="checkbox" checked><span>PDF 2페이지에 소재명세 포함</span></label><div><button type="button" class="tool-button" id="cancelMaterialDialog">닫기</button><button type="button" class="tool-button primary" id="applyMaterialTotal">계산값을 견적서에 반영</button></div></footer>
         </div>
@@ -110,14 +112,14 @@
     </form>
 
     <aside class="quote-side">
-      <section class="side-card file-actions-card" aria-label="견적서 파일 작업"><h2>견적서 작업</h2><p>새로 작성하거나 저장된 편집용 파일을 불러옵니다.</p><div class="file-action-group start-actions"><button class="tool-button" type="button" id="newQuote">새 견적서</button><label class="tool-button file-button"><span>견적 파일<br>불러오기</span><input id="importQuote" type="file" accept=".pressquote,application/json"></label></div><div class="file-action-group"><button class="tool-button primary" type="button" id="downloadPdf">PDF 다운로드</button><button class="tool-button" type="button" id="downloadQuote">편집용 파일 저장</button></div><button class="tool-button preview-action" type="button" id="previewPdf">PDF 미리보기</button></section>
-      <section class="side-card" id="linked-calculators"><h2>연동 계산기</h2><p>필요한 계산기만 별도 화면으로 열어 견적서에 반영합니다.</p><button class="calculator-link active" id="openMaterialCalculator" type="button"><span>금형소재 견적산출</span><small>열기 →</small></button><button class="calculator-link active" id="openProcessingCalculator" type="button"><span>가공비용 견적산출</span><small>열기 →</small></button></section>
+      <section class="side-card file-actions-card" aria-label="견적서 파일 작업"><h2>견적서 작업</h2><p>새로 작성하거나 저장된 편집용 파일을 불러옵니다.</p><label class="document-locale-field"><span>언어 (통화)</span><select id="documentLocale"><option value="ko">한국어 (KRW)</option><option value="ja">日本語 (JPY)</option><option value="en">English (USD)</option></select></label><div class="file-action-group start-actions"><button class="tool-button" type="button" id="newQuote">새 견적서</button><label class="tool-button file-button"><span>견적 파일<br>불러오기</span><input id="importQuote" type="file" accept=".pressquote,application/json"></label></div><div class="file-action-group"><button class="tool-button primary" type="button" id="downloadPdf">PDF 다운로드</button><button class="tool-button" type="button" id="downloadQuote">편집용 파일 저장</button></div><button class="tool-button preview-action" type="button" id="previewPdf">PDF 미리보기</button></section>
+      <section class="side-card" id="linked-calculators"><h2>연동 계산기</h2><p>필요한 계산기만 별도 화면으로 열어 견적서에 반영합니다.</p><button class="calculator-link active" id="openMaterialCalculator" type="button"><span>금형소재 견적산출</span><span class="calculator-link-meta"><em class="sync-status pending" id="materialSyncStatus">미반영</em><small>열기 →</small></span></button><button class="calculator-link active" id="openProcessingCalculator" type="button"><span>가공비용 견적산출</span><span class="calculator-link-meta"><em class="sync-status pending" id="processingSyncStatus">미반영</em><small>열기 →</small></span></button></section>
       <section class="side-card notice-card"><h2>사용 안내</h2><ul><li>본 도구는 견적서 서식과 계산 기능만 제공합니다.</li><li>단가와 금액은 작성자가 직접 입력하고 확인해야 합니다.</li><li>다운로드한 PDF에는 QDM 상호나 명판이 들어가지 않습니다.</li><li>중요 견적은 반드시 편집용 파일로 별도 백업하세요.</li></ul></section>
     </aside>
   </div>
 </main>
 
 <footer class="footer"><div class="wrap footer-inner"><div>프레스금형설계.박판성형해석.구조해석.제품설계</div><div>© QDM. All rights reserved.</div></div></footer>
-<script src="/assets/quotation.js?v=20260812-17"></script>
+<script src="/assets/quotation.js?v=20260812-19"></script>
 </body>
 </html>
