@@ -400,14 +400,14 @@
       ctx.textAlign = "right"; ctx.fillText(`${pageNumber} / ${pageCount}`, right, 3310);
     };
 
-    ctx.fillStyle = colors.blue; ctx.fillRect(left, 92, 12, 238);
-    ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.blue; ctx.fillText(kicker, left + 46, 112);
-    font(titleSize, 800); ctx.fillStyle = colors.navy; ctx.fillText(title, left + 46, 205);
-    font(25, 700); ctx.fillStyle = colors.muted; ctx.fillText(subtitle, left + 49, 292);
-    ctx.textAlign = "right"; font(136, 800); ctx.fillStyle = "#edf3f8"; ctx.fillText(String(pageNumber).padStart(2, "0"), right, 158);
-    font(23, 700); ctx.fillStyle = colors.text; ctx.fillText(`NO. ${data.quoteNumber || "-"}`, right, 275);
-    font(22, 500); ctx.fillStyle = colors.muted; ctx.fillText(data.quoteDate || "-", right, 316);
-    line(left, 380, right, 380, colors.navy, 5);
+    ctx.fillStyle = colors.blue; ctx.fillRect(left, 132, 12, 238);
+    ctx.textAlign = "left"; font(24, 800); ctx.fillStyle = colors.blue; ctx.fillText(kicker, left + 46, 152);
+    font(titleSize, 800); ctx.fillStyle = colors.navy; ctx.fillText(title, left + 46, 245);
+    font(25, 700); ctx.fillStyle = colors.muted; ctx.fillText(subtitle, left + 49, 332);
+    ctx.textAlign = "right"; font(136, 800); ctx.fillStyle = "#edf3f8"; ctx.fillText(String(pageNumber).padStart(2, "0"), right, 198);
+    font(23, 700); ctx.fillStyle = colors.text; ctx.fillText(`NO. ${data.quoteNumber || "-"}`, right, 315);
+    font(22, 500); ctx.fillStyle = colors.muted; ctx.fillText(data.quoteDate || "-", right, 356);
+    line(left, 420, right, 420, colors.navy, 5);
 
     return { canvas, ctx, left, right, width, colors, font, line, box, footer };
   }
@@ -437,28 +437,28 @@
       font(27, 700); ctx.fillStyle = colors.ink; wrapCanvasText(ctx, value || "-", x + 20, y + 58, w - 40, 29, 1);
     };
 
-    const cardY = 430, cardGap = 24, cardW = (width - cardGap) / 2;
+    const cardY = 470, cardGap = 24, cardW = (width - cardGap) / 2;
     const sellerDetail1 = [data.sellerRepresentative && `대표 ${data.sellerRepresentative}`, data.sellerBusinessNo && `사업자 ${data.sellerBusinessNo}`, data.sellerContact && `담당 ${data.sellerContact}`].filter(Boolean).join(" / ");
     const sellerDetail2 = [data.sellerPhone, data.sellerEmail, data.sellerAddress].filter(Boolean).join(" / ");
     infoCard("SUPPLIER / 공급자", data.sellerCompany || "작성 회사명", [sellerDetail1 || "-", sellerDetail2 || "-"], left, cardY, cardW, 205);
     infoCard("RECIPIENT / 수신자", data.buyerCompany || "납품 회사명", [data.buyerContact ? `담당 ${data.buyerContact}` : "담당자 미입력", data.projectName ? `프로젝트 ${data.projectName}` : "금형명 미입력"], left + cardW + cardGap, cardY, cardW, 205);
 
-    const amountY = 665;
+    const amountY = 705;
     box(left, amountY, width, 142, "#f7fafc", colors.line);
     ctx.fillStyle = colors.blue; ctx.fillRect(left, amountY, 10, 142);
     ctx.textAlign = "left"; font(21, 800); ctx.fillStyle = colors.muted; ctx.fillText("PROPOSED TOTAL / 제안 금액", left + 34, amountY + 40);
     font(29, 700); ctx.fillStyle = colors.ink; ctx.fillText(data.projectName || "프레스금형 제작", left + 34, amountY + 94);
     ctx.textAlign = "right"; font(46, 800); ctx.fillStyle = colors.navy; ctx.fillText(money(total.grand, data.currency), right - 28, amountY + 73);
 
-    const fieldY = 837, fieldGap = 20, fieldW = (width - fieldGap * 2) / 3, fieldH = 80;
+    const fieldY = 877, fieldGap = 20, fieldW = (width - fieldGap * 2) / 3, fieldH = 80;
     const fields = [
       ["금형 형식", `${data.dieType || "-"} / ${data.dieQuantity || 1}식`], ["제품 소재", data.productMaterial], ["프레스 사양", data.pressSpec],
       ["유효기간", data.validUntil], ["납기", data.delivery], ["결제조건", data.paymentTerms]
     ];
     fields.forEach(([label, value], index) => field(label, value, left + (index % 3) * (fieldW + fieldGap), fieldY + Math.floor(index / 3) * (fieldH + 18), fieldW, fieldH));
 
-    const tableY = 1040, headerH = 76, rowH = 96;
-    const columns = [left, left + 450, left + 1240, left + 1400, left + 1570, right];
+    const tableY = 1080, headerH = 76, rowH = 96;
+    const columns = [left, left + 430, left + 1170, left + 1330, left + 1490, right];
     box(left, tableY, width, headerH, colors.pale, colors.line);
     ctx.fillStyle = colors.blue; ctx.fillRect(left, tableY, width, 6);
     const headers = ["항목", "내용·사양", "수량", "단위", "금액"];
@@ -500,18 +500,18 @@
       titleSize: 72
     });
 
-    const projectY = 430;
+    const projectY = 470;
     box(left, projectY, width, 112, colors.white);
     ctx.textAlign = "left"; font(21, 800); ctx.fillStyle = colors.blue; ctx.fillText("PROJECT / 금형명", left + 26, projectY + 34);
     font(31, 800); ctx.fillStyle = colors.navy; ctx.fillText(data.projectName || "금형명 미입력", left + 26, projectY + 78);
     ctx.textAlign = "right"; font(22, 600); ctx.fillStyle = colors.text; ctx.fillText(`${data.sellerCompany || "작성 회사"}  >  ${data.buyerCompany || "납품 회사"}`, right - 26, projectY + 58);
 
-    const cardY = 575, gap = 22, cardW = (width - gap * 2) / 3;
+    const cardY = 615, gap = 22, cardW = (width - gap * 2) / 3;
     const summaryCards = [["산출 품목", `${materials.filter(item => materialWeight(item) > 0).length} 종`], ["총 원소재 중량", `${materialTotal.weight.toFixed(2)} kg`], ["금형 소재비 합계", money(materialTotal.cost, data.currency)]];
     summaryCards.forEach(([label, value], index) => { const x = left + index * (cardW + gap); box(x, cardY, cardW, 142, index === 2 ? colors.pale : colors.white, colors.line); if (index === 2) { ctx.fillStyle = colors.blue; ctx.fillRect(x, cardY, 8, 142); } ctx.textAlign = "left"; font(21, 700); ctx.fillStyle = colors.muted; ctx.fillText(label, x + 26, cardY + 40); font(index === 2 ? 35 : 38, 800); ctx.fillStyle = index === 2 ? colors.navy : colors.ink; ctx.fillText(value, x + 26, cardY + 96); });
 
-    const tableY = 760, headerH = 90, rowH = 180;
-    const columns = [left, left + 82, left + 410, left + 620, left + 1030, left + 1440, left + 1570, left + 1780, left + 1990, right];
+    const tableY = 800, headerH = 90, rowH = 180;
+    const columns = [left, left + 80, left + 380, left + 580, left + 970, left + 1360, left + 1490, left + 1690, left + 1880, right];
     const headers = ["NO.", "명칭", "재질", "완성치수\n폭 × 길이 × 두께", "추천 원소재\n폭 × 길이 × 두께", "수량", "중량(kg)", "단가/kg", "금액"];
     box(left, tableY, width, headerH, colors.pale, colors.line);
     ctx.fillStyle = colors.blue; ctx.fillRect(left, tableY, width, 6);
@@ -638,8 +638,6 @@
   document.getElementById("pdfPreviewDialog").addEventListener("click", event => { if (event.target.id === "pdfPreviewDialog") event.target.close(); });
   document.getElementById("importQuote").addEventListener("change", event => { const file = event.target.files[0]; if (file) importEditable(file); event.target.value = ""; });
   document.getElementById("newQuote").addEventListener("click", () => { if (!confirm("현재 견적서를 새 견적서로 바꾸시겠습니까? 자동 저장된 기존 견적은 목록에 남습니다.")) return; const data = blankData(); writeData(data); saveLocal(); });
-  document.getElementById("loadSaved").addEventListener("click", async () => { if (!savedQuotes.value) return setStatus("불러올 견적을 선택해 주세요.", "error"); const data = await dbRequest("readonly", store => store.get(savedQuotes.value)); if (data) { writeData(data); setStatus("저장된 견적을 불러왔습니다.", "success"); } });
-  document.getElementById("deleteSaved").addEventListener("click", async () => { if (!savedQuotes.value || !confirm("선택한 로컬 견적을 삭제하시겠습니까?")) return; await dbRequest("readwrite", store => store.delete(savedQuotes.value)); if (savedQuotes.value === currentId) { const data = blankData(); writeData(data); } await refreshSavedQuotes(); setStatus("선택한 로컬 견적을 삭제했습니다.", "success"); });
 
   async function initialize() {
     try {
