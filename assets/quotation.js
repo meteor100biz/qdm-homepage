@@ -124,7 +124,7 @@
   function materialRow(material = {}, index = 0) {
     const tr = document.createElement("tr");
     tr.dataset.id = material.id || crypto.randomUUID();
-    tr.innerHTML = `<td>${index + 1}</td><td><input class="material-name" data-material-field="name" value="${escapeHtml(material.name)}" aria-label="소재 ${index + 1} 명칭"></td><td><input class="material-grade" data-material-field="grade" list="materialGradeOptions" value="${escapeHtml(material.grade || "")}" placeholder="직접 입력" aria-label="소재 ${index + 1} 재질"></td><td><div class="material-dims"><input data-material-field="x" type="number" min="0" step="0.1" value="${number(material.x) || ""}" placeholder="폭" aria-label="소재 ${index + 1} 완성 폭"><input data-material-field="y" type="number" min="0" step="0.1" value="${number(material.y) || ""}" placeholder="길이" aria-label="소재 ${index + 1} 완성 길이"><input data-material-field="t" type="number" min="0" step="0.1" value="${number(material.t) || ""}" placeholder="두께" aria-label="소재 ${index + 1} 완성 두께"></div></td><td><div class="material-dims raw-dims"><input data-material-field="rawX" type="number" min="0" step="0.1" value="${number(material.rawX) || ""}" placeholder="폭" aria-label="소재 ${index + 1} 원소재 폭"><input data-material-field="rawY" type="number" min="0" step="0.1" value="${number(material.rawY) || ""}" placeholder="길이" aria-label="소재 ${index + 1} 원소재 길이"><input data-material-field="rawT" type="number" min="0" step="0.1" value="${number(material.rawT) || ""}" placeholder="두께" aria-label="소재 ${index + 1} 원소재 두께"></div></td><td><input class="material-qty" data-material-field="qty" type="number" min="0" step="1" value="${number(material.qty) || 1}" aria-label="소재 ${index + 1} 수량"></td><td><output class="material-weight">0.00</output></td><td><input class="material-price" data-material-field="unitPrice" type="number" min="0" step="1" value="${number(material.unitPrice) || ""}" placeholder="원/kg" aria-label="소재 ${index + 1} kg 단가"></td><td><output class="material-cost">0원</output></td>`;
+    tr.innerHTML = `<td>${index + 1}</td><td><input class="material-name" data-material-field="name" value="${escapeHtml(material.name)}" aria-label="소재 ${index + 1} 명칭"></td><td><input class="material-grade" data-material-field="grade" list="materialGradeOptions" value="${escapeHtml(material.grade || "")}" placeholder="직접 입력" aria-label="소재 ${index + 1} 재질"></td><td><div class="material-dims"><input data-material-field="x" type="number" min="0" step="0.1" value="${number(material.x) || ""}" placeholder="폭" aria-label="소재 ${index + 1} 완성 폭"><input data-material-field="y" type="number" min="0" step="0.1" value="${number(material.y) || ""}" placeholder="길이" aria-label="소재 ${index + 1} 완성 길이"><input data-material-field="t" type="number" min="0" step="0.1" value="${number(material.t) || ""}" placeholder="두께" aria-label="소재 ${index + 1} 완성 두께"></div></td><td><div class="material-dims raw-dims"><input data-material-field="rawX" type="number" min="0" step="0.1" value="${number(material.rawX) || ""}" placeholder="폭" aria-label="소재 ${index + 1} 원소재 폭"><input data-material-field="rawY" type="number" min="0" step="0.1" value="${number(material.rawY) || ""}" placeholder="길이" aria-label="소재 ${index + 1} 원소재 길이"><input data-material-field="rawT" type="number" min="0" step="0.1" value="${number(material.rawT) || ""}" placeholder="두께" aria-label="소재 ${index + 1} 원소재 두께"></div></td><td><input class="material-qty" data-material-field="qty" type="number" min="0" step="1" value="${number(material.qty) || 1}" aria-label="소재 ${index + 1} 수량"></td><td><output class="material-weight">0.00</output></td><td><input class="material-price" data-material-field="unitPrice" type="number" min="0" step="1" value="${number(material.unitPrice) || ""}" placeholder="원/kg" aria-label="소재 ${index + 1} kg 단가"></td><td><output class="material-cost">0원</output></td><td><button class="remove-material" type="button" aria-label="소재 항목 삭제">×</button></td>`;
     const refreshSuggestion = () => {
       const current = readMaterialRow(tr);
       const suggested = suggestedRawDimensions(current);
@@ -133,7 +133,17 @@
     tr.querySelectorAll('[data-material-field="x"],[data-material-field="y"],[data-material-field="t"]').forEach(input => input.addEventListener("input", () => { refreshSuggestion(); changed(); }));
     tr.querySelector('[data-material-field="grade"]').addEventListener("input", () => { refreshSuggestion(); changed(); });
     tr.querySelectorAll("input,select").forEach(input => { if (!["x", "y", "t", "grade"].includes(input.dataset.materialField)) input.addEventListener("input", changed); });
+    tr.querySelector(".remove-material").addEventListener("click", () => {
+      if (materialsBody.children.length <= 1) return;
+      tr.remove();
+      renumberMaterials();
+      changed();
+    });
     return tr;
+  }
+
+  function renumberMaterials() {
+    [...materialsBody.rows].forEach((row, index) => { row.cells[0].textContent = index + 1; });
   }
 
   function readMaterialRow(row) {
@@ -186,7 +196,9 @@
 
   function writeData(data) {
     const defaults = blankData();
-    data = { ...defaults, ...data, items: data.items?.length ? data.items : defaults.items, materials: data.materials?.length ? data.materials : defaults.materials };
+    const hasItems = Array.isArray(data.items) && data.items.some(item => String(item.name || item.description || "").trim() || number(item.price));
+    const hasMaterials = Array.isArray(data.materials) && data.materials.some(item => String(item.name || item.grade || "").trim() || number(item.x) || number(item.y) || number(item.t));
+    data = { ...defaults, ...data, items: hasItems ? data.items : defaults.items, materials: hasMaterials ? data.materials : defaults.materials };
     currentId = data.id || crypto.randomUUID();
     [...form.elements].forEach(control => {
       if (!control.name || control.type === "file") return;
@@ -364,7 +376,7 @@
     canvas.width = 2480;
     canvas.height = 3508;
     const ctx = canvas.getContext("2d");
-    const left = 160, right = 2320, width = right - left;
+    const left = 200, right = 2280, width = right - left;
     const colors = {
       navy: "#102c4e",
       blue: "#1768b2",
@@ -382,10 +394,10 @@
     const line = (x1, y1, x2, y2, color = colors.line, thickness = 2) => { ctx.strokeStyle = color; ctx.lineWidth = thickness; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); };
     const box = (x, y, w, h, fill = null, stroke = colors.line, thickness = 2) => { if (fill) { ctx.fillStyle = fill; ctx.fillRect(x, y, w, h); } ctx.strokeStyle = stroke; ctx.lineWidth = thickness; ctx.strokeRect(x, y, w, h); };
     const footer = () => {
-      line(left, 3320, right, 3320, colors.line, 2);
-      font(21, 600); ctx.fillStyle = colors.muted; ctx.textAlign = "left"; ctx.fillText(data.sellerCompany || "작성 회사명", left, 3370);
-      ctx.textAlign = "center"; ctx.fillText(data.quoteNumber || "-", 1240, 3370);
-      ctx.textAlign = "right"; ctx.fillText(`${pageNumber} / ${pageCount}`, right, 3370);
+      line(left, 3260, right, 3260, colors.line, 2);
+      font(21, 600); ctx.fillStyle = colors.muted; ctx.textAlign = "left"; ctx.fillText(data.sellerCompany || "작성 회사명", left, 3310);
+      ctx.textAlign = "center"; ctx.fillText(data.quoteNumber || "-", 1240, 3310);
+      ctx.textAlign = "right"; ctx.fillText(`${pageNumber} / ${pageCount}`, right, 3310);
     };
 
     ctx.fillStyle = colors.blue; ctx.fillRect(left, 92, 12, 238);
@@ -610,6 +622,8 @@
   form.addEventListener("input", changed);
   form.addEventListener("change", changed);
   document.getElementById("addItem").addEventListener("click", () => { if (itemsBody.children.length >= 10) { setStatus("PDF 한 페이지 출력을 위해 견적 항목은 최대 10개까지 지원합니다.", "error"); return; } itemsBody.append(itemRow({ qty: 1, unit: "식", price: 0 })); changed(); });
+  document.getElementById("addMaterial").addEventListener("click", () => { if (materialsBody.children.length >= 10) { setStatus("PDF 한 페이지 출력을 위해 소재 항목은 최대 10개까지 지원합니다.", "error"); return; } materialsBody.append(materialRow({ qty: 1 }, materialsBody.children.length)); changed(); });
+  document.getElementById("restoreDefaultMaterials").addEventListener("click", () => { if (!confirm("현재 소재 항목을 기본 8개 항목으로 바꾸시겠습니까?")) return; renderMaterials(DEFAULT_MATERIALS.map(([name, grade]) => ({ name, grade, qty: 1 }))); changed(); });
   document.getElementById("applyMaterialTotal").addEventListener("click", applyMaterialTotal);
   document.getElementById("openMaterialCalculator").addEventListener("click", openMaterialDialog);
   document.getElementById("closeMaterialDialog").addEventListener("click", () => materialDialog.close());
