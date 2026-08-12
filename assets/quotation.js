@@ -18,10 +18,10 @@
 
   const DEFAULT_ITEMS = [
     ["금형 설계비", "공정검토 및 2D/3D 설계", 1, "식", 0],
-    ["금형 소재비", "[별첨] 금형소재 산출명세 참조", 1, "식", 0],
-    ["기계가공비", "[별첨] 가공비용 산출명세 참조", 1, "식", 0],
-    ["와이어·방전가공비", "[별첨] 가공비용 산출명세 참조", 1, "식", 0],
-    ["열처리·표면처리비", "[별첨] 가공비용 산출명세 참조", 1, "식", 0],
+    ["금형 소재비", "[별첨1] 금형소재 산출명세 참조", 1, "식", 0],
+    ["기계가공비", "[별첨2] 가공비용 산출명세 참조", 1, "식", 0],
+    ["와이어·방전가공비", "[별첨2] 가공비용 산출명세 참조", 1, "식", 0],
+    ["열처리·표면처리비", "[별첨2] 가공비용 산출명세 참조", 1, "식", 0],
     ["표준부품비", "가이드·스프링·볼트 등", 1, "식", 0],
     ["조립·TRY비", "조립 및 TRY", 1, "식", 0],
     ["검사·운송·기타", "측정, 검사, 포장 및 운송", 1, "식", 0]
@@ -312,8 +312,14 @@
     data = { ...defaults, ...data, items: hasItems ? data.items : defaults.items, materials: hasMaterials ? data.materials : defaults.materials, processing: hasProcessing ? data.processing : defaults.processing };
     data.items = data.items.map(item => {
       if (item.name === "조립·사상·트라이비") return { ...item, name: "조립·TRY비", description: "조립 및 TRY" };
-      if (item.name === "금형 소재비" && !String(item.description || "").includes("[별첨]")) return { ...item, description: "[별첨] 금형소재 산출명세 참조" };
-      if (["기계가공비", "와이어·방전가공비", "열처리·표면처리비"].includes(item.name) && !String(item.description || "").includes("[별첨]")) return { ...item, description: "[별첨] 가공비용 산출명세 참조" };
+      if (item.name === "금형 소재비") {
+        const description = String(item.description || "").trim();
+        return { ...item, description: description ? (/^\[별첨\d*\]/.test(description) ? description.replace(/^\[별첨\d*\]/, "[별첨1]") : `[별첨1] ${description}`) : "[별첨1] 금형소재 산출명세 참조" };
+      }
+      if (["기계가공비", "와이어·방전가공비", "열처리·표면처리비"].includes(item.name)) {
+        const description = String(item.description || "").trim();
+        return { ...item, description: description ? (/^\[별첨\d*\]/.test(description) ? description.replace(/^\[별첨\d*\]/, "[별첨2]") : `[별첨2] ${description}`) : "[별첨2] 가공비용 산출명세 참조" };
+      }
       return item;
     });
     if (/^\d{4}-\d{2}-\d{2}$/.test(String(data.validUntil || ""))) data.validUntil = "작성일로부터 30일";
@@ -451,7 +457,7 @@
     target.querySelector('[data-field="qty"]').value = 1;
     target.querySelector('[data-field="unit"]').value = "식";
     target.querySelector('[data-field="price"]').value = materialTotal.cost;
-    target.querySelector('[data-field="description"]').value = `[별첨] 금형소재 산출명세 ${data.materials.filter(item => materialWeight(item) > 0).length}종 합계`;
+    target.querySelector('[data-field="description"]').value = `[별첨1] 금형소재 산출명세 ${data.materials.filter(item => materialWeight(item) > 0).length}종 합계`;
     changed();
     setStatus(`소재비 ${money(materialTotal.cost, data.currency)}을 견적 항목에 반영했습니다.`, "success");
     materialDialog.close();
@@ -477,7 +483,7 @@
       target.querySelector('[data-field="qty"]').value = 1;
       target.querySelector('[data-field="unit"]').value = "식";
       target.querySelector('[data-field="price"]').value = total[group];
-      target.querySelector('[data-field="description"]').value = "[별첨] 가공비용 산출명세 참조";
+      target.querySelector('[data-field="description"]').value = "[별첨2] 가공비용 산출명세 참조";
     });
     changed();
     setStatus(`가공비 합계 ${money(total.all, data.currency)}을 견적 항목별로 반영했습니다.`, "success");
@@ -642,7 +648,7 @@
     const fieldY = 950, fieldGap = 20, fieldW = (width - fieldGap * 2) / 3, fieldH = 110;
     const fields = [
       ["금형 형식", `${data.dieType || "-"} / ${data.dieQuantity || 1}식`], ["제품 소재", data.productMaterial], ["프레스 사양", data.pressSpec],
-      ["유효기간", data.validUntil], ["납기", data.delivery], ["결제조건", data.paymentTerms]
+      ["견적 유효기간", data.validUntil], ["납기", data.delivery], ["결제조건", data.paymentTerms]
     ];
     fields.forEach(([label, value], index) => field(label, value, left + (index % 3) * (fieldW + fieldGap), fieldY + Math.floor(index / 3) * (fieldH + 20), fieldW, fieldH));
 
@@ -659,7 +665,7 @@
       box(left, y, width, rowH, index % 2 ? colors.wash : colors.white, colors.line);
       columns.slice(1, -1).forEach(x => line(x, y, x, y + rowH, colors.line));
       ctx.textAlign = "left"; font(34, 400); ctx.fillStyle = colors.ink; centeredCanvasText(ctx, item.name || "-", columns[0] + 18, y + rowH / 2, columns[1] - columns[0] - 36, 40, 2);
-      const isAttachment = String(item.description || "").includes("[별첨]");
+      const isAttachment = /^\[별첨\d*\]/.test(String(item.description || ""));
       font(32, 400); ctx.fillStyle = isAttachment ? colors.blue : colors.text; centeredCanvasText(ctx, item.description || "-", columns[1] + 18, y + rowH / 2, columns[2] - columns[1] - 36, 39, 2);
       ctx.textAlign = "center"; font(32, 400); ctx.fillStyle = colors.ink; ctx.fillText(String(item.qty || 0), (columns[2] + columns[3]) / 2, y + rowH / 2); ctx.fillText(item.unit || "식", (columns[3] + columns[4]) / 2, y + rowH / 2);
       ctx.textAlign = "right"; font(36, 400); ctx.fillText(money(number(item.qty) * number(item.price), data.currency), columns[5] - 18, y + rowH / 2);
@@ -685,7 +691,7 @@
       pageNumber,
       pageCount,
       kicker: "DETAIL / MATERIAL COST",
-      title: "별첨 · 금형소재 산출 명세서",
+      title: "별첨1 · 금형소재 산출 명세서",
       subtitle: "PRESS DIE MATERIAL COST DETAIL",
       titleSize: 72
     });
@@ -736,7 +742,7 @@
       pageNumber,
       pageCount,
       kicker: "DETAIL / PROCESSING COST",
-      title: "별첨 · 가공비용 산출 명세서",
+      title: "별첨2 · 가공비용 산출 명세서",
       subtitle: "PRESS DIE PROCESSING COST DETAIL",
       titleSize: 68
     });
