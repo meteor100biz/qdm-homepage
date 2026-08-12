@@ -7,7 +7,7 @@
   <meta name="description" content="프레스금형 설계비, 소재비, 가공비와 부가세를 직접 입력해 견적서를 작성하고 PDF와 편집용 파일로 저장하는 무료 도구입니다. 입력 자료는 서버로 전송되지 않습니다.">
   <link rel="canonical" href="https://qdm.co.kr/resources/press-die-quotation/">
   <link rel="stylesheet" href="/assets/style.css?v=20260812-1">
-  <link rel="stylesheet" href="/assets/quotation.css?v=20260812-2">
+<link rel="stylesheet" href="/assets/quotation.css?v=20260812-3">
 </head>
 <body>
 <header class="topbar"><div class="wrap nav"><a href="/" class="brand" aria-label="QDM home"><div class="logo">QDM</div><div class="tagline">제품설계.구조해석.박판성형해석.프레스금형설계<br>QUALITY-DRIVEN DESIGN &amp; MANUFACTURING</div></a><nav class="menu" aria-label="주요 메뉴"><a class="hide-sm" href="/about/">회사소개</a><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/services/press-die-design/" aria-haspopup="menu">서비스<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel" role="menu"><a role="menuitem" href="/services/press-die-design/">프레스금형설계</a><a role="menuitem" href="/services/sheet-metal-forming-analysis/">박판성형해석</a><a role="menuitem" href="/services/structural-analysis/">구조해석</a><a role="menuitem" href="/services/product-design/">제품설계</a><a class="menu-dropdown-all" role="menuitem" href="/portfolio.html">전체 포트폴리오 보기</a></div></div><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/resources/press-die-quotation/" aria-haspopup="menu">자료실<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel resource-menu" role="menu"><a role="menuitem" href="/resources/press-die-quotation/">프레스금형 견적서 작성기</a><a role="menuitem" href="/resources/press-die-quotation/?tool=material">금형소재 견적산출 <small>계산기</small></a><a role="menuitem" href="#linked-calculators">설계비용 견적산출 <small>준비중</small></a></div></div><a class="hide-sm" href="/#blog">기술블로그</a><a href="/#contact">문의하기</a><a class="phone" href="tel:07080646621">☎ 070-8064-6621</a></nav></div></header>
@@ -24,6 +24,7 @@
     <form id="quoteForm" class="quote-editor" autocomplete="off">
       <div class="editor-toolbar" aria-label="견적서 파일 작업">
         <button class="tool-button primary" type="button" id="downloadPdf">PDF 다운로드</button>
+        <button class="tool-button" type="button" id="previewPdf">PDF 미리보기</button>
         <button class="tool-button" type="button" id="downloadQuote">편집용 파일 저장</button>
         <label class="tool-button file-button">견적 파일 불러오기<input id="importQuote" type="file" accept=".pressquote,application/json"></label>
         <button class="tool-button subtle" type="button" id="newQuote">새 견적서</button>
@@ -93,6 +94,11 @@
           <footer class="material-dialog-footer"><label class="check-label"><input name="includeMaterialPage" type="checkbox" checked><span>PDF 2페이지에 소재명세 포함</span></label><div><button type="button" class="tool-button" id="cancelMaterialDialog">닫기</button><button type="button" class="tool-button primary" id="applyMaterialTotal">계산값을 견적서에 반영</button></div></footer>
         </div>
       </dialog>
+
+      <dialog class="pdf-preview-dialog" id="pdfPreviewDialog" aria-labelledby="pdfPreviewTitle">
+        <header><div><span>PRINT PREVIEW</span><h2 id="pdfPreviewTitle">견적서 PDF 미리보기</h2></div><button type="button" class="dialog-close" id="closePdfPreview" aria-label="PDF 미리보기 닫기">×</button></header>
+        <div class="pdf-preview-pages" id="pdfPreviewPages"></div>
+      </dialog>
     </form>
 
     <aside class="quote-side">
@@ -104,6 +110,6 @@
 </main>
 
 <footer class="footer"><div class="wrap footer-inner"><div>프레스금형설계.박판성형해석.구조해석.제품설계</div><div>© QDM. All rights reserved.</div></div></footer>
-<script src="/assets/quotation.js?v=20260812-6"></script>
+<script src="/assets/quotation.js?v=20260812-7"></script>
 </body>
 </html>
