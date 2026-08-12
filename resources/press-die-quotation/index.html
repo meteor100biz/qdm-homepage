@@ -7,7 +7,7 @@
   <meta name="description" content="프레스금형 설계비, 소재비, 가공비와 부가세를 직접 입력해 견적서를 작성하고 PDF와 편집용 파일로 저장하는 무료 도구입니다. 입력 자료는 서버로 전송되지 않습니다.">
   <link rel="canonical" href="https://qdm.co.kr/resources/press-die-quotation/">
   <link rel="stylesheet" href="/assets/style.css?v=20260812-1">
-<link rel="stylesheet" href="/assets/quotation.css?v=20260812-11">
+<link rel="stylesheet" href="/assets/quotation.css?v=20260812-12">
 </head>
 <body>
 <header class="topbar"><div class="wrap nav"><a href="/" class="brand" aria-label="QDM home"><div class="logo">QDM</div><div class="tagline"><span class="tagline-press">프레스금형설계 · 박판성형해석</span> · <span class="tagline-product">구조해석 · 제품설계</span><br>QUALITY-DRIVEN DESIGN &amp; MANUFACTURING</div></a><nav class="menu" aria-label="주요 메뉴"><a class="hide-sm" href="/about/">회사소개</a><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/services/press-die-design/" aria-haspopup="menu">서비스<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel" role="menu"><a role="menuitem" href="/services/press-die-design/">프레스금형설계</a><a role="menuitem" href="/services/sheet-metal-forming-analysis/">박판성형해석</a><a role="menuitem" href="/services/structural-analysis/">구조해석</a><a role="menuitem" href="/services/product-design/">제품설계</a><a class="menu-dropdown-all" role="menuitem" href="/portfolio.html">전체 포트폴리오 보기</a></div></div><div class="menu-dropdown hide-sm"><a class="menu-dropdown-trigger" href="/resources/press-die-quotation/" aria-haspopup="menu">자료실<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel resource-menu" role="menu"><a role="menuitem" href="/resources/press-die-quotation/">프레스금형 견적서 작성기</a><a role="menuitem" href="/resources/press-die-quotation/?tool=material">금형소재 견적산출 <small>계산기</small></a><a role="menuitem" href="/resources/press-die-quotation/?tool=processing">가공비용 견적산출 <small>계산기</small></a></div></div><a class="hide-sm" href="/#blog">기술블로그</a><a href="/#contact">문의하기</a><a class="phone" href="tel:07080646621">☎ 070-8064-6621</a></nav></div></header>
@@ -84,7 +84,7 @@
           <div class="material-dialog-body">
             <datalist id="materialGradeOptions"><option value="S45C"><option value="SKD11"><option value="STD11"><option value="SB41P"></datalist>
             <div class="material-table-actions"><button type="button" class="mini-button" id="restoreDefaultMaterials">기본 항목 복원</button><button type="button" class="mini-button primary" id="addMaterial">+ 소재 항목 추가</button></div>
-            <div class="material-table-wrap"><table class="material-table"><thead><tr><th>No.</th><th>명칭</th><th>재질</th><th>완성치수<br>폭 × 길이 × 두께</th><th>추천 원소재<br>폭 × 길이 × 두께</th><th>수량</th><th>중량(kg)</th><th>단가/kg</th><th>금액</th><th aria-label="삭제"></th></tr></thead><tbody id="materialsBody"></tbody></table></div>
+            <div class="material-table-wrap"><table class="material-table"><thead><tr><th>No.</th><th>명칭</th><th>재질</th><th>완성치수<br>폭 × 길이 × 두께</th><th>추천 원소재<br>폭 × 길이 × 두께</th><th>수량</th><th>중량(kg)</th><th>단가/kg</th><th>금액</th><th aria-label="순서 이동 및 삭제">순서</th></tr></thead><tbody id="materialsBody"></tbody></table></div>
             <div class="material-summary"><p><strong>추천 원소재</strong>는 일반 가공여유와 유통 두께 계열을 적용한 참고치입니다. 중량은 입력한 재질을 강재로 보고 밀도 7.85 g/cm³를 적용합니다. 실제 발주 전 보유 규격·절단 공차를 확인하세요.</p><dl><div><dt>총 소재중량</dt><dd id="materialWeightTotal">0 kg</dd></div><div><dt>소재비 합계</dt><dd id="materialCostTotal">0원</dd></div></dl></div>
           </div>
           <footer class="material-dialog-footer"><label class="check-label"><input name="includeMaterialPage" type="checkbox" checked><span>PDF 2페이지에 소재명세 포함</span></label><div><button type="button" class="tool-button" id="cancelMaterialDialog">닫기</button><button type="button" class="tool-button primary" id="applyMaterialTotal">계산값을 견적서에 반영</button></div></footer>
@@ -96,7 +96,7 @@
           <header class="material-dialog-header"><div><span>PROCESSING COST CALCULATOR</span><h2 id="processingDialogTitle">가공비용 견적 산출</h2><p>투입량과 임률을 입력하면 공정별 금액을 계산하고 견적 항목에 구분하여 반영합니다.</p></div><button type="button" class="dialog-close" id="closeProcessingDialog" aria-label="가공비용 견적 산출 닫기">×</button></header>
           <div class="material-dialog-body">
             <div class="material-table-actions"><button type="button" class="mini-button" id="restoreDefaultProcessing">권장 임률 복원</button><button type="button" class="mini-button primary" id="addProcessing">+ 가공 항목 추가</button></div>
-            <div class="processing-table-wrap"><table class="processing-table"><thead><tr><th>No.</th><th>구분</th><th>가공 항목</th><th>계산 방식</th><th>투입량</th><th>단위</th><th>임률·단가</th><th>금액</th><th aria-label="삭제"></th></tr></thead><tbody id="processingBody"></tbody></table></div>
+            <div class="processing-table-wrap"><table class="processing-table"><thead><tr><th>No.</th><th>구분</th><th>가공 항목</th><th>계산 방식</th><th>투입량</th><th>단위</th><th>임률·단가</th><th>금액</th><th aria-label="순서 이동 및 삭제">순서</th></tr></thead><tbody id="processingBody"></tbody></table></div>
             <div class="processing-summary"><p><strong>열처리 권장식</strong>은 처리중량(kg) × kg당 단가입니다. 재질·목표경도·로트에 따라 단가 차이가 크므로 업체 단가를 입력하세요. 시간식과 일괄식도 선택할 수 있습니다.</p><dl><div><dt>기계가공비</dt><dd id="machiningCostTotal">0원</dd></div><div class="heat-total"><dt>열처리비</dt><dd id="heatCostTotal">0원</dd></div><div class="edm-total"><dt>와이어·방전비</dt><dd id="edmCostTotal">0원</dd></div><div><dt>가공비 합계</dt><dd id="processingCostTotal">0원</dd></div></dl></div>
           </div>
           <footer class="material-dialog-footer"><label class="check-label"><input name="includeProcessingPage" type="checkbox" checked><span>PDF 별첨에 가공명세 포함</span></label><div><button type="button" class="tool-button" id="cancelProcessingDialog">닫기</button><button type="button" class="tool-button primary" id="applyProcessingTotal">계산값을 견적서에 반영</button></div></footer>
@@ -118,6 +118,6 @@
 </main>
 
 <footer class="footer"><div class="wrap footer-inner"><div>프레스금형설계.박판성형해석.구조해석.제품설계</div><div>© QDM. All rights reserved.</div></div></footer>
-<script src="/assets/quotation.js?v=20260812-11"></script>
+<script src="/assets/quotation.js?v=20260812-13"></script>
 </body>
 </html>
