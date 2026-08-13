@@ -96,6 +96,10 @@
     { group: "edm", name: "방전가공(EDM)", method: "hour", qty: 0, rate: 70000 }
   ];
 
+  function defaultProcessing(currency = "KRW") {
+    return DEFAULT_PROCESSING.map(item => ({ ...item, id: crypto.randomUUID(), rate: currency === "KRW" ? item.rate : 0 }));
+  }
+
   function today(offsetDays = 0) {
     const date = new Date();
     date.setDate(date.getDate() + offsetDays);
@@ -118,7 +122,7 @@
       notes: "- 제품 또는 금형 사양 변경에 따른 추가 비용은 별도 협의합니다.\n- 납기와 트라이 범위는 발주 전 최종 협의합니다.",
       items: DEFAULT_ITEMS.map(([name, description, qty, unit, price]) => ({ id: crypto.randomUUID(), name, description, qty, unit, price })),
       materials: DEFAULT_MATERIALS.map(([name, grade]) => ({ id: crypto.randomUUID(), name, grade, x: 0, y: 0, t: 0, rawX: 0, rawY: 0, rawT: 0, qty: 1, unitPrice: 0 })),
-      processing: DEFAULT_PROCESSING.map(item => ({ ...item, id: crypto.randomUUID() }))
+      processing: defaultProcessing(CURRENCY_BY_LOCALE[documentLocale])
     };
   }
 
@@ -153,18 +157,29 @@
   function itemRow(item = {}) {
     const tr = document.createElement("tr");
     tr.dataset.id = item.id || crypto.randomUUID();
-    tr.innerHTML = `<td><input data-field="name" value="${escapeHtml(item.name)}" aria-label="견적 항목"></td><td><input data-field="description" value="${escapeHtml(item.description)}" aria-label="내용 및 사양"></td><td><input class="number" data-field="qty" type="number" min="0" step="0.01" value="${number(item.qty) || 1}" aria-label="수량"></td><td><input data-field="unit" value="${escapeHtml(item.unit || "식")}" aria-label="단위"></td><td><input class="number" data-field="price" type="number" min="0" step="1" value="${number(item.price)}" aria-label="단가"></td><td><output class="item-total">${money(number(item.qty) * number(item.price))}</output></td><td><button class="remove-item" type="button" aria-label="항목 삭제">×</button></td>`;
+    tr.innerHTML = `<td><input data-field="name" value="${escapeHtml(item.name)}" aria-label="견적 항목"></td><td><input data-field="description" value="${escapeHtml(item.description)}" aria-label="내용 및 사양"></td><td><input class="number" data-field="qty" type="number" min="0" step="0.01" value="${number(item.qty) || 1}" aria-label="수량"></td><td><input data-field="unit" value="${escapeHtml(item.unit || "식")}" aria-label="단위"></td><td><input class="number" data-field="price" type="number" min="0" step="1" value="${number(item.price)}" aria-label="단가"></td><td><output class="item-total">${money(number(item.qty) * number(item.price))}</output></td><td><div class="row-order-actions"><button class="move-item-up" type="button" aria-label="항목 위로 이동">↑</button><button class="move-item-down" type="button" aria-label="항목 아래로 이동">↓</button><button class="remove-item" type="button" aria-label="항목 삭제">×</button></div></td>`;
     tr.querySelector(".remove-item").addEventListener("click", () => {
       if (itemsBody.children.length <= 1) return;
       tr.remove();
+      renumberItems();
       changed();
     });
+    tr.querySelector(".move-item-up").addEventListener("click", () => moveTableRow(tr, -1, renumberItems));
+    tr.querySelector(".move-item-down").addEventListener("click", () => moveTableRow(tr, 1, renumberItems));
     tr.querySelectorAll("input").forEach(input => input.addEventListener("input", changed));
     return tr;
   }
 
   function renderItems(items) {
     itemsBody.replaceChildren(...(items?.length ? items : DEFAULT_ITEMS.map(([name, description, qty, unit, price]) => ({ name, description, qty, unit, price }))).map(itemRow));
+    renumberItems();
+  }
+
+  function renumberItems() {
+    [...itemsBody.rows].forEach((row, index, rows) => {
+      row.querySelector(".move-item-up").disabled = index === 0;
+      row.querySelector(".move-item-down").disabled = index === rows.length - 1;
+    });
   }
 
   function readItems() {
@@ -336,7 +351,7 @@
   }
 
   function renderProcessing(processing) {
-    const source = processing?.length ? processing : DEFAULT_PROCESSING;
+    const source = processing?.length ? processing : defaultProcessing(form.elements.currency?.value || "KRW");
     processingBody.replaceChildren(...source.map(processingRow));
     renumberProcessing();
   }
@@ -366,6 +381,8 @@
 
   function readData() {
     const data = Object.fromEntries(new FormData(form).entries());
+    if (isOtherDieType(data.dieType)) data.dieTypeOther = String(data.dieTypeOther || "").trim();
+    else data.dieTypeOther = "";
     data.id = currentId;
     data.dieQuantity = number(data.dieQuantity);
     data.marginRate = number(data.marginRate);
@@ -389,6 +406,7 @@
     data = { ...defaults, ...data, items: hasItems ? data.items : defaults.items, materials: hasMaterials ? data.materials : defaults.materials, processing: hasProcessing ? data.processing : defaults.processing };
     if (!PDF_TEXT[data.documentLocale]) data.documentLocale = data.currency === "JPY" ? "ja" : data.currency === "USD" ? "en" : initialLocale;
     data.currency = CURRENCY_BY_LOCALE[data.documentLocale];
+    if (data.currency !== "KRW") data.processing = data.processing.map(item => ({ ...item, rate: 0 }));
     const locale = data.documentLocale;
     data.items = data.items.map(item => {
       if (item.name === "조립·사상·트라이비") return { ...item, name: "조립·TRY비", description: "조립 및 TRY" };
@@ -402,7 +420,12 @@
       }
       return item;
     }).map(item => ({ ...item, name: translatedKnown(item.name, QUOTE_ITEM_TRANSLATIONS, locale), description: localizedDescription(item.description, locale), unit: item.unit === "식" || item.unit === "式" || item.unit === "lot" ? PDF_TEXT[locale].unitEach : item.unit }));
-    data.dieType = translatedKnown(data.dieType, DIE_TYPE_TRANSLATIONS, locale);
+    const dieTypeMatch = DIE_TYPE_TRANSLATIONS.find(set => set.some(value => value === data.dieType));
+    if (dieTypeMatch) data.dieType = dieTypeMatch[0];
+    else if (String(data.dieType || "").trim()) {
+      data.dieTypeOther = String(data.dieType).trim();
+      data.dieType = "기타";
+    }
     data.validUntil = translatedKnown(data.validUntil, DEFAULT_VALUE_TRANSLATIONS.validUntil, locale);
     data.delivery = translatedKnown(data.delivery, DEFAULT_VALUE_TRANSLATIONS.delivery, locale);
     data.paymentTerms = translatedKnown(data.paymentTerms, DEFAULT_VALUE_TRANSLATIONS.paymentTerms, locale);
@@ -419,8 +442,13 @@
     [...form.elements].forEach(control => {
       if (!control.name || control.type === "file") return;
       if (control.type === "checkbox") control.checked = Boolean(data[control.name]);
+      else if (control.name === "dieType") {
+        const match = DIE_TYPE_TRANSLATIONS.find(set => set.includes(data.dieType));
+        control.value = match?.find(value => [...control.options].some(option => option.value === value)) || "기타";
+      }
       else if (data[control.name] != null) control.value = data[control.name];
     });
+    syncDieTypeOtherField();
     renderItems(data.items);
     renderMaterials(data.materials);
     renderProcessing(data.processing);
@@ -482,6 +510,24 @@
     return found ? found[index] : value;
   }
 
+  function syncDieTypeOtherField() {
+    const otherField = document.querySelector(".die-type-other");
+    const otherInput = form.elements.dieTypeOther;
+    const isOther = isOtherDieType(form.elements.dieType.value);
+    otherField.hidden = !isOther;
+    otherInput.required = isOther;
+    if (!isOther) otherInput.value = "";
+  }
+
+  function displayedDieType(data, locale) {
+    if (isOtherDieType(data.dieType) && String(data.dieTypeOther || "").trim()) return data.dieTypeOther.trim();
+    return translatedKnown(data.dieType || "-", DIE_TYPE_TRANSLATIONS, locale);
+  }
+
+  function isOtherDieType(value) {
+    return DIE_TYPE_TRANSLATIONS.find(set => set.some(entry => entry === value))?.[0] === "기타";
+  }
+
   function localizedDescription(value, locale) {
     const text = String(value || "");
     if (/^\[(별첨|別紙|Appendix)\s*1\]/i.test(text)) return locale === "ja" ? "[別紙1] 金型材料費明細書参照" : locale === "en" ? "[Appendix 1] See material cost detail" : "[별첨1] 금형소재 산출명세 참조";
@@ -517,6 +563,24 @@
     });
     setSyncStatus("materialSyncStatus", materialSynced, documentLocale(data));
     setSyncStatus("processingSyncStatus", processingSynced, documentLocale(data));
+  }
+
+  function linkedItemName(key, locale) {
+    const names = { material: "금형 소재비", machining: "기계가공비", heat: "열처리·표면처리비", edm: "와이어·방전가공비" };
+    return translatedKnown(names[key], QUOTE_ITEM_TRANSLATIONS, locale);
+  }
+
+  function findOrCreateLinkedItem(key, data) {
+    const existing = [...itemsBody.rows].find(row => itemKey(row.querySelector('[data-field="name"]').value) === key);
+    if (existing) return existing;
+    if (itemsBody.children.length >= 10) {
+      setStatus("연동 계산기 항목을 추가할 공간이 없습니다. 견적 항목을 10개 이하로 조정해 주세요.", "error");
+      return null;
+    }
+    const row = itemRow({ name: linkedItemName(key, documentLocale(data)), qty: 1, unit: textSet(data).unitEach, price: 0 });
+    itemsBody.append(row);
+    renumberItems();
+    return row;
   }
 
   function applyInterfaceLocale(locale) {
@@ -556,6 +620,11 @@
     form.elements.documentLocale.value = normalized;
     form.elements.currency.value = CURRENCY_BY_LOCALE[normalized];
     document.getElementById("documentLocale").value = normalized;
+    if (CURRENCY_BY_LOCALE[normalized] !== "KRW") {
+      renderProcessing(readProcessing().map(item => ({ ...item, rate: 0 })));
+    } else if (readProcessing().every(item => !number(item.rate))) {
+      renderProcessing(defaultProcessing("KRW"));
+    }
     applyInterfaceLocale(normalized);
   }
 
@@ -651,9 +720,8 @@
   function applyMaterialTotal() {
     const data = readData();
     const materialTotal = materialTotals(data.materials, data.materialRoundingEnabled, data.materialRoundingUnit);
-    const target = [...itemsBody.rows].find(row => itemKey(row.querySelector('[data-field="name"]').value) === "material");
+    const target = findOrCreateLinkedItem("material", data);
     if (!target) {
-      setStatus("견적 항목에서 금형 소재비 항목을 찾을 수 없습니다.", "error");
       return;
     }
     target.querySelector('[data-field="qty"]').value = 1;
@@ -674,13 +742,8 @@
   function applyProcessingTotal() {
     const data = readData();
     const total = processingTotals(data.processing);
-    const targets = {
-      machining: [...itemsBody.rows].find(row => itemKey(row.querySelector('[data-field="name"]').value) === "machining"),
-      heat: [...itemsBody.rows].find(row => itemKey(row.querySelector('[data-field="name"]').value) === "heat"),
-      edm: [...itemsBody.rows].find(row => itemKey(row.querySelector('[data-field="name"]').value) === "edm")
-    };
+    const targets = { machining: findOrCreateLinkedItem("machining", data), heat: findOrCreateLinkedItem("heat", data), edm: findOrCreateLinkedItem("edm", data) };
     if (Object.values(targets).some(target => !target)) {
-      setStatus("견적 항목에서 기계가공비·열처리비·와이어가공비 항목을 찾을 수 없습니다.", "error");
       return;
     }
     Object.entries(targets).forEach(([group, target]) => {
@@ -853,7 +916,7 @@
 
     const fieldY = 950, fieldGap = 20, fieldW = (width - fieldGap * 2) / 3, fieldH = 110;
     const fields = [
-      [t.dieType, `${translatedKnown(data.dieType || "-", DIE_TYPE_TRANSLATIONS, locale)} / ${data.dieQuantity || 1}${t.unitEach}`], [t.productMaterial, data.productMaterial], [t.pressSpec, data.pressSpec],
+      [t.dieType, `${displayedDieType(data, locale)} / ${data.dieQuantity || 1}${t.unitEach}`], [t.productMaterial, data.productMaterial], [t.pressSpec, data.pressSpec],
       [t.validUntil, translatedKnown(data.validUntil, DEFAULT_VALUE_TRANSLATIONS.validUntil, locale)], [t.delivery, translatedKnown(data.delivery, DEFAULT_VALUE_TRANSLATIONS.delivery, locale)], [t.payment, translatedKnown(data.paymentTerms, DEFAULT_VALUE_TRANSLATIONS.paymentTerms, locale)]
     ];
     fields.forEach(([label, value], index) => field(label, value, left + (index % 3) * (fieldW + fieldGap), fieldY + Math.floor(index / 3) * (fieldH + 20), fieldW, fieldH));
@@ -1081,6 +1144,7 @@
   }
 
   form.addEventListener("submit", event => event.preventDefault());
+  form.elements.dieType.addEventListener("change", () => { syncDieTypeOtherField(); changed(); });
   document.getElementById("documentLocale").addEventListener("change", event => { changeDocumentLocale(event.target.value); changed(); });
   form.addEventListener("input", changed);
   form.addEventListener("change", changed);
@@ -1088,7 +1152,7 @@
   document.getElementById("addMaterial").addEventListener("click", () => { if (materialsBody.children.length >= 10) { setStatus("PDF 한 페이지 출력을 위해 소재 항목은 최대 10개까지 지원합니다.", "error"); return; } materialsBody.append(materialRow({ qty: 1 }, materialsBody.children.length)); renumberMaterials(); changed(); });
   document.getElementById("restoreDefaultMaterials").addEventListener("click", () => { if (!confirm("현재 소재 항목을 기본 8개 항목으로 바꾸시겠습니까?")) return; renderMaterials(DEFAULT_MATERIALS.map(([name, grade]) => ({ name, grade, qty: 1 }))); changed(); });
   document.getElementById("addProcessing").addEventListener("click", () => { if (processingBody.children.length >= 12) { setStatus("PDF 한 페이지 출력을 위해 가공 항목은 최대 12개까지 지원합니다.", "error"); return; } processingBody.append(processingRow({ group: "machining", name: "", method: "hour", qty: 0, rate: 0 }, processingBody.children.length)); renumberProcessing(); changed(); });
-  document.getElementById("restoreDefaultProcessing").addEventListener("click", () => { if (!confirm("현재 가공 항목과 임률을 권장 초기값으로 복원하시겠습니까?")) return; renderProcessing(DEFAULT_PROCESSING); changed(); });
+  document.getElementById("restoreDefaultProcessing").addEventListener("click", () => { if (!confirm("현재 가공 항목과 임률을 기본값으로 복원하시겠습니까?")) return; renderProcessing(defaultProcessing(form.elements.currency.value)); changed(); });
   document.getElementById("applyMaterialTotal").addEventListener("click", applyMaterialTotal);
   document.getElementById("applyProcessingTotal").addEventListener("click", applyProcessingTotal);
   document.getElementById("openMaterialCalculator").addEventListener("click", openMaterialDialog);
