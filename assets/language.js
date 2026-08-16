@@ -26,14 +26,6 @@
   const japanesePath = alternateUrl("ja") || fallbackJapanesePath;
   const nav = document.querySelector(".menu");
 
-  if (isJapanese && nav && !nav.querySelector('.menu-dropdown-panel.resource-menu')) {
-    const resources = document.createElement("div");
-    resources.className = "menu-dropdown hide-sm";
-    resources.innerHTML = `<a class="menu-dropdown-trigger" href="/ja/resources/press-die-quotation/" aria-haspopup="menu">資料室<span class="menu-dropdown-arrow" aria-hidden="true">▾</span></a><div class="menu-dropdown-panel resource-menu" role="menu"><a role="menuitem" href="/ja/resources/press-die-quotation/">プレス金型 見積書作成ツール</a><a role="menuitem" href="/ja/resources/press-die-quotation/?tool=material">金型材料費算出 <small>計算ツール</small></a><a role="menuitem" href="/ja/resources/press-die-quotation/?tool=processing">加工費算出 <small>計算ツール</small></a></div>`;
-    const blogLink = nav.querySelector('a[href="/ja/blog.html"], a[href*="/ja/#blog"]');
-    nav.insertBefore(resources, blogLink || nav.querySelector(".phone") || null);
-  }
-
   const groupedCopy = isJapanese ? {
     full: "プレス金型設計・薄板成形解析・構造解析・製品設計",
     legacyFull: "製品設計・構造解析・薄板成形解析・プレス金型設計",
@@ -72,7 +64,9 @@
     } : {
       open: "메뉴 열기", close: "메뉴 닫기", company: "회사소개", services: "서비스", press: "프레스금형설계", forming: "박판성형해석", structural: "구조해석", product: "제품설계", portfolio: "전체 포트폴리오 보기", blog: "기술블로그", contact: "문의하기", phone: "전화하기"
     };
-    const mobileResources = isJapanese ? "" : `<div class="qdm-mobile-service-group qdm-mobile-resource-group"><strong>자료실</strong><a href="/resources/press-die-quotation/">프레스금형 견적서 작성기</a><a class="resource-subitem" href="/resources/press-die-quotation/?tool=material">금형소재 견적산출</a><a class="resource-subitem" href="/resources/press-die-quotation/?tool=processing">가공비용 견적산출</a><a href="/resources/press-process-calculators/">프레스 버링(Burring) 계산</a></div>`;
+    const desktopResource = topbarNav.querySelector(".resource-menu");
+    const desktopResourceTrigger = desktopResource?.closest(".menu-dropdown")?.querySelector(".menu-dropdown-trigger")?.textContent.replace("▾", "").trim();
+    const mobileResources = desktopResource ? `<div class="qdm-mobile-service-group qdm-mobile-resource-group"><strong>${desktopResourceTrigger || (isJapanese ? "資料室" : "자료실")}</strong>${[...desktopResource.querySelectorAll("a")].map((link) => `<a class="${link.classList.contains("resource-subitem") ? "resource-subitem" : ""}" href="${link.getAttribute("href") || "#"}">${link.textContent.trim()}</a>`).join("")}</div>` : "";
     mobileMenu.innerHTML = `<button class="qdm-mobile-menu-button" type="button" aria-expanded="false" aria-controls="qdm-mobile-menu-panel" aria-label="${mobileLabels.open}"><span></span><span></span><span></span></button><nav class="qdm-mobile-menu-panel" id="qdm-mobile-menu-panel" aria-label="${isJapanese ? "モバイルメニュー" : "모바일 메뉴"}"><a href="${homeRoot}#about">${mobileLabels.company}</a><div class="qdm-mobile-service-group"><strong>${mobileLabels.services}</strong><a href="${serviceRoot}/press-die-design/">${mobileLabels.press}</a><a href="${serviceRoot}/sheet-metal-forming-analysis/">${mobileLabels.forming}</a><a href="${serviceRoot}/structural-analysis/">${mobileLabels.structural}</a><a href="${serviceRoot}/product-design/">${mobileLabels.product}</a><a href="${isJapanese ? "/ja/portfolio.html" : "/portfolio.html"}">${mobileLabels.portfolio}</a></div>${mobileResources}<a href="${isJapanese ? "/ja/blog.html" : "/#blog"}">${mobileLabels.blog}</a><a href="${homeRoot}#contact">${mobileLabels.contact}</a><a href="tel:07080646621">☎ ${mobileLabels.phone}</a><div class="qdm-mobile-language"><a href="${koreanPath}" data-language="ko">한국어</a><span aria-hidden="true">/</span><a href="${japanesePath}" data-language="ja">日本語</a></div></nav>`;
     mobileMenu.querySelector(".qdm-mobile-menu-panel > a")?.setAttribute("href", aboutRoot);
     const button = mobileMenu.querySelector(".qdm-mobile-menu-button");
