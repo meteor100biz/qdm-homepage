@@ -109,23 +109,29 @@
     document.querySelectorAll(".drawings [data-lock-toggle]").forEach(button=>button.addEventListener("click",()=>setAuto(button.dataset.lockToggle)));
   }
   function draw(g){
+    const heightRatio=g.r>0?g.h/g.r:3;
+    const shortScale=heightRatio<=1?0:heightRatio<=2?(heightRatio-1)/3:1;
+    const wallBottom=Math.round(98+109*shortScale);
+    const innerDimY=Math.round(116+63*shortScale);
+    const outsideDimY=Math.round(146+85*shortScale);
+    const heightCardY=Math.round((87+Math.max(98,wallBottom-4))/2-21);
     $("beforeDrawing").innerHTML=defs()+`<g transform="translate(0 -12)">
       <path class="flat-material" d="M22 76H198V102H22Z M302 76H478V102H302Z"/>
       <line class="extension-line" x1="198" y1="108" x2="198" y2="157"/><line class="extension-line" x1="302" y1="108" x2="302" y2="157"/>
       ${dimLine(202,142,298,142)}${editor(198,157,"d","기초홀 d",g.d,104)}
-      ${dimLine(451,78,451,100)}${editor(367,112,"t","두께 t",g.t,84)}</g>
+      ${dimLine(451,78,451,100)}${editor(355,112,"t","두께 t",g.t,96)}</g>
       <text class="drawing-note" x="22" y="218">피어싱 후 평판 단면</text>`;
 
     $("afterDrawing").innerHTML=defs()+`<g transform="translate(0 -12)">
-      <path class="formed-material" d="M20 54H145C171 54 187 70 187 96V207H158V98C158 87 152 83 141 83H20Z"/>
-      <path class="formed-material" d="M480 54H355C329 54 313 70 313 96V207H342V98C342 87 348 83 359 83H480Z"/>
-      <path class="highlight-edge" d="M20 83H141C152 83 158 87 158 98V207M480 83H359C348 83 342 87 342 98V207"/>
-      ${dimLine(191,179,309,179)}${editor(198,129,"D","내경 D",g.D,104)}
-      <line class="extension-line" x1="158" y1="210" x2="158" y2="239"/><line class="extension-line" x1="342" y1="210" x2="342" y2="239"/>${dimLine(162,231,338,231)}
-      <g class="result-tag"><rect x="207" y="213" width="86" height="27" rx="7"/><text x="250" y="231" text-anchor="middle">Dₒ ${fmt(g.Do)}</text></g>
-      <line class="extension-line" x1="344" y1="207" x2="407" y2="207"/>${dimLine(392,87,392,203)}${editor(373,121,"h","높이 h",g.h,105)}
+      <path class="formed-material" d="M20 54H145C171 54 187 70 187 96V${wallBottom}H158V98C158 87 152 83 141 83H20Z"/>
+      <path class="formed-material" d="M480 54H355C329 54 313 70 313 96V${wallBottom}H342V98C342 87 348 83 359 83H480Z"/>
+      <path class="highlight-edge" d="M20 83H141C152 83 158 87 158 98V${wallBottom}M480 83H359C348 83 342 87 342 98V${wallBottom}"/>
+      ${dimLine(191,innerDimY,309,innerDimY)}${editor(198,innerDimY-50,"D","내경 D",g.D,104)}
+      <line class="extension-line" x1="158" y1="${wallBottom+3}" x2="158" y2="${outsideDimY+8}"/><line class="extension-line" x1="342" y1="${wallBottom+3}" x2="342" y2="${outsideDimY+8}"/>${dimLine(162,outsideDimY,338,outsideDimY)}
+      <g class="result-tag"><rect x="207" y="${outsideDimY-18}" width="86" height="27" rx="7"/><text x="250" y="${outsideDimY}" text-anchor="middle">Dₒ ${fmt(g.Do)}</text></g>
+      <line class="extension-line" x1="344" y1="${wallBottom}" x2="407" y2="${wallBottom}"/>${dimLine(392,87,392,Math.max(94,wallBottom-4))}${editor(373,heightCardY,"h","높이 h",g.h,105)}
       <path class="radius-leader" d="M128 122 154 88"/>${editor(38,111,"r","굽힘반경 r",g.r,90)}</g>
-      ${editor(397,7,"t","두께 t",g.t,83,true)}
+      ${editor(384,7,"t","두께 t",g.t,96,true)}
       <text class="drawing-note" x="20" y="242">굽힘부 t → ${Math.round(g.k*100)}%t · 직선부 ${fmt(g.tb)} mm</text>`;
     bindDrawingEditors();
   }
