@@ -57,7 +57,8 @@
   const dimLine=(x1,y1,x2,y2)=>`<line class="dimension-line" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" marker-start="url(#dimArrow)" marker-end="url(#dimArrow)"/>`;
   function editor(x,y,key,label,value,width=88,linked=false){
     const output=els.solve.value===key,readonly=output||linked;
-    return `<foreignObject x="${x}" y="${y}" width="${width}" height="49"><div xmlns="http://www.w3.org/1999/xhtml" class="drawing-editor${output?" is-result":""}${linked?" is-linked":""}"><label>${label}</label><input data-drawing-input="${key}" type="number" min="0" step="0.1" value="${Number(value.toFixed(2))}" ${readonly?"readonly aria-readonly=\"true\"":""}/><span>mm</span></div></foreignObject>`;
+    const colorRole=["d","D","h"].includes(key)?" is-attention":key==="r"?" is-reference":key==="t"&&!linked?" is-base":"";
+    return `<foreignObject x="${x}" y="${y}" width="${width}" height="49"><div xmlns="http://www.w3.org/1999/xhtml" class="drawing-editor${colorRole}${output?" is-result":""}${linked?" is-linked":""}"><label>${label}</label><input data-drawing-input="${key}" type="number" min="0" step="0.1" value="${Number(value.toFixed(2))}" ${readonly?"readonly aria-readonly=\"true\"":""}/><span>mm</span></div></foreignObject>`;
   }
   function bindDrawingEditors(){
     document.querySelectorAll("[data-drawing-input]").forEach(input=>{
