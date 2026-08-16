@@ -20,7 +20,8 @@
     return `${url.pathname}${url.search}${url.hash}`;
   };
   const fallbackKoreanPath = quotationPage ? quotationLanguagePath("ko") : (isJapanese ? (path.replace(/^\/ja(?=\/|$)/, "") || "/") : path);
-  const fallbackJapanesePath = quotationPage ? quotationLanguagePath("ja") : (isJapanese ? path : (path === "/" || path === "/index.html" ? "/ja/" : `/ja${path.startsWith("/") ? path : `/${path}`}`));
+  const koreanOnlyPage = /^\/resources\/press-process-calculators\/?$/.test(path);
+  const fallbackJapanesePath = koreanOnlyPage ? "/ja/" : (quotationPage ? quotationLanguagePath("ja") : (isJapanese ? path : (path === "/" || path === "/index.html" ? "/ja/" : `/ja${path.startsWith("/") ? path : `/${path}`}`)));
   const koreanPath = alternateUrl("ko") || fallbackKoreanPath;
   const japanesePath = alternateUrl("ja") || fallbackJapanesePath;
   const nav = document.querySelector(".menu");
