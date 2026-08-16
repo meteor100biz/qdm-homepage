@@ -60,7 +60,7 @@
     const output=els.solve.value===key,readonly=output||linked;
     const colorRole=["d","D","h"].includes(key)?" is-attention":key==="r"?" is-reference":key==="t"&&!linked?" is-base":"";
     const lock=(["d","D","h"].includes(key))?`<button class="drawing-lock-toggle${output?" is-auto":""}" data-lock-toggle="${key}" type="button" aria-label="${label} ${output?"자동 계산 중":"고정됨"}"><span aria-hidden="true">${output?"🔓":"🔒"}</span></button>`:"";
-    return `<foreignObject x="${x}" y="${y}" width="${width}" height="49"><div xmlns="http://www.w3.org/1999/xhtml" class="drawing-editor${colorRole}${output?" is-result":""}${linked?" is-linked":""}"><label>${label}</label>${lock}<input data-drawing-input="${key}" type="number" min="0" step="0.1" value="${Number(value.toFixed(2))}" ${readonly?"readonly aria-readonly=\"true\"":""}/><span>mm</span></div></foreignObject>`;
+    return `<foreignObject x="${x}" y="${y}" width="${width}" height="49"><div xmlns="http://www.w3.org/1999/xhtml" class="drawing-editor${colorRole}${output?" is-result":""}${linked?" is-linked":""}"><label>${label}</label>${lock}<div class="drawing-value-row"><input data-drawing-input="${key}" type="number" min="0" step="0.1" value="${Number(value.toFixed(2))}" ${readonly?"readonly aria-readonly=\"true\"":""}/><span>mm</span></div></div></foreignObject>`;
   }
   function setAuto(key,focusKey="",drawing=false){
     if(!["d","D","h"].includes(key)) return;
@@ -109,14 +109,14 @@
     document.querySelectorAll(".drawings [data-lock-toggle]").forEach(button=>button.addEventListener("click",()=>setAuto(button.dataset.lockToggle)));
   }
   function draw(g){
-    $("beforeDrawing").innerHTML=defs()+`
+    $("beforeDrawing").innerHTML=defs()+`<g transform="translate(0 -12)">
       <path class="flat-material" d="M22 76H198V102H22Z M302 76H478V102H302Z"/>
       <line class="extension-line" x1="198" y1="108" x2="198" y2="157"/><line class="extension-line" x1="302" y1="108" x2="302" y2="157"/>
       ${dimLine(202,142,298,142)}${editor(198,157,"d","기초홀 d",g.d,104)}
-      ${dimLine(451,78,451,100)}${editor(367,112,"t","두께 t",g.t,84)}
+      ${dimLine(451,78,451,100)}${editor(367,112,"t","두께 t",g.t,84)}</g>
       <text class="drawing-note" x="22" y="218">피어싱 후 평판 단면</text>`;
 
-    $("afterDrawing").innerHTML=defs()+`
+    $("afterDrawing").innerHTML=defs()+`<g transform="translate(0 -12)">
       <path class="formed-material" d="M20 54H145C171 54 187 70 187 96V207H158V98C158 87 152 83 141 83H20Z"/>
       <path class="formed-material" d="M480 54H355C329 54 313 70 313 96V207H342V98C342 87 348 83 359 83H480Z"/>
       <path class="highlight-edge" d="M20 83H141C152 83 158 87 158 98V207M480 83H359C348 83 342 87 342 98V207"/>
@@ -124,7 +124,7 @@
       <line class="extension-line" x1="158" y1="210" x2="158" y2="239"/><line class="extension-line" x1="342" y1="210" x2="342" y2="239"/>${dimLine(162,231,338,231)}
       <g class="result-tag"><rect x="207" y="213" width="86" height="27" rx="7"/><text x="250" y="231" text-anchor="middle">Dₒ ${fmt(g.Do)}</text></g>
       <line class="extension-line" x1="344" y1="207" x2="407" y2="207"/>${dimLine(392,87,392,203)}${editor(373,121,"h","높이 h",g.h,105)}
-      <path class="radius-leader" d="M128 122 154 88"/>${editor(38,111,"r","굽힘반경 r",g.r,90)}
+      <path class="radius-leader" d="M128 122 154 88"/>${editor(38,111,"r","굽힘반경 r",g.r,90)}</g>
       ${editor(397,7,"t","두께 t",g.t,83,true)}
       <text class="drawing-note" x="20" y="242">굽힘부 t → ${Math.round(g.k*100)}%t · 직선부 ${fmt(g.tb)} mm</text>`;
     bindDrawingEditors();
