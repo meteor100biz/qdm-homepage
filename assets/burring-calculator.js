@@ -94,7 +94,7 @@
       <line class="extension-line" x1="158" y1="210" x2="158" y2="239"/><line class="extension-line" x1="342" y1="210" x2="342" y2="239"/>${dimLine(162,231,338,231)}
       <g class="result-tag"><rect x="207" y="213" width="86" height="27" rx="7"/><text x="250" y="231" text-anchor="middle">Dₒ ${fmt(g.Do)}</text></g>
       <line class="extension-line" x1="344" y1="207" x2="407" y2="207"/>${dimLine(392,87,392,203)}${editor(397,121,"h","높이 h",g.h,83)}
-      <path class="radius-leader" d="M157 100 117 123"/>${editor(38,111,"r","굽힘반경 r",g.r,90)}
+      <path class="radius-leader" d="M128 122 154 88"/>${editor(38,111,"r","굽힘반경 r",g.r,90)}
       ${editor(397,7,"t","두께 t",g.t,83,true)}
       <text class="drawing-note" x="20" y="252">굽힘부 t → ${Math.round(g.k*100)}%t · 직선부 ${fmt(g.tb)} mm</text>`;
     bindDrawingEditors();
