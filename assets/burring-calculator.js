@@ -5,7 +5,7 @@
   let radiusLinked = true;
   const names = {h:"버링 높이 h",d:"기초 피어싱 d",D:"버링 내경 D"};
   const num = (el) => Number.parseFloat(el.value);
-  const fmt = (v,digits=3) => Number.isFinite(v) ? v.toLocaleString("ko-KR",{minimumFractionDigits:0,maximumFractionDigits:digits}) : "-";
+  const fmt = (v,digits=2) => Number.isFinite(v) ? v.toLocaleString("ko-KR",{minimumFractionDigits:0,maximumFractionDigits:digits}) : "-";
 
   function bendVolume(D,t,r,k,steps=360){
     const a=D/2,end=Math.PI/2,dt=end/steps;
@@ -55,9 +55,9 @@
 
   const defs=()=>`<defs><marker id="dimArrow" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 8 4 0 8Z"/></marker><linearGradient id="formedBlue" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#5d8ed9"/><stop offset="1" stop-color="#3267b8"/></linearGradient></defs>`;
   const dimLine=(x1,y1,x2,y2)=>`<line class="dimension-line" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" marker-start="url(#dimArrow)" marker-end="url(#dimArrow)"/>`;
-  function editor(x,y,key,label,value,width=88){
-    const output=els.solve.value===key,step=key==="t"||key==="r"?"0.01":"0.001";
-    return `<foreignObject x="${x}" y="${y}" width="${width}" height="49"><div xmlns="http://www.w3.org/1999/xhtml" class="drawing-editor${output?" is-result":""}"><label>${label}</label><input data-drawing-input="${key}" type="number" min="0" step="${step}" value="${Number(value.toFixed(3))}" ${output?"readonly aria-readonly=\"true\"":""}/><span>mm</span></div></foreignObject>`;
+  function editor(x,y,key,label,value,width=88,linked=false){
+    const output=els.solve.value===key,readonly=output||linked;
+    return `<foreignObject x="${x}" y="${y}" width="${width}" height="49"><div xmlns="http://www.w3.org/1999/xhtml" class="drawing-editor${output?" is-result":""}${linked?" is-linked":""}"><label>${label}</label><input data-drawing-input="${key}" type="number" min="0" step="0.1" value="${Number(value.toFixed(2))}" ${readonly?"readonly aria-readonly=\"true\"":""}/><span>mm</span></div></foreignObject>`;
   }
   function bindDrawingEditors(){
     document.querySelectorAll("[data-drawing-input]").forEach(input=>{
@@ -90,13 +90,12 @@
       <path class="formed-material" d="M20 54H145C171 54 187 70 187 96V207H158V98C158 87 152 83 141 83H20Z"/>
       <path class="formed-material" d="M480 54H355C329 54 313 70 313 96V207H342V98C342 87 348 83 359 83H480Z"/>
       <path class="highlight-edge" d="M20 83H141C152 83 158 87 158 98V207M480 83H359C348 83 342 87 342 98V207"/>
-      <line class="extension-line" x1="187" y1="174" x2="187" y2="224"/><line class="extension-line" x1="313" y1="174" x2="313" y2="224"/>
       ${dimLine(191,179,309,179)}${editor(206,129,"D","내경 D",g.D,88)}
       <line class="extension-line" x1="158" y1="210" x2="158" y2="239"/><line class="extension-line" x1="342" y1="210" x2="342" y2="239"/>${dimLine(162,231,338,231)}
-      <g class="result-tag"><rect x="207" y="213" width="86" height="27" rx="7"/><text x="250" y="231" text-anchor="middle">Do ${fmt(g.Do)}</text></g>
-      <line class="extension-line" x1="344" y1="83" x2="407" y2="83"/><line class="extension-line" x1="344" y1="207" x2="407" y2="207"/>${dimLine(392,87,392,203)}${editor(397,121,"h","높이 h",g.h,83)}
-      <path class="radius-leader" d="M157 100 117 123"/>${editor(45,111,"r","반경 r",g.r,78)}
-      ${editor(397,7,"t","두께 t",g.t,83)}
+      <g class="result-tag"><rect x="207" y="213" width="86" height="27" rx="7"/><text x="250" y="231" text-anchor="middle">Dₒ ${fmt(g.Do)}</text></g>
+      <line class="extension-line" x1="344" y1="207" x2="407" y2="207"/>${dimLine(392,87,392,203)}${editor(397,121,"h","높이 h",g.h,83)}
+      <path class="radius-leader" d="M157 100 117 123"/>${editor(38,111,"r","굽힘반경 r",g.r,90)}
+      ${editor(397,7,"t","두께 t",g.t,83,true)}
       <text class="drawing-note" x="20" y="252">굽힘부 t → ${Math.round(g.k*100)}%t · 직선부 ${fmt(g.tb)} mm</text>`;
     bindDrawingEditors();
   }
@@ -106,7 +105,7 @@
     document.querySelectorAll("[data-dimension]").forEach(label=>{const output=label.dataset.dimension===target;label.classList.toggle("is-output",output);label.querySelector("input").readOnly=output;});
     try{
       const g=solve({target,t:num(els.t),r:num(els.r),d:num(els.d),D:num(els.D),h:num(els.h),k:num(els.ratio)/100});
-      els[target].value=String(Math.round(g[target]*1000)/1000);
+      els[target].value=g[target].toFixed(2);
       $("resultLabel").textContent=names[target];$("resultValue").textContent=fmt(g[target]);$("outsideDiameter").textContent=`${fmt(g.Do)} mm`;$("straightHeight").textContent=`${fmt(g.straight)} mm`;$("wallThickness").textContent=`${fmt(g.tb)} mm`;$("bendVolume").textContent=`${fmt(g.bend)} mm³`;$("wallVolume").textContent=`${fmt(g.wall)} mm³`;
       $("resultPanel").hidden=false;$("errorPanel").hidden=true;$("resultBadge").textContent="계산 완료";$("resultBadge").classList.remove("error");draw(g);
     }catch(error){showError(error.message);}
