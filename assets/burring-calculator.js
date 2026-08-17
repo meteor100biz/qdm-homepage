@@ -3,8 +3,9 @@
   const $ = (id) => document.getElementById(id);
   const els = {form:$("burringForm"),solve:$("solveFor"),t:$("tInput"),r:$("rInput"),d:$("dInput"),D:$("DInput"),h:$("hInput"),ratio:$("thicknessRatio")};
   let radiusLinked = true;
+  let lockedKey = "D";
   const names = {h:"버링 높이 h",d:"기초 피어싱 d",D:"버링 내경 D"};
-  const alternateAuto = {h:"d",d:"h",D:"h"};
+  const dimensions = ["d","D","h"];
   const num = (el) => Number.parseFloat(el.value);
   const fmt = (v,digits=2) => Number.isFinite(v) ? v.toLocaleString("ko-KR",{minimumFractionDigits:0,maximumFractionDigits:digits}) : "-";
 
@@ -57,40 +58,50 @@
   const defs=()=>`<defs><marker id="dimArrow" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 8 4 0 8Z"/></marker><linearGradient id="formedBlue" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#5d8ed9"/><stop offset="1" stop-color="#3267b8"/></linearGradient></defs>`;
   const dimLine=(x1,y1,x2,y2)=>`<line class="dimension-line" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" marker-start="url(#dimArrow)" marker-end="url(#dimArrow)"/>`;
   function editor(x,y,key,label,value,width=88,linked=false){
-    const output=els.solve.value===key,readonly=output||linked;
+    const role=key===els.solve.value?"calculated":key===lockedKey?"fixed":"input",output=role==="calculated",readonly=role!=="input"||linked;
     const colorRole=["d","D","h"].includes(key)?" is-attention":key==="r"?" is-reference":key==="t"&&!linked?" is-base":"";
-    const lock=(["d","D","h"].includes(key))?`<button class="drawing-lock-toggle${output?" is-auto":""}" data-lock-toggle="${key}" type="button" aria-label="${label} ${output?"자동 계산 중":"고정됨"}"><span aria-hidden="true">${output?"🔓":"🔒"}</span></button>`:"";
-    return `<foreignObject x="${x}" y="${y}" width="${width}" height="49"><div xmlns="http://www.w3.org/1999/xhtml" class="drawing-editor${colorRole}${output?" is-result":""}${linked?" is-linked":""}"><label>${label}</label>${lock}<div class="drawing-value-row"><input data-drawing-input="${key}" type="number" min="0" step="0.1" value="${Number(value.toFixed(2))}" ${readonly?"readonly aria-readonly=\"true\"":""}/><span>mm</span></div></div></foreignObject>`;
+    const roleClass=role==="calculated"?" is-calculated":role==="fixed"?" is-locked":" is-input";
+    const roleText=role==="calculated"?"계산값":role==="fixed"?"고정값":"입력값";
+    const lock=dimensions.includes(key)?`<button class="drawing-lock-toggle${roleClass}" data-lock-toggle="${key}" type="button" aria-label="${label} ${roleText}"><span aria-hidden="true"></span></button>`:"";
+    return `<foreignObject x="${x}" y="${y}" width="${width}" height="49"><div xmlns="http://www.w3.org/1999/xhtml" class="drawing-editor${colorRole}${output?" is-result":""}${role==="fixed"?" is-fixed":""}${linked?" is-linked":""}"><label>${label}</label>${lock}<div class="drawing-value-row"><input data-drawing-input="${key}" type="number" min="0" step="0.1" value="${Number(value.toFixed(2))}" ${readonly?"readonly aria-readonly=\"true\"":""}/><span>mm</span></div></div></foreignObject>`;
   }
-  function setAuto(key,focusKey="",drawing=false){
-    if(!["d","D","h"].includes(key)) return;
-    els.solve.value=key;
+  const inputKey=()=>dimensions.find(key=>key!==lockedKey&&key!==els.solve.value);
+  function switchCalculated(key,drawing=false){
+    if(key!==els.solve.value) return;
+    const next=inputKey();
+    els.solve.value=next;
     calculate();
-    if(focusKey) requestAnimationFrame(()=>{
-      const selector=drawing?`[data-drawing-input="${focusKey}"]`:`#${focusKey}Input`;
+    requestAnimationFrame(()=>{
+      const selector=drawing?`[data-drawing-input="${key}"]`:`#${key}Input`;
       const input=document.querySelector(selector);
       input?.focus();input?.select();
     });
   }
-  function activateAutoInput(key,drawing=false){
-    if(els.solve.value!==key) return;
-    setAuto(alternateAuto[key],key,drawing);
+  function setLocked(key){
+    if(key===els.solve.value||key===lockedKey) return;
+    lockedKey=key;
+    calculate();
+  }
+  function handleRoleButton(key,drawing=false){
+    if(key===els.solve.value) switchCalculated(key,drawing);
+    else setLocked(key);
   }
   function updateLockState(){
     const target=els.solve.value;
-    $("autoCalculationStatus").textContent=`${names[target]} 자동 계산`;
+    $("autoCalculationStatus").textContent=`${names[lockedKey]} 고정 · ${names[target]} 자동 계산`;
     document.querySelectorAll('[data-lock-toggle]').forEach(button=>{
-      const auto=button.dataset.lockToggle===target;
-      button.classList.toggle("is-auto",auto);
-      button.querySelector("span").textContent=auto?"🔓":"🔒";
-      button.setAttribute("aria-label",`${names[button.dataset.lockToggle]} ${auto?"자동 계산 중":"고정됨. 자동 계산으로 전환"}`);
+      const key=button.dataset.lockToggle,role=key===target?"calculated":key===lockedKey?"locked":"input";
+      button.classList.toggle("is-calculated",role==="calculated");button.classList.toggle("is-locked",role==="locked");button.classList.toggle("is-input",role==="input");
+      button.classList.remove("is-recalculating");
+      if(role==="calculated"){void button.offsetWidth;button.classList.add("is-recalculating");}
+      button.setAttribute("aria-label",`${names[key]} ${role==="calculated"?"계산값. 클릭하면 입력값으로 전환":role==="locked"?"고정값":"입력값. 클릭하면 고정"}`);
     });
-    document.querySelectorAll('.drawings [data-drawing-input]').forEach(input=>{if(["d","D","h"].includes(input.dataset.drawingInput))input.readOnly=input.dataset.drawingInput===target;});
+    document.querySelectorAll('.drawings [data-drawing-input]').forEach(input=>{if(dimensions.includes(input.dataset.drawingInput))input.readOnly=input.dataset.drawingInput!==inputKey();});
   }
   function bindDrawingEditors(){
     document.querySelectorAll("[data-drawing-input]").forEach(input=>{
       input.addEventListener("focus",()=>input.select());
-      input.addEventListener("click",()=>{if(input.readOnly) activateAutoInput(input.dataset.drawingInput,true);});
+      input.addEventListener("click",()=>{if(input.dataset.drawingInput===els.solve.value) switchCalculated(input.dataset.drawingInput,true);});
       const syncValue=()=>{
         const key=input.dataset.drawingInput;
         if(key==="r"){radiusLinked=false;$("rLinkStatus").textContent="개별 입력값 적용 중";}
@@ -106,7 +117,7 @@
       input.addEventListener("blur",commit);
       input.addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();commit();}});
     });
-    document.querySelectorAll(".drawings [data-lock-toggle]").forEach(button=>button.addEventListener("click",()=>setAuto(button.dataset.lockToggle)));
+    document.querySelectorAll(".drawings [data-lock-toggle]").forEach(button=>button.addEventListener("click",()=>handleRoleButton(button.dataset.lockToggle,true)));
   }
   function draw(g){
     const displayThickness=value=>{
@@ -122,7 +133,7 @@
     const rPx=Math.round(clamp(g.r*scale,10,36));
     const flatCenterY=89,flatTop=Math.round(flatCenterY-sheetPx/2),flatBottom=flatTop+sheetPx;
     const holeLeft=250-dPx/2,holeRight=250+dPx/2;
-    const formedTop=54,formedInnerY=formedTop+sheetPx;
+    const formedTop=68,formedInnerY=formedTop+sheetPx;
     const openingLeft=250-DPx/2,openingRight=250+DPx/2;
     const leftWallInner=openingLeft-wallPx,rightWallInner=openingRight+wallPx;
     const outerRadius=rPx+sheetPx;
@@ -143,8 +154,8 @@
       <path class="formed-material" d="M20 ${formedTop}H${leftBendStart}Q${openingLeft} ${formedTop} ${openingLeft} ${bendBottom}V${wallBottom}H${leftWallInner}V${bendBottom}Q${leftWallInner} ${formedInnerY} ${leftBendStart} ${formedInnerY}H20Z"/>
       <path class="formed-material" d="M480 ${formedTop}H${rightBendStart}Q${openingRight} ${formedTop} ${openingRight} ${bendBottom}V${wallBottom}H${rightWallInner}V${bendBottom}Q${rightWallInner} ${formedInnerY} ${rightBendStart} ${formedInnerY}H480Z"/>
       <path class="highlight-edge" d="M20 ${formedInnerY}H${leftBendStart}Q${leftWallInner} ${formedInnerY} ${leftWallInner} ${bendBottom}V${wallBottom}M480 ${formedInnerY}H${rightBendStart}Q${rightWallInner} ${formedInnerY} ${rightWallInner} ${bendBottom}V${wallBottom}"/>
-      <line class="extension-line" x1="${openingLeft}" y1="${formedTop}" x2="${openingLeft}" y2="39"/><line class="extension-line" x1="${openingRight}" y1="${formedTop}" x2="${openingRight}" y2="39"/>
-      ${dimLine(openingLeft+4,43,openingRight-4,43)}${editor(198,18,"D","내경 D",g.D,104)}
+      <line class="extension-line" x1="${openingLeft}" y1="${formedTop}" x2="${openingLeft}" y2="59"/><line class="extension-line" x1="${openingRight}" y1="${formedTop}" x2="${openingRight}" y2="59"/>
+      ${dimLine(openingLeft+4,63,openingRight-4,63)}${editor(198,12,"D","내경 D",g.D,104)}
       <line class="extension-line" x1="${leftWallInner}" y1="${wallBottom+3}" x2="${leftWallInner}" y2="${outsideDimY+8}"/><line class="extension-line" x1="${rightWallInner}" y1="${wallBottom+3}" x2="${rightWallInner}" y2="${outsideDimY+8}"/>${dimLine(leftWallInner+4,outsideDimY,rightWallInner-4,outsideDimY)}
       <g class="result-tag"><rect x="207" y="${outsideDimY-18}" width="86" height="27" rx="7"/><text x="250" y="${outsideDimY}" text-anchor="middle">Dₒ ${fmt(g.Do)}</text></g>
       <line class="extension-line" x1="${rightWallInner+2}" y1="${wallBottom}" x2="407" y2="${wallBottom}"/>${dimLine(392,heightDimTop,392,Math.max(heightDimTop+7,wallBottom-4))}${editor(373,heightCardY,"h","높이 h",g.h,105)}
@@ -156,7 +167,7 @@
   function calculate(){
     const target=els.solve.value;
     updateLockState();
-    document.querySelectorAll("[data-dimension]").forEach(label=>{const output=label.dataset.dimension===target;label.classList.toggle("is-output",output);label.querySelector("input").readOnly=output;});
+    document.querySelectorAll("[data-dimension]").forEach(label=>{const key=label.dataset.dimension,output=key===target,fixed=key===lockedKey;label.classList.toggle("is-output",output);label.classList.toggle("is-fixed",fixed);label.classList.toggle("is-input",!output&&!fixed);label.dataset.roleLabel=output?"계산값":fixed?"고정값":"입력값";label.querySelector("input").readOnly=output||fixed;});
     try{
       const g=solve({target,t:num(els.t),r:num(els.r),d:num(els.d),D:num(els.D),h:num(els.h),k:num(els.ratio)/100});
       els[target].value=g[target].toFixed(2);
@@ -165,11 +176,11 @@
     }catch(error){showError(error.message);}
   }
   els.form.addEventListener("input",calculate);
-  document.querySelectorAll('.input-card [data-lock-toggle]').forEach(button=>button.addEventListener("click",()=>setAuto(button.dataset.lockToggle)));
-  ["d","D","h"].forEach(key=>els[key].addEventListener("click",()=>{if(els[key].readOnly)activateAutoInput(key,false);}));
+  document.querySelectorAll('.input-card [data-lock-toggle]').forEach(button=>button.addEventListener("click",()=>handleRoleButton(button.dataset.lockToggle,false)));
+  dimensions.forEach(key=>els[key].addEventListener("click",()=>{if(key===els.solve.value)switchCalculated(key,false);}));
   els.t.addEventListener("input",()=>{if(radiusLinked)els.r.value=els.t.value;});
   els.r.addEventListener("input",()=>{radiusLinked=false;$("rLinkStatus").textContent="개별 입력값 적용 중";});
   $("relinkRadius").addEventListener("click",()=>{radiusLinked=true;els.r.value=els.t.value;$("rLinkStatus").textContent="t와 연동 중";calculate();});
-  $("resetCalculator").addEventListener("click",()=>{els.solve.value="h";els.t.value="0.4";els.r.value="0.4";els.d.value="5";els.D.value="10.5";els.h.value="2";els.ratio.value="80";radiusLinked=true;$("rLinkStatus").textContent="t와 연동 중";calculate();});
+  $("resetCalculator").addEventListener("click",()=>{lockedKey="D";els.solve.value="h";els.t.value="0.4";els.r.value="0.4";els.d.value="5";els.D.value="10.5";els.h.value="2";els.ratio.value="80";radiusLinked=true;$("rLinkStatus").textContent="t와 연동 중";calculate();});
   calculate();
 })();
