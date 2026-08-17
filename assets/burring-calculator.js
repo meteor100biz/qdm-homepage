@@ -129,8 +129,7 @@
     const leftBendStart=openingLeft-outerRadius,rightBendStart=openingRight+outerRadius;
     const bendBottom=formedInnerY+rPx;
     const wallBottom=Math.round(formedInnerY+hPx);
-    const innerDimY=Math.round(Math.min(183,wallBottom+18));
-    const outsideDimY=Math.round(Math.min(231,Math.max(innerDimY+36,wallBottom+36)));
+    const outsideDimY=Math.round(Math.min(231,wallBottom+54));
     const heightDimTop=formedInnerY+4;
     const heightCardY=Math.round(clamp((heightDimTop+wallBottom-4)/2-21,74,139));
     $("beforeDrawing").innerHTML=defs()+`<g transform="translate(0 -12)">
@@ -144,7 +143,8 @@
       <path class="formed-material" d="M20 ${formedTop}H${leftBendStart}Q${openingLeft} ${formedTop} ${openingLeft} ${bendBottom}V${wallBottom}H${leftWallInner}V${bendBottom}Q${leftWallInner} ${formedInnerY} ${leftBendStart} ${formedInnerY}H20Z"/>
       <path class="formed-material" d="M480 ${formedTop}H${rightBendStart}Q${openingRight} ${formedTop} ${openingRight} ${bendBottom}V${wallBottom}H${rightWallInner}V${bendBottom}Q${rightWallInner} ${formedInnerY} ${rightBendStart} ${formedInnerY}H480Z"/>
       <path class="highlight-edge" d="M20 ${formedInnerY}H${leftBendStart}Q${leftWallInner} ${formedInnerY} ${leftWallInner} ${bendBottom}V${wallBottom}M480 ${formedInnerY}H${rightBendStart}Q${rightWallInner} ${formedInnerY} ${rightWallInner} ${bendBottom}V${wallBottom}"/>
-      ${dimLine(openingLeft+4,innerDimY,openingRight-4,innerDimY)}${editor(198,innerDimY-50,"D","내경 D",g.D,104)}
+      <line class="extension-line" x1="${openingLeft}" y1="${formedTop}" x2="${openingLeft}" y2="39"/><line class="extension-line" x1="${openingRight}" y1="${formedTop}" x2="${openingRight}" y2="39"/>
+      ${dimLine(openingLeft+4,43,openingRight-4,43)}${editor(198,18,"D","내경 D",g.D,104)}
       <line class="extension-line" x1="${leftWallInner}" y1="${wallBottom+3}" x2="${leftWallInner}" y2="${outsideDimY+8}"/><line class="extension-line" x1="${rightWallInner}" y1="${wallBottom+3}" x2="${rightWallInner}" y2="${outsideDimY+8}"/>${dimLine(leftWallInner+4,outsideDimY,rightWallInner-4,outsideDimY)}
       <g class="result-tag"><rect x="207" y="${outsideDimY-18}" width="86" height="27" rx="7"/><text x="250" y="${outsideDimY}" text-anchor="middle">Dₒ ${fmt(g.Do)}</text></g>
       <line class="extension-line" x1="${rightWallInner+2}" y1="${wallBottom}" x2="407" y2="${wallBottom}"/>${dimLine(392,heightDimTop,392,Math.max(heightDimTop+7,wallBottom-4))}${editor(373,heightCardY,"h","높이 h",g.h,105)}
