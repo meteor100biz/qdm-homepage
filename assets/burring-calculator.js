@@ -110,7 +110,7 @@
   }
   function draw(g){
     const heightRatio=g.r>0?g.h/g.r:3;
-    const shortScale=heightRatio<=1?0:heightRatio<=2?(heightRatio-1)/3:1;
+    const shortScale=heightRatio<=1?0:heightRatio<=8?(heightRatio-1)/7:1;
     const wallBottom=Math.round(98+109*shortScale);
     const innerDimY=Math.round(116+63*shortScale);
     const outsideDimY=Math.round(146+85*shortScale);
