@@ -18,10 +18,10 @@
       <form id="burringForm" class="input-card" novalidate><div class="card-bar"><div><span>INPUT</span><h3>계산 조건</h3></div><button id="resetCalculator" class="text-button" type="button">기본값 복원</button></div>
         <div class="auto-mode-panel"><span>현재 계산 상태</span><strong id="autoCalculationStatus">버링 높이 h 자동 계산</strong><small>자물쇠를 누르거나 계산값을 직접 수정하면 계산 대상이 바뀝니다.</small><input id="solveFor" type="hidden" value="h"></div>
         <div class="dimension-fields">
-          <label data-dimension="d"><span class="field-title">기초 피어싱 <b>d</b><button class="lock-toggle" data-lock-toggle="d" type="button" aria-label="기초 피어싱 d를 자동 계산으로 전환"><span aria-hidden="true">🔒</span></button></span><div class="unit-input"><input id="dInput" type="number" value="6" min="0.01" step="0.1" inputmode="decimal"><em>mm</em></div></label>
-          <label data-dimension="D"><span class="field-title">버링 내경 <b>D</b><button class="lock-toggle" data-lock-toggle="D" type="button" aria-label="버링 내경 D를 자동 계산으로 전환"><span aria-hidden="true">🔒</span></button></span><div class="unit-input"><input id="DInput" type="number" value="10" min="0.01" step="0.1" inputmode="decimal"><em>mm</em></div></label>
-          <label><span>판재 두께 <b>t</b></span><div class="unit-input"><input id="tInput" type="number" value="1" min="0.01" step="0.1" inputmode="decimal"><em>mm</em></div></label>
-          <label><span>굽힘반경 <b>r</b></span><div class="unit-input"><input id="rInput" type="number" value="1" min="0" step="0.1" inputmode="decimal"><em>mm</em></div><small id="rLinkStatus">t와 연동 중</small></label>
+          <label data-dimension="d"><span class="field-title">기초 피어싱 <b>d</b><button class="lock-toggle" data-lock-toggle="d" type="button" aria-label="기초 피어싱 d를 자동 계산으로 전환"><span aria-hidden="true">🔒</span></button></span><div class="unit-input"><input id="dInput" type="number" value="5" min="0.01" step="0.1" inputmode="decimal"><em>mm</em></div></label>
+          <label data-dimension="D"><span class="field-title">버링 내경 <b>D</b><button class="lock-toggle" data-lock-toggle="D" type="button" aria-label="버링 내경 D를 자동 계산으로 전환"><span aria-hidden="true">🔒</span></button></span><div class="unit-input"><input id="DInput" type="number" value="10.5" min="0.01" step="0.1" inputmode="decimal"><em>mm</em></div></label>
+          <label><span>판재 두께 <b>t</b></span><div class="unit-input"><input id="tInput" type="number" value="0.4" min="0.01" step="0.1" inputmode="decimal"><em>mm</em></div></label>
+          <label><span>굽힘반경 <b>r</b></span><div class="unit-input"><input id="rInput" type="number" value="0.4" min="0" step="0.1" inputmode="decimal"><em>mm</em></div><small id="rLinkStatus">t와 연동 중</small></label>
         </div>
         <button id="relinkRadius" class="link-button" type="button">r을 t와 다시 연동</button>
         <div class="result-dimension-field"><label data-dimension="h"><span class="field-title">계산값 · 버링 높이 <b>h</b><button class="lock-toggle" data-lock-toggle="h" type="button" aria-label="버링 높이 h 자동 계산 중"><span aria-hidden="true">🔓</span></button></span><div class="unit-input"><input id="hInput" type="number" value="2" min="0" step="0.1" inputmode="decimal"><em>mm</em></div></label></div>
@@ -32,5 +32,5 @@
     <section class="model-info"><h2>계산 모델 안내</h2><div><article><b>01</b><h3>체적 보존</h3><p>버링 전 기초홀 주변의 이동 가능한 소재 체적과 버링 후 굽힘부·직선 원통부의 체적을 같게 계산합니다.</p></article><article><b>02</b><h3>두께 변화</h3><p>평면부 두께는 t로 유지하고, 굽힘부는 t에서 k·t까지 선형 감소하며 직선부에는 k·t를 적용합니다.</p></article><article><b>03</b><h3>자물쇠 자동 역산</h3><p>d, D, h 중 열린 자물쇠 하나를 계산값으로 표시합니다. 계산값을 직접 수정하면 반대 치수가 자동 계산으로 전환됩니다.</p></article></div></section>
   </div>
 </main>
-<footer class="footer"><div class="wrap footer-inner"><div>제품설계.구조해석.박판성형해석.프레스금형설계</div><div>© QDM. All rights reserved.</div></div></footer><script src="/assets/burring-calculator.js?v=20260817-2"></script>
+<footer class="footer"><div class="wrap footer-inner"><div>제품설계.구조해석.박판성형해석.프레스금형설계</div><div>© QDM. All rights reserved.</div></div></footer><script src="/assets/burring-calculator.js?v=20260817-3"></script>
 <script src="/assets/language.js?v=20260816-3"></script></body></html>

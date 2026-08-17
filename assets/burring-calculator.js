@@ -131,7 +131,6 @@
       <g class="result-tag"><rect x="207" y="${outsideDimY-18}" width="86" height="27" rx="7"/><text x="250" y="${outsideDimY}" text-anchor="middle">Dₒ ${fmt(g.Do)}</text></g>
       <line class="extension-line" x1="344" y1="${wallBottom}" x2="407" y2="${wallBottom}"/>${dimLine(392,87,392,Math.max(94,wallBottom-4))}${editor(373,heightCardY,"h","높이 h",g.h,105)}
       <path class="radius-leader" d="M128 122 154 88"/>${editor(38,111,"r","굽힘반경 r",g.r,90)}</g>
-      ${editor(384,7,"t","두께 t",g.t,96,true)}
       <text class="drawing-note" x="20" y="242">굽힘부 t → ${Math.round(g.k*100)}%t · 직선부 ${fmt(g.tb)} mm</text>`;
     bindDrawingEditors();
   }
@@ -153,6 +152,6 @@
   els.t.addEventListener("input",()=>{if(radiusLinked)els.r.value=els.t.value;});
   els.r.addEventListener("input",()=>{radiusLinked=false;$("rLinkStatus").textContent="개별 입력값 적용 중";});
   $("relinkRadius").addEventListener("click",()=>{radiusLinked=true;els.r.value=els.t.value;$("rLinkStatus").textContent="t와 연동 중";calculate();});
-  $("resetCalculator").addEventListener("click",()=>{els.solve.value="h";els.t.value="1";els.r.value="1";els.d.value="6";els.D.value="10";els.h.value="2";els.ratio.value="80";radiusLinked=true;$("rLinkStatus").textContent="t와 연동 중";calculate();});
+  $("resetCalculator").addEventListener("click",()=>{els.solve.value="h";els.t.value="0.4";els.r.value="0.4";els.d.value="5";els.D.value="10.5";els.h.value="2";els.ratio.value="80";radiusLinked=true;$("rLinkStatus").textContent="t와 연동 중";calculate();});
   calculate();
 })();
