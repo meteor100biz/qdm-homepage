@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const $ = (id) => document.getElementById(id);
-  const els = {form:$("burringForm"),solve:$("solveFor"),t:$("tInput"),r:$("rInput"),d:$("dInput"),D:$("DInput"),h:$("hInput"),ratio:$("thicknessRatio")};
+  const els = {form:$("burringForm"),solve:$("solveFor"),target:$("calculationTarget"),t:$("tInput"),r:$("rInput"),d:$("dInput"),D:$("DInput"),h:$("hInput"),ratio:$("thicknessRatio")};
   let radiusLinked = true;
   const names = {h:"버링 높이 h",d:"기초 피어싱 d",D:"버링 내경 D"};
   const alternateAuto = {h:"d",d:"h",D:"h"};
@@ -78,6 +78,7 @@
   }
   function updateLockState(){
     const target=els.solve.value;
+    els.target.value=target;
     $("autoCalculationStatus").textContent=`${names[target]} 자동 계산`;
     document.querySelectorAll('[data-lock-toggle]').forEach(button=>{
       const auto=button.dataset.lockToggle===target;
@@ -164,7 +165,8 @@
       $("resultPanel").hidden=false;$("errorPanel").hidden=true;$("resultBadge").textContent="계산 완료";$("resultBadge").classList.remove("error");draw(g);
     }catch(error){showError(error.message);}
   }
-  els.form.addEventListener("input",calculate);
+  els.form.addEventListener("input",event=>{if(event.target!==els.target)calculate();});
+  els.target.addEventListener("change",()=>setAuto(els.target.value));
   document.querySelectorAll('.input-card [data-lock-toggle]').forEach(button=>button.addEventListener("click",()=>setAuto(button.dataset.lockToggle)));
   ["d","D","h"].forEach(key=>els[key].addEventListener("click",()=>{if(els[key].readOnly)activateAutoInput(key,false);}));
   els.t.addEventListener("input",()=>{if(radiusLinked)els.r.value=els.t.value;});
