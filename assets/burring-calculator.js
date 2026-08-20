@@ -1,9 +1,12 @@
 (() => {
   "use strict";
+  const isJa=document.documentElement.lang==="ja";
+  const ja={"버링 높이 h":"バーリング高さ h","기초 피어싱 d":"下穴径 d","버링 내경 D":"バーリング内径 D","판재 두께 t는 0보다 커야 합니다.":"板厚 t は0より大きい値を入力してください。","내측 굽힘반경 r은 0 이상이어야 합니다.":"内側曲げ半径 r は0以上で入力してください。","두께율은 50%에서 100% 사이로 입력해 주세요.":"板厚率は50～100%の範囲で入力してください。","기초 피어싱 d는 0보다 커야 합니다.":"下穴径 d は0より大きい値を入力してください。","버링 내경 D는 0보다 커야 합니다.":"バーリング内径 D は0より大きい値を入力してください。","버링 높이 h는 내측 반경 r 이상이어야 합니다.":"バーリング高さ h は内側曲げ半径 r 以上にしてください。","기초홀 주변의 소재 체적이 굽힘부를 만드는 데 필요한 체적보다 부족합니다. d를 줄이거나 D 또는 r을 키워 주세요.":"下穴周辺の材料体積が曲げ部に必要な体積を下回っています。dを小さくするか、Dまたはrを大きくしてください。","입력 조건에서 유효한 버링 높이를 구할 수 없습니다.":"入力条件から有効なバーリング高さを算出できません。","지정한 내경과 높이를 만들기 위한 소재가 부족하여 양의 기초홀을 구할 수 없습니다.":"指定した内径と高さに必要な材料が不足しているため、正の下穴径を算出できません。","입력 조건에서 유효한 버링 내경을 찾을 수 없습니다. d, h 또는 r 조건을 조정해 주세요.":"入力条件から有効なバーリング内径を算出できません。d、h、rの条件を調整してください。","양의 버링 내경을 구할 수 없습니다.":"正のバーリング内径を算出できません。","계산 불가":"計算不可","계산 완료":"計算完了"};
+  const tr=text=>isJa?(ja[text]||text):text;
   const $ = (id) => document.getElementById(id);
   const els = {form:$("burringForm"),solve:$("solveFor"),target:$("calculationTarget"),t:$("tInput"),r:$("rInput"),d:$("dInput"),D:$("DInput"),h:$("hInput"),ratio:$("thicknessRatio")};
   let radiusLinked = true;
-  const names = {h:"버링 높이 h",d:"기초 피어싱 d",D:"버링 내경 D"};
+  const names = {h:tr("버링 높이 h"),d:tr("기초 피어싱 d"),D:tr("버링 내경 D")};
   const alternateAuto = {h:"d",d:"h",D:"h"};
   const num = (el) => Number.parseFloat(el.value);
   const fmt = (v,digits=2) => Number.isFinite(v) ? v.toLocaleString("ko-KR",{minimumFractionDigits:0,maximumFractionDigits:digits}) : "-";
@@ -25,32 +28,32 @@
   }
   function solve(input){
     let {target,t,r,d,D,h,k}=input;
-    if(!(t>0)) throw Error("판재 두께 t는 0보다 커야 합니다.");
-    if(!(r>=0)) throw Error("내측 굽힘반경 r은 0 이상이어야 합니다.");
-    if(!(k>=.5&&k<=1)) throw Error("두께율은 50%에서 100% 사이로 입력해 주세요.");
-    if(target!=="d"&&!(d>0)) throw Error("기초 피어싱 d는 0보다 커야 합니다.");
-    if(target!=="D"&&!(D>0)) throw Error("버링 내경 D는 0보다 커야 합니다.");
-    if(target!=="h"&&!(h>=r)) throw Error("버링 높이 h는 내측 반경 r 이상이어야 합니다.");
+    if(!(t>0)) throw Error(tr("판재 두께 t는 0보다 커야 합니다."));
+    if(!(r>=0)) throw Error(tr("내측 굽힘반경 r은 0 이상이어야 합니다."));
+    if(!(k>=.5&&k<=1)) throw Error(tr("두께율은 50%에서 100% 사이로 입력해 주세요."));
+    if(target!=="d"&&!(d>0)) throw Error(tr("기초 피어싱 d는 0보다 커야 합니다."));
+    if(target!=="D"&&!(D>0)) throw Error(tr("버링 내경 D는 0보다 커야 합니다."));
+    if(target!=="h"&&!(h>=r)) throw Error(tr("버링 높이 h는 내측 반경 r 이상이어야 합니다."));
     if(target==="h"){
       const g=geometry(D,t,r,k,r),available=Math.PI*((D/2+r)**2-(d/2)**2)*t;
-      if(!(available>g.bend)) throw Error("기초홀 주변의 소재 체적이 굽힘부를 만드는 데 필요한 체적보다 부족합니다. d를 줄이거나 D 또는 r을 키워 주세요.");
+      if(!(available>g.bend)) throw Error(tr("기초홀 주변의 소재 체적이 굽힘부를 만드는 데 필요한 체적보다 부족합니다. d를 줄이거나 D 또는 r을 키워 주세요."));
       h=r+(available-g.bend)/g.area;
-      if(!(h>=r&&Number.isFinite(h))) throw Error("입력 조건에서 유효한 버링 높이를 구할 수 없습니다.");
+      if(!(h>=r&&Number.isFinite(h))) throw Error(tr("입력 조건에서 유효한 버링 높이를 구할 수 없습니다."));
     }else if(target==="d"){
       const g=geometry(D,t,r,k,h),used=g.bend+g.area*(h-r),radicand=(D/2+r)**2-used/(Math.PI*t);
-      if(!(radicand>0)) throw Error("지정한 내경과 높이를 만들기 위한 소재가 부족하여 양의 기초홀을 구할 수 없습니다.");
+      if(!(radicand>0)) throw Error(tr("지정한 내경과 높이를 만들기 위한 소재가 부족하여 양의 기초홀을 구할 수 없습니다."));
       d=2*Math.sqrt(radicand);
     }else{
       const residual=(candidate)=>{const g=geometry(candidate,t,r,k,h);return Math.PI*((candidate/2+r)**2-(d/2)**2)*t-(g.bend+g.area*(h-r));};
       let low=.001,high=Math.max(d*2,20),fLow=residual(low),fHigh=residual(high),guard=0;
       while(fLow*fHigh>0&&guard++<30){high*=1.7;fHigh=residual(high);}
-      if(fLow*fHigh>0) throw Error("입력 조건에서 유효한 버링 내경을 찾을 수 없습니다. d, h 또는 r 조건을 조정해 주세요.");
+      if(fLow*fHigh>0) throw Error(tr("입력 조건에서 유효한 버링 내경을 찾을 수 없습니다. d, h 또는 r 조건을 조정해 주세요."));
       for(let i=0;i<90;i++){const mid=(low+high)/2,fm=residual(mid);if(fLow*fm<=0){high=mid;fHigh=fm;}else{low=mid;fLow=fm;}}
       D=(low+high)/2;
-      if(!(D>0&&Number.isFinite(D))) throw Error("양의 버링 내경을 구할 수 없습니다.");
+      if(!(D>0&&Number.isFinite(D))) throw Error(tr("양의 버링 내경을 구할 수 없습니다."));
     }
     const g=geometry(D,t,r,k,h);
-    if(g.straight<0) throw Error("버링 높이 h는 내측 반경 r 이상이어야 합니다.");
+    if(g.straight<0) throw Error(tr("버링 높이 h는 내측 반경 r 이상이어야 합니다."));
     return {t,r,d,D,h,k,...g};
   }
 
@@ -79,12 +82,12 @@
   function updateLockState(){
     const target=els.solve.value;
     els.target.value=target;
-    $("autoCalculationStatus").textContent=`${names[target]} 자동 계산`;
+    $("autoCalculationStatus").textContent=isJa?`${names[target]}を自動計算`:`${names[target]} 자동 계산`;
     document.querySelectorAll('[data-lock-toggle]').forEach(button=>{
       const auto=button.dataset.lockToggle===target;
       button.classList.toggle("is-auto",auto);
       button.querySelector("span").textContent=auto?"🔓":"🔒";
-      button.setAttribute("aria-label",`${names[button.dataset.lockToggle]} ${auto?"자동 계산 중":"고정됨. 자동 계산으로 전환"}`);
+      button.setAttribute("aria-label",isJa?`${names[button.dataset.lockToggle]} ${auto?"自動計算中":"固定済み。自動計算へ切り替え"}`:`${names[button.dataset.lockToggle]} ${auto?"자동 계산 중":"고정됨. 자동 계산으로 전환"}`);
     });
     document.querySelectorAll('.drawings [data-drawing-input]').forEach(input=>{if(["d","D","h"].includes(input.dataset.drawingInput))input.readOnly=input.dataset.drawingInput===target;});
   }
@@ -94,7 +97,7 @@
       input.addEventListener("click",()=>{if(input.readOnly) activateAutoInput(input.dataset.drawingInput,true);});
       const syncValue=()=>{
         const key=input.dataset.drawingInput;
-        if(key==="r"){radiusLinked=false;$("rLinkStatus").textContent="개별 입력값 적용 중";}
+        if(key==="r"){radiusLinked=false;$("rLinkStatus").textContent=isJa?"個別入力値を適用中":"개별 입력값 적용 중";}
         els[key].value=input.value;
         if(key==="t"&&radiusLinked) els.r.value=input.value;
       };
@@ -136,24 +139,24 @@
     $("beforeDrawing").innerHTML=defs()+`<g transform="translate(0 -12)">
       <path class="flat-material" d="M22 ${flatTop}H${holeLeft}V${flatBottom}H22Z M${holeRight} ${flatTop}H478V${flatBottom}H${holeRight}Z"/>
       <line class="extension-line" x1="${holeLeft}" y1="${flatBottom+6}" x2="${holeLeft}" y2="157"/><line class="extension-line" x1="${holeRight}" y1="${flatBottom+6}" x2="${holeRight}" y2="157"/>
-      ${dimLine(holeLeft+4,142,holeRight-4,142)}${editor(198,157,"d","기초홀 d",g.d,104)}
-      ${dimLine(451,flatTop+2,451,flatBottom-2)}${editor(355,flatBottom+10,"t","두께 t",g.t,96)}</g>
-      <text class="drawing-note" x="22" y="218">피어싱 후 평판 단면</text>`;
+      ${dimLine(holeLeft+4,142,holeRight-4,142)}${editor(198,157,"d",isJa?"下穴径 d":"기초홀 d",g.d,104)}
+      ${dimLine(451,flatTop+2,451,flatBottom-2)}${editor(355,flatBottom+10,"t",isJa?"板厚 t":"두께 t",g.t,96)}</g>
+      <text class="drawing-note" x="22" y="218">${isJa?"ピアス加工後の平板断面":"피어싱 후 평판 단면"}</text>`;
 
     $("afterDrawing").innerHTML=defs()+`<g transform="translate(0 -12)">
       <path class="formed-material" d="M20 ${formedTop}H${leftBendStart}Q${openingLeft} ${formedTop} ${openingLeft} ${bendBottom}V${wallBottom}H${leftWallInner}V${bendBottom}Q${leftWallInner} ${formedInnerY} ${leftBendStart} ${formedInnerY}H20Z"/>
       <path class="formed-material" d="M480 ${formedTop}H${rightBendStart}Q${openingRight} ${formedTop} ${openingRight} ${bendBottom}V${wallBottom}H${rightWallInner}V${bendBottom}Q${rightWallInner} ${formedInnerY} ${rightBendStart} ${formedInnerY}H480Z"/>
       <path class="highlight-edge" d="M20 ${formedInnerY}H${leftBendStart}Q${leftWallInner} ${formedInnerY} ${leftWallInner} ${bendBottom}V${wallBottom}M480 ${formedInnerY}H${rightBendStart}Q${rightWallInner} ${formedInnerY} ${rightWallInner} ${bendBottom}V${wallBottom}"/>
       <line class="extension-line" x1="${openingLeft}" y1="${formedTop}" x2="${openingLeft}" y2="59"/><line class="extension-line" x1="${openingRight}" y1="${formedTop}" x2="${openingRight}" y2="59"/>
-      ${dimLine(openingLeft+4,63,openingRight-4,63)}${editor(198,12,"D","내경 D",g.D,104)}
+      ${dimLine(openingLeft+4,63,openingRight-4,63)}${editor(198,12,"D",isJa?"内径 D":"내경 D",g.D,104)}
       <line class="extension-line" x1="${leftWallInner}" y1="${wallBottom+3}" x2="${leftWallInner}" y2="${outsideDimY+8}"/><line class="extension-line" x1="${rightWallInner}" y1="${wallBottom+3}" x2="${rightWallInner}" y2="${outsideDimY+8}"/>${dimLine(leftWallInner+4,outsideDimY,rightWallInner-4,outsideDimY)}
       <g class="result-tag"><rect x="207" y="${outsideDimY-18}" width="86" height="27" rx="7"/><text x="250" y="${outsideDimY}" text-anchor="middle">Dₒ ${fmt(g.Do)}</text></g>
-      <line class="extension-line" x1="${rightWallInner+2}" y1="${wallBottom}" x2="407" y2="${wallBottom}"/>${dimLine(392,heightDimTop,392,Math.max(heightDimTop+7,wallBottom-4))}${editor(373,heightCardY,"h","높이 h",g.h,105)}
-      <path class="radius-leader" d="M128 122 ${leftWallInner-3} ${formedInnerY+Math.max(5,rPx/2)}"/>${editor(38,111,"r","굽힘반경 r",g.r,90)}</g>
-      <text class="drawing-note" x="20" y="242">굽힘부 t → ${Math.round(g.k*100)}%t · 직선부 ${fmt(g.tb)} mm</text>`;
+      <line class="extension-line" x1="${rightWallInner+2}" y1="${wallBottom}" x2="407" y2="${wallBottom}"/>${dimLine(392,heightDimTop,392,Math.max(heightDimTop+7,wallBottom-4))}${editor(373,heightCardY,"h",isJa?"高さ h":"높이 h",g.h,105)}
+      <path class="radius-leader" d="M128 122 ${leftWallInner-3} ${formedInnerY+Math.max(5,rPx/2)}"/>${editor(38,111,"r",isJa?"曲げ半径 r":"굽힘반경 r",g.r,90)}</g>
+      <text class="drawing-note" x="20" y="242">${isJa?`曲げ部 t → ${Math.round(g.k*100)}%t・直線部 ${fmt(g.tb)} mm`:`굽힘부 t → ${Math.round(g.k*100)}%t · 직선부 ${fmt(g.tb)} mm`}</text>`;
     bindDrawingEditors();
   }
-  function showError(message){$("resultPanel").hidden=true;$("errorPanel").hidden=false;$("errorMessage").textContent=message;$("resultBadge").textContent="계산 불가";$("resultBadge").classList.add("error");}
+  function showError(message){$("resultPanel").hidden=true;$("errorPanel").hidden=false;$("errorMessage").textContent=message;$("resultBadge").textContent=tr("계산 불가");$("resultBadge").classList.add("error");}
   function calculate(){
     const target=els.solve.value;
     updateLockState();
@@ -162,7 +165,7 @@
       const g=solve({target,t:num(els.t),r:num(els.r),d:num(els.d),D:num(els.D),h:num(els.h),k:num(els.ratio)/100});
       els[target].value=g[target].toFixed(2);
       $("resultLabel").textContent=names[target];$("resultValue").textContent=fmt(g[target]);$("outsideDiameter").textContent=`${fmt(g.Do)} mm`;$("straightHeight").textContent=`${fmt(g.straight)} mm`;$("wallThickness").textContent=`${fmt(g.tb)} mm`;
-      $("resultPanel").hidden=false;$("errorPanel").hidden=true;$("resultBadge").textContent="계산 완료";$("resultBadge").classList.remove("error");draw(g);
+      $("resultPanel").hidden=false;$("errorPanel").hidden=true;$("resultBadge").textContent=tr("계산 완료");$("resultBadge").classList.remove("error");draw(g);
     }catch(error){showError(error.message);}
   }
   els.form.addEventListener("input",event=>{if(event.target!==els.target)calculate();});
@@ -170,8 +173,8 @@
   document.querySelectorAll('.input-card [data-lock-toggle]').forEach(button=>button.addEventListener("click",()=>setAuto(button.dataset.lockToggle)));
   ["d","D","h"].forEach(key=>els[key].addEventListener("click",()=>{if(els[key].readOnly)activateAutoInput(key,false);}));
   els.t.addEventListener("input",()=>{if(radiusLinked)els.r.value=els.t.value;});
-  els.r.addEventListener("input",()=>{radiusLinked=false;$("rLinkStatus").textContent="개별 입력값 적용 중";});
-  $("relinkRadius").addEventListener("click",()=>{radiusLinked=true;els.r.value=els.t.value;$("rLinkStatus").textContent="t와 연동 중";calculate();});
-  $("resetCalculator").addEventListener("click",()=>{els.solve.value="h";els.t.value="0.4";els.r.value="0.4";els.d.value="5";els.D.value="10.5";els.h.value="2";els.ratio.value="80";radiusLinked=true;$("rLinkStatus").textContent="t와 연동 중";calculate();});
+  els.r.addEventListener("input",()=>{radiusLinked=false;$("rLinkStatus").textContent=isJa?"個別入力値を適用中":"개별 입력값 적용 중";});
+  $("relinkRadius").addEventListener("click",()=>{radiusLinked=true;els.r.value=els.t.value;$("rLinkStatus").textContent=isJa?"tと連動中":"t와 연동 중";calculate();});
+  $("resetCalculator").addEventListener("click",()=>{els.solve.value="h";els.t.value="0.4";els.r.value="0.4";els.d.value="5";els.D.value="10.5";els.h.value="2";els.ratio.value="80";radiusLinked=true;$("rLinkStatus").textContent=isJa?"tと連動中":"t와 연동 중";calculate();});
   calculate();
 })();
