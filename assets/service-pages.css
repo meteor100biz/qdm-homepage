@@ -9,3 +9,22 @@
 @media(max-width:900px){.service-intro{grid-template-columns:1fr}.scope-grid{grid-template-columns:1fr 1fr}.process-list{grid-template-columns:1fr 1fr}.service-nav .wrap{grid-template-columns:1fr 1fr}.service-nav a:nth-child(2){border-right:0}}
 @media(max-width:620px){.service-hero{padding:58px 0}.service-hero h1{letter-spacing:-1.5px}.service-hero p{font-size:17px}.service-hero .hero-actions{flex-direction:column}.service-nav{position:static}.service-nav .wrap,.scope-grid,.process-list,.deliverables,.related-grid{grid-template-columns:1fr}.service-nav a{border-right:0;border-bottom:1px solid var(--line)}.service-nav a:last-child{border-bottom:0}.service-visual{height:270px}.service-cta .cta-inner{display:block}.service-cta .btn{margin-top:22px}.related-image{height:210px}}
 .service-hero{padding:52px 0}.service-hero h1{font-size:44px}.service-lead{padding:38px 0}.service-section{padding:42px 0}@media(max-width:620px){.service-hero{padding:42px 0}.service-hero h1{font-size:34px}.service-lead{padding:32px 0}.service-section{padding:36px 0}}
+
+/* Related projects use the same compact photo-and-description layout as the portfolio list. */
+.related-grid{min-height:0}
+.related-grid .related-card{display:grid;grid-template-columns:160px minmax(0,1fr);align-items:center;gap:20px;padding:20px}
+.related-grid .related-image{width:160px;height:120px;background-size:contain;border:1px solid var(--line);border-radius:9px}
+.related-grid .related-body{min-width:0;padding:0;overflow-wrap:anywhere}
+.related-grid .related-body h3{font-size:19px;line-height:1.5}
+.related-grid .related-body p{font-size:13px;line-height:1.7;margin-bottom:12px}
+.related-grid .badge{font-size:11px;margin:0 4px 6px 0;padding:3px 7px}
+.related-grid .more{font-size:14px}
+.related-grid .related-card:focus-visible{outline:3px solid var(--blue2);outline-offset:3px}
+.related-grid .related-card-empty{display:none}
+@media(max-width:1050px){.related-grid{grid-template-columns:1fr}}
+@media(max-width:520px){
+  .related-grid .related-card{grid-template-columns:96px minmax(0,1fr);gap:14px;padding:14px}
+  .related-grid .related-image{width:96px;height:72px}
+  .related-grid .related-body h3{font-size:16px}
+  .related-grid .related-body p{font-size:12px}
+}
