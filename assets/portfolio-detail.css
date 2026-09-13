@@ -1,0 +1,14 @@
+/* Shared by existing portfolios and the admin detail-page generator. */
+.portfolio-detail{grid-template-columns:minmax(0,2fr) minmax(0,3fr);align-items:start;gap:32px}
+.portfolio-detail .portfolio-media{min-width:0;width:100%;max-width:320px;margin:0 auto}
+.portfolio-detail .detail-img{width:100%;height:auto;aspect-ratio:4/3;background-size:contain;border-radius:12px}
+.portfolio-detail .gallery{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
+.portfolio-detail .gallery:empty{display:none}
+.portfolio-detail .gallery img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:contain;border-radius:12px}
+.portfolio-detail .portfolio-image-note{margin:16px 0 0;font-size:12px;line-height:1.7;color:var(--muted)}
+.portfolio-detail .detail-box{min-width:0}
+.portfolio-detail .detail-box>p{white-space:pre-line}
+@media(max-width:720px){
+  .portfolio-detail{grid-template-columns:1fr;gap:24px}
+  .portfolio-detail .detail-box{padding:22px}
+}
