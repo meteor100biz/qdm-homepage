@@ -28,3 +28,10 @@
   .related-grid .related-body h3{font-size:16px}
   .related-grid .related-body p{font-size:12px}
 }
+
+/* Overview galleries summarize a service with small images from distinct projects. */
+.service-intro{grid-template-columns:minmax(0,1fr) 280px;gap:48px}
+.service-thumbnails{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;width:100%;max-width:276px;justify-self:center;align-self:center}
+.service-thumbnails[hidden]{display:none}
+.service-thumbnails img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#edf2f8;border:1px solid var(--line);border-radius:9px}
+@media(max-width:900px){.service-intro{grid-template-columns:1fr;gap:24px}}

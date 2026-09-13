@@ -100,6 +100,24 @@ function renderHomePortfolioPreviews(posts){
     gallery.replaceChildren(...previews);
   });
 }
+function renderServiceOverview(projects){
+  const gallery=document.querySelector('.service-thumbnails');
+  if(!gallery)return;
+  const seen=new Set();
+  const images=projects.filter(item=>{
+    if(!item.image)return false;
+    const src=/^(?:https?:)?\//.test(item.image)?item.image:`/${item.image}`;
+    if(seen.has(src))return false;
+    seen.add(src);return true;
+  }).slice(0,4).map(item=>{
+    const image=document.createElement('img');
+    image.src=/^(?:https?:)?\//.test(item.image)?item.image:`/${item.image}`;
+    image.alt=item.title||'';image.decoding='async';
+    return image;
+  });
+  gallery.replaceChildren(...images);
+  gallery.hidden=!images.length;
+}
 function renderServiceRelatedProjects(posts){
   const grid=document.querySelector('.related-grid');
   if(!grid)return;
@@ -107,7 +125,9 @@ function renderServiceRelatedProjects(posts){
   const categories={'press-die-design':'press-die','sheet-metal-forming-analysis':'forming','structural-analysis':'analysis','product-design':'mechanical'};
   const category=categories[service];
   if(!category)return;
-  const projects=publishedPortfolios(posts).filter(item=>item.category===category).sort((a,b)=>(b.order||0)-(a.order||0)).slice(0,2);
+  const categoryProjects=publishedPortfolios(posts).filter(item=>item.category===category).sort((a,b)=>(b.order||0)-(a.order||0));
+  renderServiceOverview(categoryProjects);
+  const projects=categoryProjects.slice(0,2);
   const items=projects.map(item=>{
     const link=document.createElement('a');link.className='related-card';
     link.href=/^(?:https?:)?\//.test(item.url||'')?item.url:`/${item.url||''}`;
