@@ -57,3 +57,20 @@
 }
 .service-directory{padding-bottom:24px;background:#f8fafc}.service-directory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.service-directory-grid a{display:flex;min-height:112px;flex-direction:column;justify-content:space-between;padding:19px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 8px 22px rgba(15,35,68,.05);transition:transform .2s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease}.service-directory-grid a:is([href*="press-die-design"],[href*="sheet-metal-forming-analysis"]){background:var(--press-bg);border-color:var(--press-border);color:var(--press-color)}.service-directory-grid a:is([href*="press-die-design"],[href*="sheet-metal-forming-analysis"]) span{color:var(--press-strong)}.service-directory-grid a:is([href*="structural-analysis"],[href*="product-design"]){background:var(--product-bg);border-color:var(--product-border);color:var(--product-color)}.service-directory-grid a:is([href*="structural-analysis"],[href*="product-design"]) span{color:var(--product-strong)}.service-directory-grid a:hover,.service-directory-grid a:focus-visible{transform:translateY(-3px);box-shadow:0 14px 30px rgba(15,35,68,.1);outline:none}.service-directory-grid a:is([href*="press-die-design"],[href*="sheet-metal-forming-analysis"]):is(:hover,:focus-visible){background:var(--press-hover);border-color:var(--press-strong)}.service-directory-grid a:is([href*="structural-analysis"],[href*="product-design"]):is(:hover,:focus-visible){background:var(--product-hover);border-color:#78a7df}.service-directory-grid strong{color:inherit;font-size:19px}.service-directory-grid span{font-size:13px;font-weight:800}@media(max-width:900px){.service-directory-grid{grid-template-columns:1fr 1fr}}@media(max-width:520px){.service-directory-grid{grid-template-columns:1fr}}
 .portfolio-hero{padding:48px 0}.service-directory{padding:36px 0 28px}.portfolio-list-section{padding:34px 0 42px}@media(max-width:720px){.portfolio-hero{padding:38px 0}.service-directory{padding:30px 0 24px}.portfolio-list-section{padding:28px 0 36px}}
+
+/* Compact thumbnails keep the project description prominent in category lists. */
+#portfolioList .project{display:grid;grid-template-columns:160px minmax(0,1fr);align-items:center;gap:20px;padding:20px}
+#portfolioList .project-img{width:160px;height:120px;background-size:contain;border:1px solid var(--line);border-radius:9px}
+#portfolioList .project-body{min-width:0;padding:0;overflow-wrap:anywhere}
+#portfolioList .project h3{font-size:19px;line-height:1.5;margin:2px 0 8px}
+#portfolioList .project .badge{font-size:11px;margin:0 4px 6px 0;padding:3px 7px}
+#portfolioList .project p{font-size:13px;line-height:1.7}
+#portfolioList .project .more{display:inline-block;margin-top:12px;font-size:14px}
+#portfolioList .project:focus-visible{outline:3px solid var(--blue2);outline-offset:3px}
+@media(max-width:1050px){#portfolioList{grid-template-columns:1fr}}
+@media(max-width:520px){
+  #portfolioList .project{grid-template-columns:96px minmax(0,1fr);gap:14px;padding:14px}
+  #portfolioList .project-img{width:96px;height:72px}
+  #portfolioList .project h3{font-size:16px}
+  #portfolioList .project p{font-size:12px}
+}
