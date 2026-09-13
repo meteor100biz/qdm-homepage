@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T00:29:02.306Z",
+  "updatedAt": "2026-09-13T20:53:56.497Z",
   "services": [
     {
       "id": "press-die-design",
@@ -35,11 +35,11 @@
       "nameJa": "構造解析",
       "shared": true,
       "ko": {
-        "image": "assets/portfolio/analysis/double-drill/main.jpg",
+        "image": "assets/portfolio/analysis/structural-analysis-20260914/main.png",
         "alt": "양면 웨이퍼 드릴링 장비 구조해석과 처짐 검토"
       },
       "ja": {
-        "image": "assets/portfolio/analysis/double-drill/main.jpg",
+        "image": "assets/portfolio/analysis/structural-analysis-20260914/main.png",
         "alt": "両面ウェハドリリング装置の構造解析"
       }
     },
