@@ -2,8 +2,8 @@
   {
     "category": "forming",
     "categoryName": "박판성형해석",
-    "title": "프로그레시브 금형 스트립 처짐 해석",
-    "summary": "프로그레시브 금형의 이송·취출 구간에서 자중에 의한 스트립 처짐을 해석하고, 가이드 리프트의 적정 작동량을 검토하였습니다.",
+    "title": "프로그레시브 금형 스트립 처짐 검증",
+    "summary": "프로그레시브 금형 설계 과정에서 자중에 의한 스트립 처짐을 해석하고, 안정적인 이송을 위한 가이드 리프트 작동량을 검증하였습니다.",
     "image": "assets/portfolio/forming/forming-analysis-20260914/main.png",
     "url": "assets/portfolio/forming/forming-analysis-20260914/portfolio.html",
     "published": true,
