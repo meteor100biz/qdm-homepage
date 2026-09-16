@@ -7,29 +7,12 @@
     "image": "assets/portfolio/press-die/press-die-design-20260916/main.png",
     "url": "assets/portfolio/press-die/press-die-design-20260916/portfolio.html",
     "published": true,
-    "order": 12,
+    "order": 11,
     "tags": [
       "자동차부품",
       "공조부품",
       "포밍",
       "3D금형설계"
-    ]
-  },
-  {
-    "category": "press-die",
-    "categoryName": "프레스 금형설계",
-    "title": "도어 래치 부품 프레스금형 설계",
-    "summary": "모서리부 파단 위험을 검토하여 성형 공정을 2단계로 분할하고, 블랭크 형상 산출부터 공정별 단발 금형까지 설계한 사례입니다.",
-    "image": "assets/portfolio/press-die/press-die-design-20260916-02/main.png",
-    "url": "assets/portfolio/press-die/press-die-design-20260916-02/portfolio.html",
-    "published": true,
-    "order": 11,
-    "tags": [
-      "도어래치",
-      "성형성검토",
-      "블랭크설계",
-      "단발금형",
-      "창원프레스금형설계"
     ]
   },
   {

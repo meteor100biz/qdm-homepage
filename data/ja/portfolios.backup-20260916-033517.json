@@ -2,22 +2,6 @@
   {
     "category": "press-die",
     "categoryName": "プレス金型設計",
-    "title": "自動車空調部品のプレス金型設計",
-    "summary": "複雑なビードおよびフォーミング形状に対し、工程ごとに中間形状を設定し、段階的な成形によって最終製品形状と外周フランジを完成させるプレス金型設計です。",
-    "image": "assets/portfolio/press-die/press-die-design-20260916-02/main.png",
-    "url": "ja/assets/portfolio/press-die/press-die-design-20260916-02/portfolio.html",
-    "published": true,
-    "order": 12,
-    "tags": [
-      "自動車部品",
-      "空調部品",
-      "フォーミング",
-      "3D金型設計"
-    ]
-  },
-  {
-    "category": "press-die",
-    "categoryName": "プレス金型設計",
     "title": "ドアラッチ関連部品のプレス金型設計",
     "summary": "コーナー部の割れリスクを事前に検討し、成形工程を5段階に分割。ブランク形状の算出から各工程の単発金型まで設計した事例です。",
     "image": "assets/portfolio/press-die/press-die-design-20260916/main.png",
