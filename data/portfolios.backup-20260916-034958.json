@@ -1,0 +1,177 @@
+[
+  {
+    "category": "press-die",
+    "categoryName": "프레스 금형설계",
+    "title": "자동차 공조부품 프레스금형 설계",
+    "summary": "복잡한 비드와 포밍 형상을 공정별로 단계 성형하여 최종 제품 형상과 외곽 플랜지를 완성한 프레스금형 설계입니다.",
+    "image": "assets/portfolio/press-die/press-die-design-20260916/main.png",
+    "url": "assets/portfolio/press-die/press-die-design-20260916/portfolio.html",
+    "published": true,
+    "order": 12,
+    "tags": [
+      "자동차부품",
+      "공조부품",
+      "포밍",
+      "3D금형설계"
+    ]
+  },
+  {
+    "category": "press-die",
+    "categoryName": "프레스 금형설계",
+    "title": "도어 래치 부품 프레스금형 설계",
+    "summary": "모서리부 파단 위험을 검토하여 성형 공정을 2단계로 분할하고, 블랭크 형상 산출부터 공정별 단발 금형까지 설계한 사례입니다.",
+    "image": "assets/portfolio/press-die/press-die-design-20260916-02/main.png",
+    "url": "assets/portfolio/press-die/press-die-design-20260916-02/portfolio.html",
+    "published": true,
+    "order": 11,
+    "tags": [
+      "도어래치",
+      "성형성검토",
+      "블랭크설계",
+      "단발금형",
+      "창원프레스금형설계"
+    ]
+  },
+  {
+    "category": "forming",
+    "categoryName": "박판성형해석",
+    "title": "프로그레시브 금형 스트립 처짐 검증",
+    "summary": "프로그레시브 금형 설계 과정에서 자중에 의한 스트립 처짐을 해석하고, 안정적인 이송을 위한 가이드 리프트 작동량을 검증하였습니다.",
+    "image": "assets/portfolio/forming/forming-analysis-20260914/main.png",
+    "url": "assets/portfolio/forming/forming-analysis-20260914/portfolio.html",
+    "published": true,
+    "order": 10,
+    "tags": [
+      "프로그레시브 금형",
+      "구조해석",
+      "스트립 처짐",
+      "가이드 리프트",
+      "금형설계"
+    ]
+  },
+  {
+    "category": "analysis",
+    "categoryName": "구조해석",
+    "title": "ABS 역설계 및 5G 구조해석",
+    "summary": "실물 ABS 부품을 3D 역설계하고, 충격조건을 5G 수직 등가하중으로 변환하여 구조적 거동을 검토했습니다.",
+    "image": "assets/portfolio/analysis/structural-analysis-20260914/main.png",
+    "url": "assets/portfolio/analysis/structural-analysis-20260914/portfolio.html",
+    "published": true,
+    "order": 9,
+    "tags": [
+      "역설계",
+      "ABS",
+      "등가정적해석",
+      "5G",
+      "3D모델링"
+    ]
+  },
+  {
+    "category": "press-die",
+    "categoryName": "프레스 금형설계",
+    "title": "알루미늄 다이캐스팅 제품 트리밍·피어싱 금형 설계",
+    "summary": "다이캐스팅 후 게이트를 정밀 절단하고, 제품 기준면 및 홀 가공을 함께 수행하는 트리밍 금형 설계 사례입니다",
+    "image": "assets/portfolio/press-die/press-die-design-2026080601/main.png",
+    "url": "assets/portfolio/press-die/press-die-design-2026080601/portfolio.html",
+    "published": true,
+    "order": 8,
+    "tags": [
+      "다이캐스팅",
+      "트리밍금형",
+      "게이트절단",
+      "피어싱",
+      "알루미늄부품"
+    ]
+  },
+  {
+    "category": "forming",
+    "categoryName": "박판성형해석",
+    "title": "사각 박스형 제품의 드로잉 성형성 개선 검토",
+    "summary": "사각 드로잉제품의 터짐을 예측하고, 제품 형상을 개선",
+    "image": "assets/portfolio/forming/press_sm_001/main.png",
+    "url": "assets/portfolio/forming/press_sm_001/portfolio.html",
+    "order": 7,
+    "tags": [
+      "프레스금형설계"
+    ]
+  },
+  {
+    "category": "analysis",
+    "categoryName": "구조해석",
+    "title": "LED등기구 COVER 설계.해석.시제품제작",
+    "summary": "LED등기구 COVER 의 설계에서 구조해석 및 실제품 제작까지 수행",
+    "image": "assets/portfolio/analysis/led_cover/main.png",
+    "url": "assets/portfolio/analysis/led_cover/portfolio.html",
+    "order": 6,
+    "tags": [
+      "기구해석",
+      "기구설계",
+      "시제품제작"
+    ]
+  },
+  {
+    "category": "press-die",
+    "categoryName": "프레스 금형설계",
+    "title": "자동차 시트 프레임 부품 프레스 금형설계",
+    "summary": "깊은 벤딩 형상, 내측 쏠림, 버링 구조를 고려한 자동차 시트 프레임 부품의 프레스 금형설계 사례",
+    "image": "assets/portfolio/press-die/seat-frame/main.jpg",
+    "url": "assets/portfolio/press-die/seat-frame/portfolio.html",
+    "order": 5,
+    "tags": [
+      "자동차 부품",
+      "3D 금형 모델링"
+    ]
+  },
+  {
+    "category": "mechanical",
+    "categoryName": "기계·기구설계",
+    "title": "금속 노즐 부품 역설계",
+    "summary": "실물 부품을 기반으로 형상을 분석하고 제작 가능한 3D CAD 데이터와 2D 도면으로 복원한 사례",
+    "image": "assets/portfolio/reverse/nozzle/main.png",
+    "url": "assets/portfolio/reverse/nozzle/portfolio.html",
+    "order": 4,
+    "tags": [
+      "3D스캔",
+      "2D도면화"
+    ]
+  },
+  {
+    "category": "press-die",
+    "categoryName": "프레스 금형설계",
+    "title": "자동차 시트 부품 프레스 성형 검토",
+    "summary": "프레스 부품의 성형 가능성, 금형 구조, 제작성을 고려한 프레스 금형설계 대표 사례",
+    "image": "assets/portfolio/press-die/seat-bracket/main.jpg",
+    "url": "assets/portfolio/press-die/seat-bracket/portfolio.html",
+    "order": 3,
+    "tags": [
+      "성형해석",
+      "블랭크 검토"
+    ]
+  },
+  {
+    "category": "analysis",
+    "categoryName": "구조해석",
+    "title": "양면 웨이퍼 드릴링 장비 처짐 검토",
+    "summary": "대구경 SiC 웨이퍼 대응을 위한 장비 스트로크 확장, 기존 기구 재활용, 자중 처짐 구조해석 검토",
+    "image": "assets/portfolio/analysis/double-drill/main.jpg",
+    "url": "assets/portfolio/analysis/double-drill/portfolio.html",
+    "order": 2,
+    "tags": [
+      "정적해석",
+      "처짐검토"
+    ]
+  },
+  {
+    "category": "mechanical",
+    "categoryName": "기계·기구설계",
+    "title": "SiC 코어드릴 장비 스트로크 개선",
+    "summary": "SiC 원소재 가공 장비의 스트로크 확장, 기존 구동부 활용, 소재 투입 구조 개선 제안",
+    "image": "assets/portfolio/mechanical/core-drill/main.jpg",
+    "url": "assets/portfolio/mechanical/core-drill/portfolio.html",
+    "order": 1,
+    "tags": [
+      "장비개선",
+      "스트로크 확장"
+    ]
+  }
+]
