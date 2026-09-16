@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QDM 검색 노출 관리자</title>
+  <style>
+    :root{--blue:#06306f;--green:#0b7a53;--red:#b42318;--yellow:#a15c00;--ink:#172033;--muted:#667085;--line:#d8e0ec;--bg:#f3f6fb}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
+    header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2}
+    .top{max-width:1000px;margin:0 auto;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+    h1{margin:0;color:var(--blue);font-size:22px}.sub{margin:3px 0 0;color:var(--muted);font-size:13px;font-weight:700}
+    main{max-width:1000px;margin:0 auto;padding:22px 24px 42px}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+    .body{padding:20px;display:grid;gap:18px}
+    .btn{border:1px solid var(--line);background:#fff;border-radius:8px;min-height:42px;padding:0 15px;font-weight:900;color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+    .btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.green{background:var(--green);border-color:var(--green);color:#fff}.btn:disabled{opacity:.45;cursor:not-allowed}
+    .toolbar,.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .status{padding:11px 13px;border-radius:8px;background:#fff7ed;border:1px solid #fed7aa;color:var(--yellow);font-size:13px;font-weight:700}
+    .status.good{background:#ecfdf3;border-color:#abefc6;color:var(--green)}.status.bad{background:#fef3f2;border-color:#fecdca;color:var(--red)}
+    label{display:grid;gap:7px;font-size:13px;font-weight:900}
+    input{width:100%;border:1px solid #cfd8e6;border-radius:8px;padding:12px;font:inherit}
+    .hint{font-size:12px;color:var(--muted);font-weight:700}
+    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .stat{padding:14px;border:1px solid var(--line);border-radius:8px;background:#f7f9fc}.stat strong{display:block;color:var(--blue);font-size:24px}.stat span{font-size:12px;color:var(--muted);font-weight:800}
+    .list{margin:0;padding:0;list-style:none;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+    .list li{display:grid;grid-template-columns:1fr auto;gap:12px;padding:11px 13px;border-bottom:1px solid var(--line);font-size:13px}.list li:last-child{border-bottom:0}
+    .path{overflow-wrap:anywhere;font-weight:800}.date{color:var(--muted)}
+    .empty{padding:24px;text-align:center;color:var(--muted);font-weight:800}
+    code{padding:2px 5px;border-radius:4px;background:#eef2f7}
+    @media(max-width:720px){.top{display:block}.toolbar{margin-top:12px}.summary{grid-template-columns:1fr}.list li{grid-template-columns:1fr}.date{font-size:12px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top">
+      <div>
+        <h1>검색 노출 관리</h1>
+        <p class="sub">현재 공개 HTML 페이지를 기준으로 sitemap.xml을 생성·갱신합니다.</p>
+      </div>
+      <div class="toolbar">
+        <a class="btn" href="index.html">관리자 홈</a>
+        <button class="btn primary" id="pickRootBtn" type="button">홈페이지 폴더 선택</button>
+      </div>
+    </div>
+  </header>
+  <main>
+    <section class="panel">
+      <div class="body">
+        <div id="status" class="status">홈페이지 폴더를 불러오는 중입니다.</div>
+        <label>사이트 기본 주소
+          <input id="baseUrl" type="url" value="https://qdm.co.kr" placeholder="https://qdm.co.kr">
+          <span class="hint">기존 sitemap.xml이 있으면 그 안의 도메인을 우선 참고합니다.</span>
+        </label>
+        <div class="summary">
+          <div class="stat"><strong id="pageCount">0</strong><span>현재 공개 페이지</span></div>
+          <div class="stat"><strong id="existingCount">0</strong><span>기존 사이트맵 주소</span></div>
+          <div class="stat"><strong id="newCount">0</strong><span>새로 추가된 주소</span></div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="scanBtn" type="button" disabled>현재 페이지 다시 검사</button>
+          <button class="btn green" id="saveBtn" type="button" disabled>sitemap.xml 생성 / 갱신</button>
+          <span class="hint">삭제된 페이지는 사이트맵에서 제거되고, 새 페이지는 자동으로 추가됩니다.</span>
+        </div>
+        <ul class="list" id="pageList"><li class="empty">검사된 페이지가 없습니다.</li></ul>
+        <p class="hint"><code>robots.txt</code>는 검색 허용 정책이나 사이트맵 주소가 바뀔 때만 수정하면 됩니다.</p>
+      </div>
+    </section>
+  </main>
+  <script src="admin-shared.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const state = { rootHandle: null, pages: [], existingUrls: new Set() };
+    const excludedFolders = new Set(["local-admin", "offline-admin", "node_modules", ".git", ".vercel", ".openai"]);
+
+    function setStatus(message, type = "") {
+      const element = $("status");
+      element.className = `status ${type}`.trim();
+      element.textContent = message;
+    }
+
+    function normalizeBaseUrl(value) {
+      const url = new URL(String(value || "").trim());
+      if (!/^https?:$/.test(url.protocol)) throw new Error("사이트 주소는 http:// 또는 https://로 시작해야 합니다.");
+      return `${url.origin}${url.pathname.replace(/\/+$/, "")}`;
+    }
+
+    function escapeXml(value) {
+      return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+    }
+
+    function publicPath(parts) {
+      const joined = parts.join("/").replace(/\\/g, "/");
+      if (joined === "index.html") return "/";
+      if (joined.endsWith("/index.html")) return `/${joined.slice(0, -"index.html".length)}`;
+      return `/${joined}`;
+    }
+
+    function isPublicHtml(parts) {
+      if (!parts.length) return false;
+      const fileName = parts[parts.length - 1];
+      if (!fileName.toLowerCase().endsWith(".html")) return false;
+      if (fileName.includes(".backup-")) return false;
+      return !parts.some((part, index) => index < parts.length - 1 && (excludedFolders.has(part) || part.startsWith(".")));
+    }
+
+    async function scanDirectory(directoryHandle, parts = [], results = []) {
+      for await (const [name, handle] of directoryHandle.entries()) {
+        const nextParts = [...parts, name];
+        if (handle.kind === "directory") {
+          if (!excludedFolders.has(name) && !name.startsWith(".")) await scanDirectory(handle, nextParts, results);
+          continue;
+        }
+        if (!isPublicHtml(nextParts)) continue;
+        const file = await handle.getFile();
+        results.push({
+          path: publicPath(nextParts),
+          lastmod: new Date(file.lastModified).toISOString().slice(0, 10)
+        });
+      }
+      return results;
+    }
+
+    async function readExistingSitemap() {
+      state.existingUrls = new Set();
+      try {
+        const handle = await state.rootHandle.getFileHandle("sitemap.xml");
+        const xml = await (await handle.getFile()).text();
+        const documentXml = new DOMParser().parseFromString(xml, "application/xml");
+        if (documentXml.querySelector("parsererror")) throw new Error("기존 sitemap.xml 형식이 올바르지 않습니다.");
+        const locations = [...documentXml.getElementsByTagName("loc")].map((node) => node.textContent.trim()).filter(Boolean);
+        state.existingUrls = new Set(locations);
+        if (locations.length) {
+          const first = new URL(locations[0]);
+          $("baseUrl").value = first.origin;
+        }
+      } catch (error) {
+        if (error.name !== "NotFoundError") throw error;
+      }
+    }
+
+    function render() {
+      const baseUrl = normalizeBaseUrl($("baseUrl").value);
+      const currentUrls = state.pages.map((page) => `${baseUrl}${page.path}`);
+      const added = currentUrls.filter((url) => !state.existingUrls.has(url)).length;
+      $("pageCount").textContent = state.pages.length;
+      $("existingCount").textContent = state.existingUrls.size;
+      $("newCount").textContent = added;
+      $("pageList").innerHTML = state.pages.length
+        ? state.pages.map((page) => `<li><span class="path">${page.path}</span><span class="date">수정일 ${page.lastmod}</span></li>`).join("")
+        : '<li class="empty">공개 HTML 페이지가 없습니다.</li>';
+    }
+
+    async function scan() {
+      if (!state.rootHandle) throw new Error("홈페이지 폴더를 먼저 선택하세요.");
+      state.pages = (await scanDirectory(state.rootHandle)).sort((a, b) => {
+        if (a.path === "/") return -1;
+        if (b.path === "/") return 1;
+        return a.path.localeCompare(b.path, "ko");
+      });
+      render();
+      $("saveBtn").disabled = !state.pages.length;
+      setStatus(`현재 공개 페이지 ${state.pages.length}개를 확인했습니다.`, "good");
+    }
+
+    function createSitemapXml() {
+      const baseUrl = normalizeBaseUrl($("baseUrl").value);
+      const paths = new Set(state.pages.map((page) => page.path));
+      const rows = state.pages.map((page) => {
+        const isJa = page.path === "/ja/" || page.path.startsWith("/ja/");
+        const alternate = isJa ? (page.path.replace(/^\/ja/, "") || "/") : (page.path === "/" ? "/ja/" : `/ja${page.path}`);
+        const links = paths.has(alternate)
+          ? `\n    <xhtml:link rel="alternate" hreflang="${isJa ? "ja" : "ko"}" href="${escapeXml(`${baseUrl}${page.path}`)}"/>\n    <xhtml:link rel="alternate" hreflang="${isJa ? "ko" : "ja"}" href="${escapeXml(`${baseUrl}${alternate}`)}"/>`
+          : "";
+        return `  <url>\n    <loc>${escapeXml(`${baseUrl}${page.path}`)}</loc>${links}\n    <lastmod>${page.lastmod}</lastmod>\n  </url>`;
+      }).join("\n");
+      return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${rows}\n</urlset>\n`;
+    }
+
+    async function writeTextFile(name, content, type) {
+      const handle = await state.rootHandle.getFileHandle(name, { create: true });
+      const writable = await handle.createWritable();
+      await writable.write(new Blob([content], { type }));
+      await writable.close();
+    }
+
+    async function saveSitemap() {
+      await scan();
+      const xml = createSitemapXml();
+      await writeTextFile("sitemap.xml", xml, "application/xml;charset=utf-8");
+      await readExistingSitemap();
+      render();
+      setStatus(`sitemap.xml 저장 완료: 공개 페이지 ${state.pages.length}개가 반영되었습니다. GitHub에 올리면 검색엔진에서 확인할 수 있습니다.`, "good");
+    }
+
+    async function useRootHandle(handle, shared = false) {
+      state.rootHandle = handle;
+      await readExistingSitemap();
+      $("scanBtn").disabled = false;
+      await scan();
+      setStatus(shared ? `공유된 홈페이지 폴더를 불러왔습니다: ${handle.name}` : `홈페이지 폴더를 불러왔습니다: ${handle.name}`, "good");
+    }
+
+    $("baseUrl").addEventListener("change", () => {
+      try { render(); } catch (error) { setStatus(error.message, "bad"); }
+    });
+    $("pickRootBtn").addEventListener("click", async () => {
+      try { await useRootHandle(await QdmAdminStorage.pickAndSaveRoot()); }
+      catch (error) { setStatus(error.message, "bad"); }
+    });
+    $("scanBtn").addEventListener("click", () => scan().catch((error) => setStatus(error.message, "bad")));
+    $("saveBtn").addEventListener("click", () => saveSitemap().catch((error) => setStatus(error.message, "bad")));
+
+    QdmAdminStorage.loadSavedRoot()
+      .then((handle) => handle ? useRootHandle(handle, true) : setStatus("홈페이지 루트 폴더를 선택하세요."))
+      .catch((error) => setStatus(error.message, "bad"));
+  </script>
+</body>
+</html>
