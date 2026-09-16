@@ -204,13 +204,14 @@ function initHeroSlider(){
     slides=[...stage.querySelectorAll('.hero-slide')];
     dots.replaceChildren(...slides.map((_,i)=>{const button=document.createElement('button');button.type='button';button.setAttribute('aria-label',qdmJapanese?`${i+1}番目のバナーを見る`:`${i+1}번째 배너 보기`);button.addEventListener('click',()=>{show(i);play();});return button;}));
     root.classList.toggle('has-multiple',slides.length>1);show(0);play();
+    root.classList.remove('is-loading');root.removeAttribute('aria-busy');
   };
   prev?.addEventListener('click',()=>{show(index-1);play();});
   next?.addEventListener('click',()=>{show(index+1);play();});
   root.addEventListener('mouseenter',stop);root.addEventListener('mouseleave',play);
   root.addEventListener('focusin',stop);root.addEventListener('focusout',play);
   document.addEventListener('visibilitychange',()=>document.hidden?stop():play());
-  fetch('/data/hero-slides.json').then(response=>{if(!response.ok)throw new Error('hero settings');return response.json();}).then(render).catch(()=>{});
+  fetch('/data/hero-slides.json',{cache:'no-store'}).then(response=>{if(!response.ok)throw new Error('hero settings');return response.json();}).then(render).catch(()=>{root.classList.remove('is-loading');root.removeAttribute('aria-busy');});
 }
 function initKoreanServiceDirectory(){
   if(document.getElementById('serviceDetailLinks'))return;
