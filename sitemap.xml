@@ -47,6 +47,12 @@
     <lastmod>2026-09-13</lastmod>
   </url>
   <url>
+    <loc>https://qdm.co.kr/assets/portfolio/mechanical/roller-press-reverse-engineering-20260916/portfolio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/mechanical/roller-press-reverse-engineering-20260916/portfolio.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/mechanical/roller-press-reverse-engineering-20260916/portfolio.html"/>
+    <lastmod>2026-09-16</lastmod>
+  </url>
+  <url>
     <loc>https://qdm.co.kr/assets/portfolio/press-die/press-die-design-2026080601/portfolio.html</loc>
     <lastmod>2026-09-13</lastmod>
   </url>
@@ -125,6 +131,12 @@
     <xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/mechanical/core-drill/portfolio.html"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/mechanical/core-drill/portfolio.html"/>
     <lastmod>2026-09-13</lastmod>
+  </url>
+  <url>
+    <loc>https://qdm.co.kr/ja/assets/portfolio/mechanical/roller-press-reverse-engineering-20260916/portfolio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/assets/portfolio/mechanical/roller-press-reverse-engineering-20260916/portfolio.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/assets/portfolio/mechanical/roller-press-reverse-engineering-20260916/portfolio.html"/>
+    <lastmod>2026-09-16</lastmod>
   </url>
   <url>
     <loc>https://qdm.co.kr/ja/assets/portfolio/press-die/press-die-design-20260806/portfolio.html</loc>
@@ -261,6 +273,18 @@
     <lastmod>2026-09-13</lastmod>
   </url>
   <url>
+    <loc>https://qdm.co.kr/tmp/portfolio-image-fix-backup/ja/assets/portfolio/press-die/press-die-design-20260916-02/portfolio.html</loc>
+    <lastmod>2026-09-16</lastmod>
+  </url>
+  <url>
+    <loc>https://qdm.co.kr/tmp/portfolio-image-fix-backup/ja/assets/portfolio/press-die/press-die-design-20260916/portfolio.html</loc>
+    <lastmod>2026-09-16</lastmod>
+  </url>
+  <url>
+    <loc>https://qdm.co.kr/tmp/portfolio-image-fix-backup/portfolio-admin.html</loc>
+    <lastmod>2026-09-13</lastmod>
+  </url>
+  <url>
     <loc>https://qdm.co.kr/tmp/portfolio-layout-backup/assets/portfolio/analysis/double-drill/portfolio.html</loc>
     <lastmod>2026-08-16</lastmod>
   </url>
@@ -331,6 +355,10 @@
   <url>
     <loc>https://qdm.co.kr/tmp/portfolio-layout-backup/ja/assets/portfolio/reverse/nozzle/portfolio.html</loc>
     <lastmod>2026-08-20</lastmod>
+  </url>
+  <url>
+    <loc>https://qdm.co.kr/tmp/roller-press-portfolio-backup/ko-portfolio-before-alternate.html</loc>
+    <lastmod>2026-09-16</lastmod>
   </url>
   <url>
     <loc>https://qdm.co.kr/tmp/service-thumbnails-backup/ja/services/press-die-design/</loc>

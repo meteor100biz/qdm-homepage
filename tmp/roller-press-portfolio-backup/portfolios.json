@@ -1,21 +1,5 @@
 [
   {
-    "category": "mechanical",
-    "categoryName": "기계·기구설계",
-    "title": "롤러 프레스 역설계 및 상세 부품도 복원",
-    "summary": "상세 부품도가 분실된 롤러 프레스의 기존 조립도와 현물을 교차 검증하고, 부품별 3D 모델링과 가상 조립을 통해 2D 설계도면을 복원하는 프로젝트입니다.",
-    "image": "assets/portfolio/mechanical/roller-press-reverse-engineering-20260916/main.jpg",
-    "url": "assets/portfolio/mechanical/roller-press-reverse-engineering-20260916/portfolio.html",
-    "published": true,
-    "order": 13,
-    "tags": [
-      "롤러프레스",
-      "역설계",
-      "3D모델링",
-      "도면복원"
-    ]
-  },
-  {
     "category": "press-die",
     "categoryName": "프레스 금형설계",
     "title": "자동차 공조부품 프레스금형 설계",

@@ -1,21 +1,5 @@
 [
   {
-    "category": "mechanical",
-    "categoryName": "機械・機構設計",
-    "title": "ローラープレスのリバースエンジニアリングと部品図の復元",
-    "summary": "詳細部品図が失われたローラープレスを対象に、既存の組立図と実機を照合。部品ごとの3Dモデリングと仮想組立によって構造を検証し、2D設計図面を復元するプロジェクトです。",
-    "image": "ja/assets/portfolio/mechanical/roller-press-reverse-engineering-20260916/main.jpg",
-    "url": "ja/assets/portfolio/mechanical/roller-press-reverse-engineering-20260916/portfolio.html",
-    "published": true,
-    "order": 13,
-    "tags": [
-      "ローラープレス",
-      "リバースエンジニアリング",
-      "3Dモデリング",
-      "図面復元"
-    ]
-  },
-  {
     "category": "press-die",
     "categoryName": "プレス金型設計",
     "title": "自動車空調部品のプレス金型設計",
