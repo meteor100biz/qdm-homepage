@@ -173,22 +173,6 @@
     <lastmod>2026-09-13</lastmod>
   </url>
   <url>
-    <loc>https://qdm.co.kr/ja/blog.html</loc>
-    <lastmod>2026-08-20</lastmod>
-  </url>
-  <url>
-    <loc>https://qdm.co.kr/ja/blog/press-die-design-2026080602/</loc>
-    <lastmod>2026-08-20</lastmod>
-  </url>
-  <url>
-    <loc>https://qdm.co.kr/ja/blog/press080401/</loc>
-    <lastmod>2026-08-20</lastmod>
-  </url>
-  <url>
-    <loc>https://qdm.co.kr/ja/blog/sheet-metal-forming-analysis-20260805/</loc>
-    <lastmod>2026-08-20</lastmod>
-  </url>
-  <url>
     <loc>https://qdm.co.kr/ja/portfolio.html</loc>
     <xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/portfolio.html"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://qdm.co.kr/portfolio.html"/>
@@ -272,4 +256,10 @@
     <xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/services/structural-analysis/"/>
     <lastmod>2026-09-13</lastmod>
   </url>
+  <url><loc>https://qdm.co.kr/ja/blog.html</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/blog.html"/><lastmod>2026-09-16</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/blog/press-die-design-20260916/</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/blog/press-die-design-20260916/"/><lastmod>2026-09-16</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/blog/press-die-design-2026080602/</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/blog/press-die-design-2026080602/"/><lastmod>2026-08-06</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/blog/sheet-metal-forming-analysis-20260805/</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/blog/sheet-metal-forming-analysis-20260805/"/><lastmod>2026-08-05</lastmod></url>
+  <url><loc>https://qdm.co.kr/ja/blog/press080401/</loc><xhtml:link rel="alternate" hreflang="ja" href="https://qdm.co.kr/ja/blog/press080401/"/><lastmod>2026-08-05</lastmod></url>
 </urlset>
+
