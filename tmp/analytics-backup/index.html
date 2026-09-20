@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QDM 관리자</title>
+  <style>
+    :root{--blue:#06306f;--blue2:#0b4fb3;--ink:#172033;--muted:#667085;--line:#d8e0ec;--bg:#f3f6fb;--danger:#b42318;--good:#087451}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:Arial,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:var(--ink);background:var(--bg)}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    .wrap{width:min(1220px,100%);margin:0 auto;padding:34px 28px 48px}
+    h1{margin:0 0 8px;color:var(--blue);font-size:32px}
+    p{margin:0;color:var(--muted);font-weight:700}
+    .actions,.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
+    .btn{border:1px solid var(--blue);background:var(--blue);color:#fff;border-radius:8px;min-height:42px;padding:0 15px;font-weight:900}
+    .btn.secondary{background:#fff;color:var(--blue)}
+    .btn.danger{border-color:var(--danger);background:var(--danger)}
+    .btn:disabled{cursor:not-allowed;opacity:.55}
+    .status{padding:10px 12px;border:1px solid #fed7aa;background:#fff7ed;color:#a15c00;border-radius:8px;font-size:13px;font-weight:700}
+    .status.good{border-color:#abefc6;background:#ecfdf3;color:var(--good)}
+    .status.bad{border-color:#fecdca;background:#fef3f2;color:var(--danger)}
+    .grid{display:none}
+    .card{display:grid;gap:12px;min-height:210px;padding:24px;border:1px solid var(--line);border-radius:8px;background:#fff;color:inherit;text-decoration:none;box-shadow:0 12px 28px rgba(15,35,68,.06);transition:.2s}
+    .card.full{grid-column:1/-1;min-height:170px}
+    .card:hover{transform:translateY(-3px);box-shadow:0 18px 38px rgba(15,35,68,.12);border-color:#b8c7dd}
+    .icon{width:44px;height:44px;border-radius:8px;background:#eaf2ff;color:var(--blue2);display:grid;place-items:center;font-size:24px;font-weight:900}
+    h2{margin:0;font-size:21px;color:#0b234b}
+    .desc{font-size:14px;line-height:1.55;color:var(--muted)}
+    .go{align-self:end;color:var(--blue2);font-weight:900}
+    .inquiry-panel{margin-top:28px;padding:26px;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:0 12px 28px rgba(15,35,68,.06);scroll-margin-top:20px}
+    .panel-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+    .panel-head p{margin-top:7px;font-size:14px;line-height:1.55}
+    .stats{min-width:220px;padding:12px 14px;border-radius:8px;background:#eef4ff;color:var(--blue);font-size:14px;font-weight:900;line-height:1.6}.stats-new{display:block;margin-bottom:7px;color:#0b7a53;font-size:14px;font-weight:900}.stats-new.has-new{color:#d97706}.stats-sync{display:block;margin-top:8px;padding-top:8px;border-top:1px solid #c7d7fe;color:#0b7a53;font-size:12px;line-height:1.45}
+    .search{width:100%;height:44px;margin:20px 0 14px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+    .inquiry-layout{display:grid;grid-template-columns:330px 1fr;gap:16px;min-height:430px}
+    .inquiry-list{max-height:620px;overflow:auto;border:1px solid var(--line);border-radius:8px;background:#f8faff}
+    .inquiry-item-row{position:relative;border-bottom:1px solid var(--line)}
+    .inquiry-item-row:last-child{border-bottom:0}
+    .inquiry-item{display:block;width:100%;padding:15px;border:0;background:transparent;text-align:left;color:var(--ink)}
+    .inquiry-item-row.has-local .inquiry-item{padding-bottom:46px}
+    .inquiry-item:hover,.inquiry-item.active{background:#eaf2ff}
+    .inquiry-item strong{display:block;margin:6px 0;font-size:15px}
+    .delete-local-inquiry{position:absolute;right:12px;bottom:9px;padding:5px 9px;border:1px solid #f3aaa5;border-radius:6px;background:#fff;color:var(--danger);font-size:12px;font-weight:800;cursor:pointer}
+    .delete-local-inquiry:hover{background:#fef3f2}
+    .inquiry-meta{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px}
+    .badges{display:flex;gap:5px;flex-wrap:wrap}
+    .badge{display:inline-flex;align-items:center;min-height:23px;padding:0 8px;border-radius:999px;background:#e8eef7;color:#344054;font-size:11px;font-weight:900}
+    .badge.remote{background:#fff1db;color:#9a5b00}
+    .badge.both{background:#ddf6e9;color:#087451}
+    .badge.local{background:#e8efff;color:#174ea6}
+    .inquiry-detail{min-width:0;padding:22px;border:1px solid var(--line);border-radius:8px;background:#fff}
+    .empty{display:grid;place-items:center;min-height:300px;color:var(--muted);font-weight:800;text-align:center}
+    .detail-title{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:16px}
+    .detail-title h3{margin:0 0 6px;color:var(--blue);font-size:22px}
+    .detail-grid{display:grid;grid-template-columns:110px 1fr;gap:0;margin-top:16px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+    .detail-grid dt,.detail-grid dd{margin:0;padding:11px 12px;border-bottom:1px solid var(--line)}
+    .detail-grid dt{background:#f5f7fb;font-weight:900}
+    .detail-grid dd{overflow-wrap:anywhere}
+    .detail-grid dt:last-of-type,.detail-grid dd:last-of-type{border-bottom:0}
+    .message-box{margin-top:16px;padding:16px;border-radius:8px;background:#f7f9fc;white-space:pre-wrap;line-height:1.65}
+    .attachment-list{margin:12px 0 0;padding-left:20px;color:var(--muted)}
+    .panel-message{min-height:22px;margin-top:14px;font-size:14px}
+    .panel-message.good{color:var(--good)}
+    .panel-message.bad{color:var(--danger)}
+    @media(max-width:800px){
+      .wrap{padding:24px 18px}.grid,.inquiry-layout{grid-template-columns:1fr}.inquiry-layout{min-height:0}.inquiry-list{max-height:350px}
+      h1{font-size:26px}.card{min-height:170px}.panel-head{display:block}.stats{margin-top:14px}.inquiry-panel{padding:18px}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div style="margin-bottom:6px;color:#b56b12;font-size:12px;font-weight:900;letter-spacing:.2em">LOCAL ONLY</div>
+    <h1>QDM 로컬 관리자</h1>
+    <p>문의·견적 요청을 확인하고 PC 보관 및 Supabase 동기화 상태를 관리합니다.</p>
+    <div class="actions">
+      <button class="btn" id="pickRootBtn" type="button">홈페이지 폴더 선택 / 공유</button>
+      <div class="status" id="status">아직 공유된 홈페이지 폴더가 없습니다.</div>
+    </div>
+
+    <div class="grid">
+      <a class="card full" href="home-admin.html">
+        <div class="icon">⌂</div>
+        <h2>메인 홈페이지 수정</h2>
+        <div class="desc">메인 배너와 전화번호, 이메일, 주소, 블로그 대표 링크 등 메인 페이지의 내용을 수정합니다.</div>
+        <div class="go">열기 →</div>
+      </a>
+      <a class="card full" href="about-admin.html">
+        <div class="icon">▤</div>
+        <h2>회사소개 수정</h2>
+        <div class="desc">다양한 산업 분야의 설계·해석 사례 사진, 제목, 링크, 노출 순서를 한국어·일본어 함께 관리합니다.</div>
+        <div class="go">열기 →</div>
+      </a>
+      <a class="card" href="portfolio-admin.html">
+        <div class="icon">▦</div>
+        <h2>포트폴리오 수정</h2>
+        <div class="desc">포트폴리오 생성, 상세 내용, 이미지, 메인 노출 여부와 순서를 관리합니다.</div>
+        <div class="go">열기 →</div>
+      </a>
+      <a class="card" href="portfolio-admin.html?lang=ja">
+        <div class="icon">日</div>
+        <h2>일본어 포트폴리오 수정</h2>
+        <div class="desc">공통 이미지를 사용하면서 일본어 제목, 상세 내용, 메인 노출 여부와 순서를 별도로 관리합니다.</div>
+        <div class="go">열기 →</div>
+      </a>
+      <a class="card" href="blog-admin.html">
+        <div class="icon">✎</div>
+        <h2>블로그 수정</h2>
+        <div class="desc">최신 기술자료 카드의 이미지, 제목, 설명, 네이버 블로그 링크를 수정합니다.</div>
+        <div class="go">열기 →</div>
+      </a>
+      <a class="card" href="ja-blog-admin.html">
+        <div class="icon">日</div>
+        <h2>일본어 기술 블로그 수정</h2>
+        <div class="desc">일본어 기술 블로그의 본문과 이미지를 작성하고 게시물 HTML, 목록, 사이트맵을 함께 생성합니다.</div>
+        <div class="go">열기 →</div>
+      </a>
+      <a class="card" href="seo-admin.html">
+        <div class="icon">⌕</div>
+        <h2>검색 노출 관리</h2>
+        <div class="desc">현재 공개 페이지와 기존 sitemap.xml을 확인하여 검색엔진용 사이트맵을 생성·갱신합니다.</div>
+        <div class="go">열기 →</div>
+      </a>
+      <a class="card" href="#inquiries">
+        <div class="icon">↓</div>
+        <h2>문의·견적 요청 관리</h2>
+        <div class="desc">Supabase 문의와 PC 보관 상태를 함께 확인하고, 첨부파일까지 PC에 보관된 문의만 Supabase에서 정리합니다.</div>
+        <div class="go">관리 화면으로 이동 →</div>
+      </a>
+    </div>
+
+    <section class="inquiry-panel" id="inquiries">
+      <div class="panel-head">
+        <div>
+          <h2>문의·견적 요청 관리</h2>
+          <p>PC 보관 자료는 이 관리자 폴더에 계속 남습니다. Supabase 삭제는 PC 보관 완료가 확인된 문의에만 허용됩니다.</p>
+        </div>
+        <div class="stats" id="inquiryStats">문의 내역을 불러오는 중입니다.</div>
+      </div>
+      <div class="toolbar">
+        <button class="btn secondary" id="refreshInquiries" type="button">새로고침</button>
+        <button class="btn" id="backupAllInquiries" type="button">Supabase 전체 PC 보관</button>
+        <button class="btn danger" id="deleteBackedUpInquiries" type="button">PC 보관 완료분 Supabase 삭제</button>
+      </div>
+      <input class="search" id="inquirySearch" type="search" placeholder="이름, 회사명, 연락처, 이메일, 제목 검색">
+      <div class="inquiry-layout">
+        <div class="inquiry-list" id="inquiryList"></div>
+        <div class="inquiry-detail empty" id="inquiryDetail">왼쪽에서 문의를 선택하세요.</div>
+      </div>
+      <p class="panel-message" id="inquiryMessage"></p>
+    </section>
+  </main>
+
+  <script src="admin-shared.js"></script>
+  <script>
+    const statusEl = document.getElementById("status");
+    function setStatus(message, type = "") {
+      statusEl.className = `status ${type}`.trim();
+      statusEl.textContent = message;
+    }
+    document.getElementById("pickRootBtn").addEventListener("click", async () => {
+      try {
+        const handle = await QdmAdminStorage.pickAndSaveRoot();
+        setStatus(`공유 완료: ${handle.name}`, "good");
+      } catch (error) {
+        setStatus(error.message, "bad");
+      }
+    });
+    QdmAdminStorage.loadSavedRoot()
+      .then((handle) => {
+        if (handle) setStatus(`공유된 폴더 사용 가능: ${handle.name}`, "good");
+      })
+      .catch(() => {});
+  </script>
+  <script src="admin-inquiries.js"></script>
+</body>
+</html>

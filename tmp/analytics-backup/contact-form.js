@@ -83,7 +83,6 @@
       });
       if (error) throw error;
 
-      window.dispatchEvent(new Event('qdm:inquiry-success'));
       form.reset();
       setStartedAt();
       setStatus(text.success, "success");

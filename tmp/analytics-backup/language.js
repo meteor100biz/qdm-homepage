@@ -1,10 +1,4 @@
 (() => {
-  if (!document.querySelector('script[data-qdm-analytics]')) {
-    const tracker = document.createElement('script');
-    tracker.src = '/assets/analytics.js?v=20260920-1';
-    tracker.dataset.qdmAnalytics = '1';
-    document.head.appendChild(tracker);
-  }
   const path = location.pathname || "/";
   const quotationPage = /^\/(?:ja\/)?resources\/press-die-quotation\/?$/.test(path);
   const requestedLanguage = quotationPage ? new URLSearchParams(location.search).get("lang") : "";
