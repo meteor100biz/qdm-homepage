@@ -2,23 +2,6 @@
   {
     "category": "mechanical",
     "categoryName": "기계·기구설계",
-    "title": "전술용 손전등 분해 역설계",
-    "summary": "피카티니 레일 장착형 전술용 손전등을 분해·측정하여 개별 부품과 초점 조절 구조를 파라메트릭 3D 모델로 재구성하였습니다.",
-    "image": "assets/portfolio/mechanical/product-design-20260922-02/main.png",
-    "url": "assets/portfolio/mechanical/product-design-20260922-02/portfolio.html",
-    "published": true,
-    "order": 15,
-    "tags": [
-      "역설계",
-      "전술용 손전등",
-      "3D모델링",
-      "파라메트릭설계",
-      "CNC가공품"
-    ]
-  },
-  {
-    "category": "mechanical",
-    "categoryName": "기계·기구설계",
     "title": "일체형 시트 역설계 및 3D 모델링",
     "summary": "분해 과정에서 변형된 3D 스캔 데이터를 분석하고, 원래 제품 형상을 고려하여 복잡한 자유곡면을 재구성한 역설계 사례입니다.",
     "image": "assets/portfolio/mechanical/product-design-20260922/main.png",
