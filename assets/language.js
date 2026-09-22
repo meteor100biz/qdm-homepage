@@ -1,7 +1,7 @@
 (() => {
   if (!document.querySelector('script[data-qdm-analytics]')) {
     const tracker = document.createElement('script');
-    tracker.src = '/assets/analytics.js?v=20260920-1';
+    tracker.src = '/assets/analytics.js?v=20260922-1';
     tracker.dataset.qdmAnalytics = '1';
     document.head.appendChild(tracker);
   }
