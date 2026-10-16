@@ -1,5 +1,13 @@
 const assert=require("node:assert/strict");
 const {calculate}=require("../assets/press-product-core.js");
+const {formatBusinessNo,groupNumber,ungroupNumber}=require("../assets/press-product-core.js");
+assert.equal(formatBusinessNo("1234567890"),"123-45-67890");
+assert.equal(formatBusinessNo("123-45-67890"),"123-45-67890");
+assert.equal(formatBusinessNo("1234"),"123-4");
+assert.equal(groupNumber("1234567.50"),"1,234,567.50");
+assert.equal(groupNumber("1200."),"1,200.");
+assert.equal(groupNumber(""),"");
+assert.equal(ungroupNumber(groupNumber("1234567.50")),"1234567.50");
 const d={width:15,length:50,thickness:1,density:8.5,materialPrice:22000,quantity:5000,output:1200,laborRate:10320,workers:1,pressRate:30000,setupHours:1,extraUnit:0,extraLot:0,overhead:0,markup:0,rounding:1,rotation:"0",layout:"allowance",left:2,right:2,gap:4,includeTool:false,scrap:false,vat:true};
 const close=(a,b)=>assert.ok(Math.abs(a-b)<1e-8, a+" != "+b);
 let r=calculate(d);

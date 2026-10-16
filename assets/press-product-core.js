@@ -1,5 +1,16 @@
 (function(root) {
 "use strict";
+function formatBusinessNo(value) {
+ const digits=String(value??"").replace(/\D/g,"").slice(0,10);
+ return digits.slice(0,3)+(digits.length>3?"-"+digits.slice(3,5):"")+(digits.length>5?"-"+digits.slice(5):"");
+}
+function ungroupNumber(value) {return String(value??"").replace(/,/g,"");}
+function groupNumber(value) {
+ const raw=ungroupNumber(value);
+ if(!/^\d*(?:\.\d*)?$/.test(raw))return raw;
+ const [integer,fraction]=raw.split(".");
+ return integer.replace(/^0+(?=\d)/,"").replace(/\B(?=(\d{3})+(?!\d))/g,",")+(fraction===undefined?"":"."+fraction);
+}
 function calculate(d) {
  const n = k => Number(d[k]);
  const required = ["width","length","thickness","density","materialPrice","quantity","output","laborRate","workers","pressRate","setupHours","extraUnit","extraLot","overhead","markup","rounding"];
@@ -44,7 +55,7 @@ function calculate(d) {
  if(Object.values(result).some(v=>!Number.isFinite(v)||Math.abs(v)>Number.MAX_SAFE_INTEGER)) throw Error("계산 범위를 초과했습니다. 입력값을 줄여주세요.");
  return result;
 }
-const api={calculate};
+const api={calculate,formatBusinessNo,groupNumber,ungroupNumber};
 if(typeof module!=="undefined"&&module.exports) module.exports=api;
 else root.PressProductCost=api;
 })(typeof globalThis!=="undefined"?globalThis:this);

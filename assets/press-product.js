@@ -20,7 +20,7 @@ f("seller","작성 회사명","","text")+f("representative","대표자","","text
 '<div class="identity-group identity-recipient"><h3>납품처 정보</h3>'+grid(
 f("buyer","납품 회사명","","text")+f("contact","수신 담당자","","text"))+'</div>'+
 '<div class="identity-group identity-project"><h3>견적 정보</h3>'+grid(
-f("quoteNumber","견적번호","PQ-"+today().replaceAll("-",""),"text")+f("date","견적일",today(),"date")+f("validity","유효기간","견적일로부터 30일","text")+f("product","제품명 / 품번","프레스 부품","text")+f("revision","도면 번호 / 개정","","text")+f("delivery","납기","발주 후 협의","text")+f("payment","결제 조건","별도 협의","text"))+'</div>')+
+f("quoteNumber","견적번호","PQ-"+today().replaceAll("-",""),"text")+f("date","견적일",today(),"date")+f("validity","유효기간","견적일로부터 30일","text")+f("product","제품명 / 품번","프레스 부품","text","견적명으로 사용됩니다.")+f("revision","도면 번호 / 개정","","text")+f("delivery","납기","발주 후 협의","text")+f("payment","결제 조건","별도 협의","text"))+'</div>')+
 card(2,"전개 치수와 소재","전개 치수는 견적자가 산출해 입력합니다. 모든 치수는 mm입니다.",grid(
 f("width","전개 가로 (mm)",15)+f("length","전개 세로 (mm)",50)+f("thickness","두께 (mm)",1)+sel("materialId","소재 기준 DB",db.materials.map(m=>[m.id,m.name]))+f("materialName","소재명 · 직접 수정 가능","SUS304","text")+f("temper","조질 / 표면","2B · 조질 별도 확인","text","CSP는 1/2H·3/4H·H 등 조질을 명시하세요.")+f("density","밀도 (g/cm³)",7.93,"number","소재별 근삿값입니다. 직접 입력 소재는 밀도도 확인하세요.")+f("materialPrice","원소재 단가 (원/kg)",4500))+
 '<div class="basis" id="materialBasis"></div><div class="hint-actions"><button type="button" class="mini-button" id="restoreMaterial">선택 소재 기준값 적용</button></div>')+
@@ -52,13 +52,28 @@ sel("rounding","공급단가 올림 단위",[["1","1원"],["10","10원"],["100",
 card(6,"개당 원가 산출 내역","PDF에는 01 고객 제출용 견적서와 02 내부 원가산출서가 함께 포함됩니다.",
 '<table class="breakdown"><thead><tr><th>산출 항목</th><th>원/개</th></tr></thead><tbody id="breakdown"></tbody></table><div class="basis" id="costBasis"></div><div class="hint-actions"><button type="button" class="mini-button" id="internalPdf">내부 원가산출서 PDF</button></div>');
 const el=n=>form.elements.namedItem(n);
-function read(){const d={};for(const e of form.elements)if(e.name)d[e.name]=e.type==="checkbox"?e.checked:e.value;return d;}
+const groupedFields=new Set(["materialPrice","quantity","output","pressRate"]);
+const {formatBusinessNo,groupNumber,ungroupNumber}=PressProductCost;
+el("product").closest("label").classList.add("quote-name-field");
+el("businessNo").placeholder="000-00-00000";
+el("businessNo").inputMode="numeric";
+el("businessNo").maxLength=12;
+for(const name of groupedFields){el(name).type="text";el(name).inputMode=name==="quantity"?"numeric":"decimal";el(name).maxLength=30;}
+function formatControl(input,formatter){
+ const old=input.value,position=input.selectionStart;
+ const count=position===null?0:old.slice(0,position).replace(/[,\-]/g,"").length;
+ const formatted=formatter(old);input.value=formatted;
+ if(document.activeElement===input&&position!==null){let caret=0,seen=0;while(caret<formatted.length&&seen<count){if(!/[,\-]/.test(formatted[caret]))seen++;caret++;}input.setSelectionRange(caret,caret);}
+}
+function formatInputs(){for(const name of groupedFields)formatControl(el(name),groupNumber);formatControl(el("businessNo"),formatBusinessNo);}
+function read(){const d={};for(const e of form.elements)if(e.name)d[e.name]=e.type==="checkbox"?e.checked:groupedFields.has(e.name)?ungroupNumber(e.value):e.name==="businessNo"?formatBusinessNo(e.value):e.value;return d;}
 function apply(d){for(const e of form.elements)if(e.name && Object.hasOwn(d,e.name)){if(e.type==="checkbox")e.checked=d[e.name]===true;else e.value=String(d[e.name]??"");}}
-function materialBasis(){const m=db.materials.find(m=>m.id===el("materialId").value);if(!m)return;const modified=Number(el("materialPrice").value)!==m.price;refs.material={id:m.id,kind:m.kind,note:m.note,source:m.source,modified,researchDate:db.researchedOn};showRefs();}
-function pressBasis(){const p=db.presses.find(p=>p.id===el("pressId").value);if(!p)return;refs.press={id:p.id,kind:db.pressBasis.kind,note:db.pressBasis.note,modified:Number(el("pressRate").value)!==p.rate,researchDate:db.researchedOn};showRefs();}
+function materialBasis(){const m=db.materials.find(m=>m.id===el("materialId").value);if(!m)return;const modified=Number(ungroupNumber(el("materialPrice").value))!==m.price;refs.material={id:m.id,kind:m.kind,note:m.note,source:m.source,modified,researchDate:db.researchedOn};showRefs();}
+function pressBasis(){const p=db.presses.find(p=>p.id===el("pressId").value);if(!p)return;const modified=Number(ungroupNumber(el("pressRate").value))!==p.rate;refs.press={id:p.id,kind:db.pressBasis.kind,note:db.pressBasis.note,modified,researchDate:db.researchedOn};showRefs();}
 function showRefs(){const m=refs.material||{};$("materialBasis").innerHTML='<strong>'+esc(m.kind||"저장된 기준")+(m.modified?' · 작성자 수정값':'')+'</strong><br>'+esc(m.note||"")+(m.source?' <a href="'+esc(safeUrl(m.source))+'" target="_blank" rel="noopener">가격 출처</a>':'');const p=refs.press||{};$("pressBasis").innerHTML='<strong>'+esc(p.kind||"저장된 기준")+(p.modified?' · 작성자 수정값':'')+'</strong><br>'+esc(p.note||"")+'<details><summary>검색 자료와 제안값의 구분</summary>'+db.pressBasis.sources.map(s=>'<p>'+esc(s.note)+' <a href="'+s.url+'" target="_blank" rel="noopener">원문</a></p>').join("")+'</details>';}
 function rows(r){return [["소재 투입비",r.grossMaterial],["스크랩 회수 차감",-r.scrapCredit],["인건비",r.labor],["프레스 설비비",r.machine],["로트 준비비 배분",r.setup],["금형비 배분",r.tooling],["후처리·검사·포장·기타",r.extra],["관리비",r.overhead],["원가 합계",r.cost],["이익 가산",r.profit],["공급단가 (올림 적용)",r.unit]];}
 function update(persist=true){
+ formatInputs();
  const d=read();$("allowanceFields").hidden=d.layout==="exact";$("exactFields").hidden=d.layout!=="exact";$("toolFields").hidden=!d.includeTool;$("scrapFields").hidden=!d.scrap;
  try{result=PressProductCost.calculate(d);lastData=d;$("calculationError").textContent="";for(const [id,key] of [["unitPrice","unit"],["unitCost","cost"],["supply","supply"],["vat","vat"],["total","total"]])$(id).textContent=money(result[key],id==="unitCost"?2:0);
  $("stripMetrics").innerHTML=[["소재 폭",result.stripWidth.toFixed(2)+" mm"],["이송 피치",result.pitch.toFixed(2)+" mm"],["개당 투입 중량",(result.inputKg*1000).toFixed(3)+" g"]].map(([a,b])=>'<div class="metric"><small>'+a+'</small><strong>'+b+'</strong></div>').join("");
@@ -75,6 +90,16 @@ const fileName=()=>String(el("quoteNumber").value||"press-product-quote").replac
 function setMaterial(){const m=db.materials.find(m=>m.id===el("materialId").value);if(!m)return;el("materialName").value=m.id==="custom"?"":m.name;el("density").value=m.density;el("materialPrice").value=m.price??"";el("temper").value="";materialBasis();update();}
 function setPress(){const p=db.presses.find(p=>p.id===el("pressId").value);el("pressName").value=p.id==="custom"?"":p.name;el("pressRate").value=p.rate??"";pressBasis();update();}
 form.addEventListener("submit",e=>e.preventDefault());
+form.addEventListener("beforeinput",e=>{
+ const input=e.target;
+ if(!(groupedFields.has(input.name)||input.name==="businessNo")||input.selectionStart!==input.selectionEnd)return;
+ const pos=input.selectionStart,value=input.value;
+ if(e.inputType==="deleteContentBackward"&&pos>1&&/[,\-]/.test(value[pos-1])){
+  e.preventDefault();input.setRangeText("",pos-2,pos,"end");input.dispatchEvent(new Event("input",{bubbles:true}));
+ }else if(e.inputType==="deleteContentForward"&&pos<value.length-1&&/[,\-]/.test(value[pos])){
+  e.preventDefault();input.setRangeText("",pos,pos+2,"end");input.dispatchEvent(new Event("input",{bubbles:true}));
+ }
+});
 form.addEventListener("input",e=>{if(["materialPrice","density","materialName","temper"].includes(e.target.name)){refs.material.modified=true;showRefs();}if(["pressRate","pressName"].includes(e.target.name)){refs.press.modified=true;showRefs();}update();});
 el("materialId").addEventListener("change",setMaterial);
 el("pressId").addEventListener("change",setPress);

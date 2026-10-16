@@ -11,3 +11,4 @@
 @media(max-width:600px){.product-quote .identity-group{padding:13px}}
 
 @media(min-width:1100px){#previewPages{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:18px}#productPreview{height:min(1100px,calc(100vh - 36px))}#previewPages figure{width:100%}}
+.product-quote .quote-name-field{padding:14px;border:1px solid #e2bd57;border-radius:9px;background:#fff2bd}.product-quote .quote-name-field input{background:#fff9df;border-color:#d6ac37;font-weight:800;color:#3f3419}.product-quote .quote-name-field input:focus{outline:2px solid #c28a13;outline-offset:2px}.product-quote .quote-name-field .help{color:#765816}

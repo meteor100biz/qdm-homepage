@@ -41,7 +41,7 @@ function draw(d,r,refs,internal=false){
  const dims=d.width+" × "+d.length+" × "+d.thickness+" mm";
  if(!internal){
   const gap=24,cw=(width-gap)/2;
-  infoCard("SUPPLIER / 공급자",d.seller,["대표 "+(d.representative||"—")+" / 사업자번호 "+(d.businessNo||"—"),d.phone||"연락처 —",d.address||"주소 —"].join("\n"),left,470,cw,310);
+  infoCard("SUPPLIER / 공급자",d.seller,["대표 "+(d.representative||"—")+" / 사업자번호 "+(PressProductCost.formatBusinessNo(d.businessNo)||"—"),d.phone||"연락처 —",d.address||"주소 —"].join("\n"),left,470,cw,310);
   infoCard("RECIPIENT / 수신처",d.buyer,["담당자 "+(d.contact||"—"),"제품 "+d.product].join("\n"),left+cw+gap,470,cw,310);
   box(left,810,width,142,"#f7fafc");ctx.fillStyle=c.blue;ctx.fillRect(left,810,10,142);
   text("PRODUCT UNIT PRICE / 제품 공급단가 (VAT 제외)",left+34,837,25,c.muted,"left",800);
