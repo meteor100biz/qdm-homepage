@@ -38,7 +38,7 @@ function draw(d,r,refs,internal=false){
  fit("NO. "+d.quoteNumber,right-540,282,540,50,28,400,c.text,"right");
  text(d.date||"—",right,356,26,c.muted,"right");line(left,420,right,420,c.navy,5);
  const mode=d.mode==="auto"?"자동 순차이송":"수동 단발";
- const dims=d.width+" × "+d.length+" × t"+d.thickness+" mm";
+ const dims=d.width+" × "+d.length+" × "+d.thickness+" mm";
  if(!internal){
   const gap=24,cw=(width-gap)/2;
   infoCard("SUPPLIER / 공급자",d.seller,["대표 "+(d.representative||"—")+" / 사업자번호 "+(d.businessNo||"—"),d.phone||"연락처 —",d.address||"주소 —"].join("\n"),left,470,cw,310);
@@ -63,7 +63,7 @@ function draw(d,r,refs,internal=false){
   box(sx,sy,sw,104,c.pale,c.blue,3);ctx.fillStyle=c.blue;ctx.fillRect(sx,sy,9,104);text("총 견적금액",sx+28,sy+52,35,c.navy,"left",800);text(money(r.total),right-20,sy+52,44,c.navy,"right");
   const terms="금형비: "+(d.includeTool?"제품 단가에 배분 포함":"제품 단가에서 제외")+" / 스크랩 회수액: "+(d.scrap?"차감 반영":"차감 없음")+"\n"+(d.notes||"별도 조건 없음");
   noteBlock("견적 조건 및 특기사항",terms,1960,540);
-  text("첨부: 02 제품 원가산출서 · 제출 범위는 작성자가 결정합니다.",left,2600,27,c.muted);
+  text("첨부: 02 제품 원가산출서",left,2600,27,c.muted);
  } else {
   field("PROJECT / 제품명",d.product,left,470,width,126);
   const cw=(width-40)/3;
