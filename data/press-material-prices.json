@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "researchedOn": "2026-10-16",
+  "status": "initial_research",
+  "notes": [
+    "공개 판매 표시가격이며 실제 매입 확정가가 아닙니다.",
+    "규격·조질·두께·표면·수량 조건이 다른 가격을 자동 대체하지 않습니다.",
+    "null은 미확인 값이며 0원을 의미하지 않습니다. 해외 가격은 원화 매입가로 자동 적용하지 않습니다."
+  ],
+  "records": [
+    {
+      "id": "sts304-hl-1.2-shinwoo",
+      "material": "STS304",
+      "searchAliases": ["SUS304", "304"],
+      "form": "sheet",
+      "temper": null,
+      "surface": "HL",
+      "thicknessMm": [1.2],
+      "pricePerKg": 3910,
+      "currency": "KRW",
+      "priceDate": "2026-10-06",
+      "minimumOrderKg": null,
+      "vatIncluded": null,
+      "freightIncluded": null,
+      "slittingIncluded": null,
+      "sourceType": "domestic_supplier_list_price",
+      "supplier": "신우금속",
+      "sourceUrl": "https://swst.kr/resources/pricing.php",
+      "requiresConditionReview": true,
+      "note": "HL 1.2T 판재 표시가격. 2B·BA·CSP 또는 정밀 슬릿 코일의 가격으로 확정 적용할 수 없습니다."
+    },
+    {
+      "id": "sus301-spring-voltara",
+      "material": "SUS301",
+      "form": "coil",
+      "temper": null,
+      "advertisedTempers": ["1/2H", "3/4H", "FH"],
+      "thicknessRangeMm": [0.15, 3],
+      "pricePerKg": 3.65,
+      "currency": "USD",
+      "priceDate": null,
+      "minimumOrderKg": 100,
+      "vatIncluded": null,
+      "freightIncluded": null,
+      "slittingIncluded": null,
+      "sourceType": "overseas_supplier_reference",
+      "supplier": "VoltaraPV",
+      "sourceUrl": "https://voltarapv.com/sus-301-stainless-steel-strip-coil-for-springs-1-2-hard-3-4h-full-hard/",
+      "requiresConditionReview": true,
+      "note": "해외 표시가격. 개별 조질별 가격과 국내 구매단가는 미확인. 운송·수입 부대비와 거래 조건 확인이 필요합니다.",
+      "domesticPricePerKgKrw": null
+    },
+    {
+      "id": "egi-shinwoo",
+      "material": "EGI",
+      "form": "sheet",
+      "temper": null,
+      "thicknessMm": [1.15, 1.55],
+      "pricePerKg": 1120,
+      "currency": "KRW",
+      "priceDate": "2026-10-06",
+      "minimumOrderKg": null,
+      "vatIncluded": null,
+      "freightIncluded": null,
+      "slittingIncluded": null,
+      "sourceType": "domestic_supplier_list_price",
+      "supplier": "신우금속",
+      "sourceUrl": "https://swst.kr/resources/pricing.php",
+      "requiresConditionReview": true
+    }
+  ]
+}

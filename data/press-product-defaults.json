@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "researchedOn": "2026-10-16",
+  "wage": {
+    "year": 2026,
+    "rate": 10320,
+    "source": "https://www.minimumwage.go.kr/minWage/policy/decisionMain.do",
+    "note": "2026년 최저임금 시간급. 주휴·보험·퇴직급여 등을 포함한 총 인건비는 아닙니다."
+  },
+  "materials": [
+    {
+      "id": "sus304-2b",
+      "name": "SUS304 · 일반 판재/코일",
+      "density": 7.93,
+      "price": 4500,
+      "kind": "예산 제안값",
+      "note": "국내 HL 1.2T 공개가 3,910원/kg을 비교 기준으로 둔 예산값 4,500원/kg입니다. 2B·BA·두께·수량별 실매입가는 확인 후 수정하세요.",
+      "source": "https://swst.kr/resources/pricing.php"
+    },
+    {
+      "id": "sus301-csp",
+      "name": "SUS301-CSP · 스프링용",
+      "density": 7.93,
+      "price": 6500,
+      "kind": "예산 제안값",
+      "note": "해외 공개가 3.65 USD/kg은 국내 매입가가 아닙니다. 6,500원/kg은 환산 시세가 아닌 초기 예산 제안값이며 조질·슬리팅·구매량에 맞춰 수정하세요.",
+      "source": "https://www.stainlesssteel-sheetmetal.com/sale-13642207-sus301-csp-eh-cold-rolled-stainless-steel-strip-jis-g4313.html"
+    },
+    {
+      "id": "sts304-hl",
+      "name": "STS304 · HL 1.2T 판재",
+      "density": 7.93,
+      "price": 3910,
+      "kind": "국내 공개 판매가",
+      "note": "신우금속 2026-10-06 기준 HL 1.2T 표시가격입니다. VAT·운송·슬리팅 포함 여부 미확인. 다른 두께·표면·조질에는 참고용입니다.",
+      "source": "https://swst.kr/resources/pricing.php"
+    },
+    {
+      "id": "egi",
+      "name": "EGI · 전기아연도금강판",
+      "density": 7.85,
+      "price": 1120,
+      "kind": "국내 공개 판매가",
+      "note": "신우금속 2026-10-06 기준 1.15T·1.55T 판재 표시가격입니다. VAT·운송·슬리팅 포함 여부 미확인.",
+      "source": "https://swst.kr/resources/pricing.php"
+    },
+    {
+      "id": "custom",
+      "name": "직접 입력",
+      "density": 7.85,
+      "price": null,
+      "kind": "작성자 입력",
+      "note": "소재명·밀도·원/kg 단가를 입력하세요. 밀도 기본값 7.85는 일반 강재 참고값입니다.",
+      "source": null
+    }
+  ],
+  "presses": [
+    {
+      "id": "35",
+      "name": "35 ton",
+      "rate": 15000
+    },
+    {
+      "id": "60",
+      "name": "60 ton",
+      "rate": 20000
+    },
+    {
+      "id": "80",
+      "name": "80 ton",
+      "rate": 25000
+    },
+    {
+      "id": "110",
+      "name": "110 ton",
+      "rate": 30000
+    },
+    {
+      "id": "160",
+      "name": "160 ton",
+      "rate": 40000
+    },
+    {
+      "id": "200",
+      "name": "200 ton",
+      "rate": 50000
+    },
+    {
+      "id": "300",
+      "name": "300 ton",
+      "rate": 70000
+    },
+    {
+      "id": "custom",
+      "name": "직접 입력",
+      "rate": null
+    }
+  ],
+  "pressBasis": {
+    "kind": "QDM 초기 예산 제안값",
+    "note": "국내 톤수별 공개 표준 임률은 확인되지 않았습니다. 톤수별 원화 값은 시장 조사 확정가가 아닌 작성 편의를 위한 제안값입니다. 인건비 제외 기준이며 전력·상각·보전비를 포함하는 회사 설비 임률로 수정하세요.",
+    "sources": [
+      {
+        "url": "https://catalogimages.wiley.com/images/db/pdf/9781119128694.excerpt.pdf",
+        "note": "프레스 원가 계산 교육 예제: 설비 22.50 USD/h, 인건비·경비 별도. 현행 국내 가격이나 톤수별 표가 아닙니다."
+      },
+      {
+        "url": "https://www.dfma.com/forum/2017pdf/Johnsonpaper.pdf",
+        "note": "2017년 발표 사례: 120 USD/h는 공급사 비용·이익을 포함하는 청구 임률. 설비 단독 임률과 구분해야 합니다."
+      }
+    ]
+  },
+  "allowance": {
+    "kind": "초기 예산 제안 규칙",
+    "note": "단순 단열 배치의 견적용 초기값이며 금형 설계 최소값이 아닙니다. 한쪽 잔폭=max(2,2t), 제품 간격=max(2,1.5t), 0.5mm 단위 올림. 크기·형상·캐리어·조질에 따라 직접 조정하세요.",
+    "source": "https://www.misumi-techcentral.com/tt/en/press/2012/04/-120-terminology-and-surroundings-14-width-of-blanking-bridges.html"
+  }
+}
