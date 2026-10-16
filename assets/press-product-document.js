@@ -44,9 +44,11 @@ function draw(d,r,refs,internal=false){
   infoCard("SUPPLIER / 공급자",d.seller,["대표 "+(d.representative||"—")+" / 사업자번호 "+(d.businessNo||"—"),d.phone||"연락처 —",d.address||"주소 —"].join("\n"),left,470,cw,310);
   infoCard("RECIPIENT / 수신처",d.buyer,["담당자 "+(d.contact||"—"),"제품 "+d.product].join("\n"),left+cw+gap,470,cw,310);
   box(left,810,width,142,"#f7fafc");ctx.fillStyle=c.blue;ctx.fillRect(left,810,10,142);
-  text("PROPOSED TOTAL / 제안 금액",left+34,848,25,c.muted,"left",800);
-  fit(d.product,left+34,880,width-730,56,34);
-  text(money(r.total),right-28,883,46,c.navy,"right");
+  text("PRODUCT UNIT PRICE / 제품 공급단가 (VAT 제외)",left+34,837,25,c.muted,"left",800);
+  fit(d.product,left+34,860,width-900,46,32);
+  fit(money(r.unit)+" / 개",right-800,838,772,72,64,800,c.navy,"right");
+  const productionReference="양산 참고 · "+number(d.quantity)+"개 × "+money(r.unit)+" = "+money(r.supply)+" (VAT 제외)"+(d.vat?" / VAT 포함 "+money(r.total):" / VAT 미가산");
+  fit(productionReference,left+34,911,width-62,34,25,400,c.muted,"right");
   const fw=(width-40)/3;
   [[ "제품 소재",d.materialName+(d.temper?" / "+d.temper:"")],["전개 크기 / 두께",dims],["생산 방식 / 프레스",mode+" / "+d.pressName],["견적 유효기간",d.validity],["납기",d.delivery],["결제 조건",d.payment]].forEach(([a,b],i)=>field(a,b,left+(i%3)*(fw+20),980+Math.floor(i/3)*130,fw));
   const y=1260,hh=86,rh=160;
