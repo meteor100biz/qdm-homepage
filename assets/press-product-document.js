@@ -96,7 +96,6 @@ function draw(d,r,refs,internal=false){
   box(left,ey,width,112,c.pale,c.blue,3);ctx.fillStyle=c.blue;ctx.fillRect(left,ey,9,112);
   text("제품 공급단가 · VAT 제외",left+30,ey+56,35,c.navy,"left",800);text(money(r.unit),right-30,ey+56,46,c.navy,"right");
   const sourceNotes=[
-   "소재: "+(refs.material?.kind||"작성자 입력")+(refs.material?.modified?" · 작성자 수정값":"")+" / 가격 조사일 "+(refs.material?.researchDate||"—"),
    "설비 임률: "+(refs.press?.modified?"작성자 수정값":"초기 예산 제안값")+" (인건비 제외). 생산량은 실제 양품 수량 기준입니다.",
    "준비비 = 준비 시간 × (설비 임률 + 작업자 비용 × 인원), 로트 수량으로 나누어 배분합니다.",
    "스트립 폭·피치에 외곽 스크랩 포함. 초기·말단 잔재 등 추가 손실은 별도 반영합니다.",
