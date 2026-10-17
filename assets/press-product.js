@@ -20,7 +20,7 @@ f("seller","작성 회사명","","text")+f("representative","대표자","","text
 '<div class="identity-group identity-recipient"><h3>납품처 정보</h3>'+grid(
 f("buyer","납품 회사명","","text")+f("contact","수신 담당자","","text"))+'</div>'+
 '<div class="identity-group identity-project"><h3>견적 정보</h3>'+grid(
-f("quoteNumber","견적번호","PQ-"+today().replaceAll("-",""),"text")+f("date","견적일",today(),"date")+f("validity","유효기간","견적일로부터 30일","text")+f("product","제품명 / 품번","프레스 부품","text","견적명으로 사용됩니다.")+f("revision","도면 번호 / 개정","","text")+f("delivery","납기","발주 후 협의","text")+f("payment","결제 조건","별도 협의","text"))+'</div>')+
+f("product","제품명 / 품번","프레스 부품","text","견적명으로 사용됩니다.")+f("quoteNumber","견적번호","PQ-"+today().replaceAll("-",""),"text")+f("date","견적일",today(),"date")+f("validity","유효기간","견적일로부터 30일","text")+f("revision","도면 번호 / 개정","","text")+f("delivery","납기","발주 후 협의","text")+f("payment","결제 조건","별도 협의","text"))+'</div>')+
 card(2,"전개 치수와 소재","전개 치수는 견적자가 산출해 입력합니다. 모든 치수는 mm입니다.",grid(
 f("width","전개 가로 (mm)",15)+f("length","전개 세로 (mm)",50)+f("thickness","두께 (mm)",1)+sel("materialId","소재 기준 DB",db.materials.map(m=>[m.id,m.name]))+f("materialName","소재명 · 직접 수정 가능","SUS304","text")+f("temper","조질 / 표면","2B · 조질 별도 확인","text","CSP는 1/2H·3/4H·H 등 조질을 명시하세요.")+f("density","밀도 (g/cm³)",7.93,"number","소재별 근삿값입니다. 직접 입력 소재는 밀도도 확인하세요.")+f("materialPrice","원소재 단가 (원/kg)",4500))+
 '<div class="basis" id="materialBasis"></div><div class="hint-actions"><button type="button" class="mini-button" id="restoreMaterial">선택 소재 기준값 적용</button></div>')+
