@@ -32,7 +32,8 @@ function draw(d,r,refs,internal=false){
  const page=internal?2:1;
  ctx.fillStyle=c.blue;ctx.fillRect(left,132,12,238);
  text(internal?"DETAIL / PRODUCT COST":"QUOTATION / PRESS PART",left+46,152,28,c.blue,"left",800);
- text(internal?"별첨1 · 내부 원가산출서":"프레스제품 견적서",left+46,245,internal?78:88,c.navy,"left",800);
+ if(internal)text("별첨1 · 내부 원가산출서",left+46,245,78,c.navy,"left",800);
+ else fit(String(d.product||"").trim()+" 부품 견적서",left+46,179,width-650,132,88,800,c.navy);
  text(internal?"PRESS PART COST DETAIL":"PRESS PART QUOTATION",left+49,332,30,c.muted,"left",700);
  text(String(page).padStart(2,"0"),right,198,136,"#edf3f8","right",800);
  fit("NO. "+d.quoteNumber,right-540,282,540,50,28,400,c.text,"right");

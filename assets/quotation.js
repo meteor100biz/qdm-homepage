@@ -862,7 +862,21 @@
 
     ctx.fillStyle = colors.blue; ctx.fillRect(left, 132, 12, 238);
     ctx.textAlign = "left"; font(28, 800); ctx.fillStyle = colors.blue; ctx.fillText(kicker, left + 46, 152);
-    font(titleSize, 800); ctx.fillStyle = colors.navy; ctx.fillText(title, left + 46, 245);
+    ctx.fillStyle = colors.navy;
+    if (pageNumber === 1) {
+      let fittedSize = titleSize, titleLines;
+      do {
+        font(fittedSize, 800);
+        titleLines = canvasTextLines(ctx, title, width - 650, 1000);
+        if (titleLines.length * fittedSize * 1.2 <= 132) break;
+        fittedSize -= 1;
+      } while (fittedSize >= 20);
+      if (fittedSize < 20) throw new Error("금형명 / 프로젝트명이 너무 깁니다. 제목을 줄여주세요.");
+      const firstY = 245 - (titleLines.length - 1) * fittedSize * 1.2 / 2;
+      titleLines.forEach((text, index) => ctx.fillText(text, left + 46, firstY + index * fittedSize * 1.2));
+    } else {
+      font(titleSize, 800); ctx.fillText(title, left + 46, 245);
+    }
     font(30, 700); ctx.fillStyle = colors.muted; ctx.fillText(subtitle, left + 49, 332);
     ctx.textAlign = "right"; font(136, 800); ctx.fillStyle = "#edf3f8"; ctx.fillText(String(pageNumber).padStart(2, "0"), right, 198);
     font(28, 400); ctx.fillStyle = colors.text; ctx.fillText(`NO. ${data.quoteNumber || "-"}`, right, 315);
@@ -883,7 +897,7 @@
       pageNumber: 1,
       pageCount,
       kicker: "QUOTATION / PRESS DIE",
-      title: t.quoteTitle,
+      title: [String(data.projectName || "").trim(), locale === "ko" ? "프레스 금형 견적서" : t.quoteTitle].filter(Boolean).join(" "),
       subtitle: t.quoteSubtitle,
       titleSize: 92
     });
