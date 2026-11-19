@@ -1,5 +1,22 @@
 [
   {
+    "category": "mechanical",
+    "categoryName": "기계·기구설계",
+    "title": "CNC 파이프 절단기 구동장치 설계",
+    "summary": "CNC 파이프 코스터의 절단 헤드 구동장치를 재설계하고, 인벌류트 기어와 웜기어를 조합하여 전체 감속비 160:1을 구현하였습니다.",
+    "image": "assets/portfolio/mechanical/product-design-20261119/main.png",
+    "url": "assets/portfolio/mechanical/product-design-20261119/portfolio.html",
+    "published": true,
+    "order": 17,
+    "tags": [
+      "파이프 절단기 설계",
+      "감속기 설계",
+      "기어 설계",
+      "산업기계 설계",
+      "CNC 파이프 코스터"
+    ]
+  },
+  {
     "category": "analysis",
     "categoryName": "구조해석",
     "title": "자동차 전자장비 기구 ECU 열전달 해석",
