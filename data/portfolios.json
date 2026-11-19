@@ -1,5 +1,22 @@
 [
   {
+    "category": "analysis",
+    "categoryName": "구조해석",
+    "title": "자동차 전자장비 기구 ECU 열전달 해석",
+    "summary": "자동차 ECU의 발열 특성을 분석하고, 상변화물질(PCM) 적용에 따른 열전달 및 시간별 온도 변화를 비교 검토하였습니다.",
+    "image": "assets/portfolio/analysis/structural-analysis-20261119/main.jpg",
+    "url": "assets/portfolio/analysis/structural-analysis-20261119/portfolio.html",
+    "published": true,
+    "order": 16,
+    "tags": [
+      "열해석",
+      "열전달 해석",
+      "과도 열해석",
+      "ECU",
+      "PCM"
+    ]
+  },
+  {
     "category": "mechanical",
     "categoryName": "기계·기구설계",
     "title": "전술용 손전등 분해 역설계",
