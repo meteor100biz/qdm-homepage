@@ -2,6 +2,41 @@
   {
     "category": "mechanical",
     "categoryName": "機械・機構設計",
+    "title": "CNCパイプ切断機の駆動装置設計",
+    "summary": "CNCパイプコースターの切断ヘッド駆動装置を再設計。平歯車とウォームギヤを組み合わせ、総減速比160:1の駆動機構を構成しました。",
+    "image": "ja/assets/portfolio/mechanical/product-design-20261119/main.png",
+    "url": "ja/assets/portfolio/mechanical/product-design-20261119/portfolio.html",
+    "published": true,
+    "order": 17,
+    "tags": [
+      "CNCパイプ切断機",
+      "減速機設計",
+      "歯車設計",
+      "産業機械設計",
+      "駆動機構設計"
+    ]
+  },
+  {
+    "category": "analysis",
+    "categoryName": "構造解析",
+    "title": "自動車ECUの熱伝導解析",
+    "summary": "自動車ECU内部の発熱と熱伝達特性を解析し、相変化材料（PCM）の適用による温度分布と時間経過に伴う温度上昇特性を比較・評価しました。",
+    "image": "ja/assets/portfolio/analysis/structural-analysis-20261119/main.jpg",
+    "url": "ja/assets/portfolio/analysis/structural-analysis-20261119/portfolio.html",
+    "published": true,
+    "order": 16,
+    "tags": [
+      "熱解析",
+      "熱伝導解析",
+      "非定常熱解析",
+      "ECU",
+      "相変化材料",
+      "PCM"
+    ]
+  },
+  {
+    "category": "mechanical",
+    "categoryName": "機械・機構設計",
     "title": "タクティカルフラッシュライトのリバースエンジニアリング",
     "summary": "ピカティニーレール装着型フラッシュライトを分解・測定し、各部品とフォーカス調整機構をパラメトリック3Dモデルとして再構築しました。",
     "image": "ja/assets/portfolio/mechanical/product-design-20260922/main.png",

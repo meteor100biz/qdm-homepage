@@ -1,0 +1,242 @@
+[
+  {
+    "category": "analysis",
+    "categoryName": "構造解析",
+    "title": "自動車ECUの熱伝導解析",
+    "summary": "自動車ECU内部の発熱と熱伝達特性を解析し、相変化材料（PCM）の適用による温度分布と時間経過に伴う温度上昇特性を比較・評価しました。",
+    "image": "ja/assets/portfolio/analysis/structural-analysis-20261119/main.jpg",
+    "url": "ja/assets/portfolio/analysis/structural-analysis-20261119/portfolio.html",
+    "published": true,
+    "order": 16,
+    "tags": [
+      "熱解析",
+      "熱伝導解析",
+      "非定常熱解析",
+      "ECU",
+      "相変化材料",
+      "PCM"
+    ]
+  },
+  {
+    "category": "mechanical",
+    "categoryName": "機械・機構設計",
+    "title": "タクティカルフラッシュライトのリバースエンジニアリング",
+    "summary": "ピカティニーレール装着型フラッシュライトを分解・測定し、各部品とフォーカス調整機構をパラメトリック3Dモデルとして再構築しました。",
+    "image": "ja/assets/portfolio/mechanical/product-design-20260922/main.png",
+    "url": "ja/assets/portfolio/mechanical/product-design-20260922/portfolio.html",
+    "published": true,
+    "order": 15,
+    "tags": [
+      "リバースエンジニアリング",
+      "タクティカルフラッシュライト",
+      "3Dモデリング",
+      "パラメトリック設計",
+      "CNC加工"
+    ]
+  },
+  {
+    "category": "mechanical",
+    "categoryName": "機械・機構設計",
+    "title": "一体型シートのリバースエンジニアリング",
+    "summary": "分解による変形を含む3Dスキャンデータを基に、元形状を考慮しながら複雑な自由曲面を再構築したリバースエンジニアリング事例です。",
+    "image": "ja/assets/portfolio/mechanical/product-design-20260917/main.png",
+    "url": "ja/assets/portfolio/mechanical/product-design-20260917/portfolio.html",
+    "published": true,
+    "order": 14,
+    "tags": [
+      "リバースエンジニアリング",
+      "3Dスキャン",
+      "3Dモデリング",
+      "自由曲面",
+      "パラメトリック設計"
+    ]
+  },
+  {
+    "category": "mechanical",
+    "categoryName": "機械・機構設計",
+    "title": "ローラープレスのリバースエンジニアリングと部品図の復元",
+    "summary": "詳細部品図が失われたローラープレスを対象に、既存の組立図と実機を照合。部品ごとの3Dモデリングと仮想組立によって構造を検証し、2D設計図面を復元するプロジェクトです。",
+    "image": "ja/assets/portfolio/mechanical/roller-press-reverse-engineering-20260916/main.png",
+    "url": "ja/assets/portfolio/mechanical/roller-press-reverse-engineering-20260916/portfolio.html",
+    "published": true,
+    "order": 13,
+    "tags": [
+      "ローラープレス",
+      "リバースエンジニアリング",
+      "3Dモデリング",
+      "図面復元"
+    ]
+  },
+  {
+    "category": "press-die",
+    "categoryName": "プレス金型設計",
+    "title": "自動車空調部品のプレス金型設計",
+    "summary": "複雑なビードおよびフォーミング形状に対し、工程ごとに中間形状を設定し、段階的な成形によって最終製品形状と外周フランジを完成させるプレス金型設計です。",
+    "image": "ja/assets/portfolio/press-die/press-die-design-20260916-02/main.png",
+    "url": "ja/assets/portfolio/press-die/press-die-design-20260916-02/portfolio.html",
+    "published": true,
+    "order": 12,
+    "tags": [
+      "自動車部品",
+      "空調部品",
+      "フォーミング",
+      "3D金型設計"
+    ]
+  },
+  {
+    "category": "press-die",
+    "categoryName": "プレス金型設計",
+    "title": "ドアラッチ関連部品のプレス金型設計",
+    "summary": "コーナー部の割れリスクを事前に検討し、成形工程を5段階に分割。ブランク形状の算出から各工程の単発金型まで設計した事例です。",
+    "image": "ja/assets/portfolio/press-die/press-die-design-20260916/main.png",
+    "url": "ja/assets/portfolio/press-die/press-die-design-20260916/portfolio.html",
+    "published": true,
+    "order": 11,
+    "tags": [
+      "ドアラッチ",
+      "成形性検討",
+      "ブランク形状",
+      "単発金型"
+    ]
+  },
+  {
+    "category": "forming",
+    "categoryName": "薄板成形解析",
+    "title": "プログレッシブ金型のストリップたわみ検証",
+    "summary": "プログレッシブ金型の設計段階で、自重によるストリップのたわみを解析し、安定した搬送に必要なガイドリフトの作動量を検証しました。",
+    "image": "assets/portfolio/forming/forming-analysis-20260914/main.png",
+    "url": "ja/assets/portfolio/forming/forming-analysis-20260914/portfolio.html",
+    "published": true,
+    "order": 10,
+    "tags": [
+      "プログレッシブ金型",
+      "金型設計",
+      "構造解析",
+      "ストリップたわみ",
+      "ガイドリフト"
+    ]
+  },
+  {
+    "category": "analysis",
+    "categoryName": "構造解析",
+    "title": "ABS部品のリバースエンジニアリング・構造解析",
+    "summary": "実物のABS部品から3Dモデルを作成し、衝撃条件を5Gの鉛直等価荷重に置き換えて構造解析を実施しました。",
+    "image": "assets/portfolio/analysis/structural-analysis-20260914/main.png",
+    "url": "ja/assets/portfolio/analysis/structural-analysis-20260914/portfolio.html",
+    "published": true,
+    "order": 9,
+    "tags": [
+      "リバースエンジニアリング",
+      "ABS",
+      "3Dモデリング",
+      "等価静解析"
+    ]
+  },
+  {
+    "category": "press-die",
+    "categoryName": "プレス金型設計",
+    "title": "アルミダイカスト製品用 トリミング・ピアシング金型設計",
+    "summary": "ダイカスト後に残るゲートを精密に切断し、製品の基準精度確保および穴加工を同時に行うトリミング金型の設計事例です。",
+    "image": "assets/portfolio/press-die/press-die-design-20260806/main.png",
+    "url": "ja/assets/portfolio/press-die/press-die-design-20260806/portfolio.html",
+    "published": true,
+    "order": 8,
+    "tags": [
+      "アルミダイカスト、トリミング金型、ゲート切断、ピアシング、プレス金型設計、アルミ部品"
+    ]
+  },
+  {
+    "category": "forming",
+    "categoryName": "薄板成形解析",
+    "title": "角形ボックス製品の絞り成形性改善検討",
+    "summary": "既存工程で確認された局部的な破断リスクを分析し、コーナーRおよび側壁の抜き勾配を見直して、より安定した絞り成形案を提案した事例です。",
+    "image": "assets/portfolio/forming/press_sheetmetal_008/main.png",
+    "url": "ja/assets/portfolio/forming/press_sheetmetal_008/portfolio.html",
+    "order": 7,
+    "tags": [
+      "絞り加工",
+      "成形性検討",
+      "製品形状改善",
+      "金型設計"
+    ]
+  },
+  {
+    "category": "analysis",
+    "categoryName": "構造解析",
+    "title": "LED照明カバーの設計・解析・試作品製作",
+    "summary": "LED照明カバーの製品設計から構造解析、試作品製作まで一貫して実施",
+    "image": "/assets/portfolio/analysis/led_cover/main.png",
+    "url": "/ja/assets/portfolio/analysis/led_cover/portfolio.html",
+    "order": 6,
+    "tags": [
+      "機構解析",
+      "機構設計",
+      "試作品製作"
+    ]
+  },
+  {
+    "category": "press-die",
+    "categoryName": "プレス金型設計",
+    "title": "自動車シートフレーム部品のプレス金型設計",
+    "summary": "深い曲げ形状、内側への偏り、バーリング構造を考慮した自動車シートフレーム部品のプレス金型設計事例",
+    "image": "/assets/portfolio/press-die/seat-frame/main.jpg",
+    "url": "/ja/assets/portfolio/press-die/seat-frame/portfolio.html",
+    "order": 5,
+    "tags": [
+      "自動車部品",
+      "3D金型モデリング"
+    ]
+  },
+  {
+    "category": "mechanical",
+    "categoryName": "機械・機構設計",
+    "title": "金属ノズル部品のリバースエンジニアリング",
+    "summary": "実物部品を基に形状を解析し、製作可能な3D CADデータと2D図面へ復元した事例",
+    "image": "assets/portfolio/reverse/nozzle/main.png",
+    "url": "ja/assets/portfolio/reverse/nozzle/portfolio.html",
+    "order": 4,
+    "tags": [
+      "3Dスキャン",
+      "2D図面化"
+    ]
+  },
+  {
+    "category": "press-die",
+    "categoryName": "プレス金型設計",
+    "title": "自動車シート部品のプレス成形検討",
+    "summary": "プレス部品の成形可能性、金型構造、製作性を考慮したプレス金型設計事例",
+    "image": "/assets/portfolio/press-die/seat-bracket/main.jpg",
+    "url": "/ja/assets/portfolio/press-die/seat-bracket/portfolio.html",
+    "order": 3,
+    "tags": [
+      "成形解析",
+      "ブランク検討"
+    ]
+  },
+  {
+    "category": "analysis",
+    "categoryName": "構造解析",
+    "title": "両面ウェハドリリング装置のたわみ検討",
+    "summary": "大口径SiCウェハ対応のための装置ストローク拡張、既存機構の再活用、自重たわみの構造解析検討",
+    "image": "/assets/portfolio/analysis/double-drill/main.jpg",
+    "url": "/ja/assets/portfolio/analysis/double-drill/portfolio.html",
+    "order": 2,
+    "tags": [
+      "静解析",
+      "たわみ検討"
+    ]
+  },
+  {
+    "category": "mechanical",
+    "categoryName": "機械・機構設計",
+    "title": "SiCコアドリル装置のストローク改善",
+    "summary": "SiC素材加工装置のストローク拡張、既存駆動部の活用、素材投入構造の改善提案",
+    "image": "/assets/portfolio/mechanical/core-drill/main.jpg",
+    "url": "/ja/assets/portfolio/mechanical/core-drill/portfolio.html",
+    "order": 1,
+    "tags": [
+      "装置改善",
+      "ストローク拡張"
+    ]
+  }
+]
