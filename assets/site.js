@@ -32,13 +32,14 @@ function card(p){
   return `<a class="project" href="${url}"><div class="project-img" style="background-image:url('${image}')"></div><div class="project-body"><span class="badge">${label}</span>${tags}<h3>${p.title}</h3><p>${p.summary || p.description || ''}</p><span class="more">${qdmText.detail}</span></div></a>`;
 }
 function blogDate(value){if(!value)return '';try{return new Intl.DateTimeFormat(qdmJapanese?'ja-JP':'ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(`${value}T00:00:00`));}catch{return value;}}
+function blogEscape(value){return String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');}
 function blogCard(post){
   const image=/^(?:https?:)?\//.test(post.image||'')?post.image:`/${post.image||''}`;
   const external=/^https?:\/\//.test(post.url||'');
   const attrs=external?' target="_blank" rel="noopener"':'';
   const label=post.categoryLabel||post.category||'';
   const date=blogDate(post.publishedAt);
-  return `<a class="blog-card" href="${post.url}"${attrs}><div class="blog-img" style="background-image:url('${image}')"></div><div class="blog-body"><div class="blog-meta"><span class="badge">${label}</span>${date?`<time datetime="${post.publishedAt}">${date}</time>`:''}</div><h3>${post.title}</h3><p>${post.summary||post.description||''}</p><span class="more">${qdmJapanese?'記事を読む →':'글 보기 →'}</span></div></a>`;
+  return `<a class="blog-card" href="${blogEscape(post.url)}"${attrs}><div class="blog-img" style="background-image:url('${blogEscape(image.replaceAll("'","%27"))}')"></div><div class="blog-body"><div class="blog-meta"><span class="badge">${blogEscape(label)}</span>${!qdmJapanese&&external?'<span class="blog-source">네이버 블로그</span>':''}${date?`<time datetime="${post.publishedAt}">${date}</time>`:''}</div><h3>${blogEscape(post.title)}</h3><p>${blogEscape(post.summary||post.description||'')}</p><span class="more">${qdmJapanese?'記事を読む →':external?'네이버 블로그에서 읽기':'글 보기 →'}</span></div></a>`;
 }
 function publishedBlogs(posts){return posts.filter(post=>post.published!==false).sort((a,b)=>String(b.publishedAt||'').localeCompare(String(a.publishedAt||''))||(a.order||0)-(b.order||0));}
 function publishedPortfolios(posts){return posts.filter(portfolio=>portfolio.published!==false);}
@@ -75,7 +76,7 @@ function renderBlogList(posts){
   const empty=qdmJapanese?'公開された記事はまだありません。':'공개된 글이 아직 없습니다.';
   const draw=(category='all')=>{const filtered=category==='all'?list:list.filter(post=>post.category===category);g.innerHTML=filtered.map(blogCard).join('')||`<p class="empty-message">${empty}</p>`;};
   const tabs=document.getElementById('blogCategoryTabs');
-  if(tabs){const categories=[...new Map(list.map(post=>[post.category,post.categoryLabel||post.category])).entries()];tabs.innerHTML=[['all',qdmJapanese?'すべて':'전체'],...categories].map(([key,label],index)=>`<button class="tab${index===0?' active':''}" type="button" data-blog-category="${key}">${label}</button>`).join('');tabs.querySelectorAll('button').forEach(button=>button.addEventListener('click',()=>{tabs.querySelectorAll('button').forEach(item=>item.classList.remove('active'));button.classList.add('active');draw(button.dataset.blogCategory);}));}
+  if(tabs){const categories=[...new Map(list.map(post=>[post.category,post.categoryLabel||post.category])).entries()];tabs.innerHTML=[['all',qdmJapanese?'すべて':'전체'],...categories].map(([key,label],index)=>`<button class="tab${index===0?' active':''}" type="button" data-blog-category="${blogEscape(key)}">${blogEscape(label)}</button>`).join('');tabs.querySelectorAll('button').forEach(button=>button.addEventListener('click',()=>{tabs.querySelectorAll('button').forEach(item=>item.classList.remove('active'));button.classList.add('active');draw(button.dataset.blogCategory);}));}
   draw();
 }
 function renderPortfolioList(posts,category='all'){const g=document.getElementById('portfolioList');if(!g)return;let list=publishedPortfolios(posts).sort((a,b)=>(b.order||0)-(a.order||0));if(category==='product')list=list.filter(p=>['mechanical','analysis'].includes(p.category));else if(category==='press')list=list.filter(p=>['press-die','forming'].includes(p.category));else if(category!=='all')list=list.filter(p=>p.category===category);g.innerHTML=list.map(card).join('')||`<p>${qdmText.empty}</p>`;}
@@ -259,10 +260,10 @@ initKoreanServiceDirectory();
 initHeroSlider();
 initOverseasTrade();
 initAboutExperience();
-fetch(`${qdmDataBase}/blog-posts.json`).then(r=>r.json()).then(posts=>{renderBlog(posts);renderBlogList(posts);}).catch(()=>{});
+fetch(`${qdmDataBase}/blog-posts.json`,{cache:'no-store'}).then(r=>r.json()).then(posts=>{renderBlog(posts);renderBlogList(posts);}).catch(()=>{const list=document.getElementById('blogList');if(list)list.textContent=qdmJapanese?'記事を読み込めませんでした。再読み込みしてください。':'기술자료를 불러오지 못했습니다. 새로고침해 주세요.';});
 fetch(`${qdmDataBase}/portfolios.json`,{cache:'no-store'}).then(r=>r.json()).then(posts=>{
   renderHomePortfolioPreviews(posts);
   renderServiceRelatedProjects(posts);
   const params=new URLSearchParams(location.search);const init=params.get('category')||'all';updatePortfolioIntro(init);renderPortfolioList(posts,init);
-  document.querySelectorAll('.tab').forEach(btn=>{if(btn.dataset.category===init){document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updatePortfolioIntro(btn.dataset.category);renderPortfolioList(posts,btn.dataset.category);});});
+  document.querySelectorAll('#portfolioTabs .tab').forEach(btn=>{if(btn.dataset.category===init){document.querySelectorAll('#portfolioTabs .tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}btn.addEventListener('click',()=>{document.querySelectorAll('#portfolioTabs .tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updatePortfolioIntro(btn.dataset.category);renderPortfolioList(posts,btn.dataset.category);});});
 }).catch(()=>{});

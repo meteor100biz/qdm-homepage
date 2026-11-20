@@ -1,0 +1,54 @@
+[
+  {
+    "category": "mechanical",
+    "title": "기계설계 기술자료",
+    "description": "기구설계, CAD 설계, 제작성을 고려한 설계 사례",
+    "url": "https://blog.naver.com/meteor_822/223829402349",
+    "image": "assets/service-design.jpg",
+    "type": "external",
+    "categoryLabel": "제품·기계설계",
+    "summary": "기구설계, CAD 설계, 제작성을 고려한 설계 사례",
+    "published": true,
+    "featured": true,
+    "order": 0
+  },
+  {
+    "category": "analysis",
+    "title": "구조해석·기구해석 사례",
+    "description": "응력, 변형, 하중조건 검토 및 설계 개선 자료",
+    "url": "https://blog.naver.com/meteor_822/224201514103",
+    "image": "assets/service-analysis.jpg",
+    "type": "external",
+    "categoryLabel": "구조해석",
+    "summary": "응력, 변형, 하중조건 검토 및 설계 개선 자료",
+    "published": true,
+    "featured": true,
+    "order": 1
+  },
+  {
+    "category": "press-die",
+    "title": "프레스 금형설계 기술자료",
+    "description": "금형 구조 설계, 성형성 검토, 양산성 관련 자료",
+    "url": "https://blog.naver.com/meteor_822/223631728621",
+    "image": "assets/service-press-die.jpg",
+    "type": "external",
+    "categoryLabel": "프레스금형설계",
+    "summary": "금형 구조 설계, 성형성 검토, 양산성 관련 자료",
+    "published": true,
+    "featured": true,
+    "order": 2
+  },
+  {
+    "category": "reverse",
+    "title": "역설계 및 CAD 대행",
+    "description": "실물, 사진, 스케치 기반 3D 모델링 및 도면화 자료",
+    "url": "https://blog.naver.com/meteor_822/224200351959",
+    "image": "assets/service-reverse.jpg",
+    "type": "external",
+    "categoryLabel": "역설계",
+    "summary": "실물, 사진, 스케치 기반 3D 모델링 및 도면화 자료",
+    "published": true,
+    "featured": true,
+    "order": 3
+  }
+]

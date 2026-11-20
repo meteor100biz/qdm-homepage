@@ -1,5 +1,6 @@
 .blog-meta{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .blog-meta time{color:var(--muted);font-size:12px;font-weight:700}
+.blog-source{display:inline-flex;align-items:center;flex-shrink:0;padding:3px 8px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#596274;font-size:11px;font-weight:700;line-height:1.4;white-space:nowrap}
 .blog-card .more{display:inline-block;margin-top:15px}
 .blog-list-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
 .empty-message{grid-column:1/-1;padding:38px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);text-align:center}
