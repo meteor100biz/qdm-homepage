@@ -1,0 +1,119 @@
+[
+  {
+    "title": "감속비 160:1을 구현한 감속기 설계와 기어 배치",
+    "slug": "product-design-20261120",
+    "category": "mechanical",
+    "categoryLabel": "제품·기계설계",
+    "publishedAt": "2026-11-20",
+    "tags": [
+      "감속기 설계",
+      "웜기어",
+      "감속비 계산",
+      "기어 설계",
+      "산업기계 설계",
+      "기계설계",
+      "CNC 파이프 절단기",
+      "동력 전달장치"
+    ],
+    "summary": "CNC 파이프 절단기 구동장치의 재설계 사례입니다. 제한된 설치 공간에서 웜기어와 인벌류트 기어를 조합하여 고객이 요구한 전체 감속비 160:1을 구현한 설계 과정을 소개합니다.",
+    "metaDescription": "CNC 파이프 절단기의 감속기 설계 사례입니다. 제한된 설치 공간에서 웜기어와 인벌류트 기어를 선정·조합하여 전체 감속비 160:1을 구현한 구동장치 재설계 과정과 3D 기어 배치를 소개합니다.",
+    "published": true,
+    "featured": true,
+    "relatedPortfolioUrl": "",
+    "relatedPortfolioTitle": "",
+    "image": "/blog/product-design-20261120/main.png",
+    "url": "/blog/product-design-20261120/",
+    "modifiedAt": "2026-11-20",
+    "sections": [
+      {
+        "heading": "대형 파이프 절단기의 구동장치 설계",
+        "body": "CNC 파이프 코스터(CNC Pipe Coaster)는 대형 파이프의 상관 형상 및 다양한 절단 형상을 가공하는 산업용 자동 절단 장비입니다.\n\n이번 설계는 기존 CNC 파이프 절단기의 절단 헤드 구동장치를 재설계하는 과정에서 진행되었습니다.\n\n고객이 요구한 조건 중 하나는 전체 감속비 160:1의 구현이었습니다. 그러나 감속기를 설치할 수 있는 공간이 제한되어 있어, 단순히 감속비를 만족하는 것뿐 아니라 기어와 축, 동력 전달 부품을 적절하게 배치하는 것이 중요한 설계 과제였습니다.\n\n이를 위해 기성 기어를 활용한 감속기 구성을 검토하고, 웜기어와 인벌류트 기어를 조합하여 요구 감속비를 만족하는 구동 구조를 설계하였습니다.",
+        "bullets": "",
+        "image": "/blog/product-design-20261120/section-1-image_color-converted.png",
+        "imageAlt": "CNC 파이프 절단기 절단 헤드의 감속기와 링크 구동장치 3D 설계 모델석",
+        "caption": "CNC 파이프 코스터 절단 헤드 구동장치의 전체 조립 모델"
+      },
+      {
+        "heading": "웜기어와 인벌류트 기어의 감속비 구성",
+        "body": "감속기 설계에서 감속비는 입력축 회전수와 출력축 회전수의 비율을 나타냅니다.\n\n여러 단계의 기어를 조합하면 각 단계의 감속비를 곱하여 전체 감속비를 계산할 수 있습니다.\n\n전체 감속비 = 1단 감속비 × 2단 감속비 × 3단 감속비\n\n예를 들어 1단에서 20:1, 2단에서 2:1, 3단에서 4:1의 감속비를 적용하면 전체 감속비는 160:1이 됩니다.\n\n일반적인 평기어만으로 큰 감속비를 구성하면 기어 직경이나 축 배치에 따른 공간 문제가 발생할 수 있습니다. 웜기어는 비교적 큰 감속비를 한 단계에서 구현할 수 있고, 서로 직교하는 축 사이에서 회전 운동을 전달할 수 있다는 특징이 있습니다.\n\n이번 설계에서는 이러한 특성을 고려하여 웜기어와 인벌류트 기어를 조합하고, 고객이 요구한 전체 감속비 160:1을 구현하는 구동 구조를 구성하였습니다.",
+        "bullets": "",
+        "image": "/blog/product-design-20261120/section-2-015.png",
+        "imageAlt": "웜기어와 일반 기어의 단계별 감속비 및 회전수를 표시하는 자체 제작 감속비 검토 프로그램",
+        "caption": "자체 제작한 감속비 검토 도구의 예시 화면. 20:1, 2:1, 4:1의 조합으로 전체 감속비 160:1을 계산한 사례"
+      },
+      {
+        "heading": "제한된 공간에서의 기어 및 축 배치",
+        "body": "실제 산업기계의 감속기 설계에서는 감속비를 계산하는 것만으로 설계가 완성되지 않습니다.\n\n기어의 외경과 중심거리, 축의 위치, 베어링 및 하우징의 설치 공간 등을 함께 고려해야 합니다. 특히 기존 장비를 재설계하는 경우에는 주변 구조물과의 간섭을 피하면서 요구하는 구동 기능을 구현해야 합니다.\n\n이번 CNC 파이프 절단기 구동장치 역시 제한된 설치 공간을 고려하여 기어의 조합과 배치 구조를 검토하였습니다.\n\n감속기 내부의 기어 구동부뿐 아니라 체인·스프로킷과 링크 메커니즘을 연계하여 전체 동력 전달 구조를 3D 모델링하였습니다.\n\n이처럼 감속기 설계는 개별 기계요소의 선정과 함께, 장치 전체의 공간과 운동 전달 구조를 고려하는 종합적인 기계설계 과정입니다.",
+        "bullets": "목표 감속비를 고려한 기어 조합\n기어 외경과 축 중심거리 검토\n제한된 설치 공간에서의 기어 배치\n체인·스프로킷과 링크 구동부의 연결\n전체 구동장치의 3D 조립 구조 검토",
+        "image": "/blog/product-design-20261120/section-3-012.png",
+        "imageAlt": "CNC 파이프 절단기 구동장치 내부의 기어, 축, 체인과 스프로킷 배치 구조",
+        "caption": "제한된 공간에 배치된 기어 구동부와 동력 전달 메커니즘의 3D 모델"
+      },
+      {
+        "heading": "감속기 재설계와 실제 장비 적용",
+        "body": "기존 CNC 파이프 코스터의 구동 구조를 재검토하고, 목표 감속비와 설치 공간을 고려하여 절단 헤드 구동장치를 재설계하였습니다.\n\n설계 과정에서는 새로운 기어 치형을 개발하는 대신 기성 기어를 선정하고 조합하는 방식을 적용하였으며, 감속기와 체인·스프로킷, 링크 구동부를 하나의 조립 구조로 구성하였습니다.\n\n재설계된 구동장치는 실제 대형 파이프 절단 장비에 적용되었습니다.\n\n이번 사례는 기계요소의 선정과 조합, 구동 메커니즘의 구성, 제한된 공간에서의 3D 배치 설계가 산업기계 설계에서 중요한 역할을 한다는 것을 보여줍니다.",
+        "bullets": "",
+        "image": "/blog/product-design-20261120/section-4-014.png",
+        "imageAlt": "CNC 파이프 절단기에 장착된 절단 헤드 구동장치의 실제 제작 모습",
+        "caption": "설계된 감속기 및 링크 구동장치가 적용된 CNC 파이프 코스터"
+      }
+    ]
+  },
+  {
+    "category": "mechanical",
+    "title": "기계설계 기술자료",
+    "description": "기구설계, CAD 설계, 제작성을 고려한 설계 사례",
+    "url": "https://blog.naver.com/meteor_822/223829402349",
+    "image": "assets/service-design.jpg",
+    "type": "external",
+    "categoryLabel": "제품·기계설계",
+    "summary": "기구설계, CAD 설계, 제작성을 고려한 설계 사례",
+    "published": true,
+    "featured": false,
+    "order": 0,
+    "publishedAt": "",
+    "tags": [],
+    "metaDescription": "기구설계, CAD 설계, 제작성을 고려한 설계 사례",
+    "relatedPortfolioUrl": "",
+    "relatedPortfolioTitle": ""
+  },
+  {
+    "category": "analysis",
+    "title": "구조해석·기구해석 사례",
+    "description": "응력, 변형, 하중조건 검토 및 설계 개선 자료",
+    "url": "https://blog.naver.com/meteor_822/224201514103",
+    "image": "assets/service-analysis.jpg",
+    "type": "external",
+    "categoryLabel": "구조해석",
+    "summary": "응력, 변형, 하중조건 검토 및 설계 개선 자료",
+    "published": true,
+    "featured": true,
+    "order": 1
+  },
+  {
+    "category": "press-die",
+    "title": "프레스 금형설계 기술자료",
+    "description": "금형 구조 설계, 성형성 검토, 양산성 관련 자료",
+    "url": "https://blog.naver.com/meteor_822/223631728621",
+    "image": "assets/service-press-die.jpg",
+    "type": "external",
+    "categoryLabel": "프레스금형설계",
+    "summary": "금형 구조 설계, 성형성 검토, 양산성 관련 자료",
+    "published": true,
+    "featured": true,
+    "order": 2
+  },
+  {
+    "category": "reverse",
+    "title": "역설계 및 CAD 대행",
+    "description": "실물, 사진, 스케치 기반 3D 모델링 및 도면화 자료",
+    "url": "https://blog.naver.com/meteor_822/224200351959",
+    "image": "assets/service-reverse.jpg",
+    "type": "external",
+    "categoryLabel": "역설계",
+    "summary": "실물, 사진, 스케치 기반 3D 모델링 및 도면화 자료",
+    "published": true,
+    "featured": true,
+    "order": 3
+  }
+]
