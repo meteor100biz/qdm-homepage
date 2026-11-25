@@ -71,7 +71,7 @@
         "bullets": "적용 가속도 : 98.10m/s²\n최대 von Mises 응력 : 13.15MPa\n5G 대비 최대 응력 : 약 2배 증가",
         "image": "/blog/structural-analysis-20261125/section-6-10g-mises.png",
         "imageAlt": "수직 10G 관성하중을 적용한 자동차 수납형 커버의 응력 집중 분포",
-        "caption": "10G 등가 정적 구조해석 결과 — 최대 응력 10.71MPa"
+        "caption": "10G 등가 정적 구조해석 결과 — 최대 응력 13.15MPa"
       },
       {
         "heading": "수직 10G 관성하중에 대한 변위 분포",
