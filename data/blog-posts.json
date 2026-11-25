@@ -19,7 +19,7 @@
     "metaDescription": "자동차 부품의 충격하중을 등가 정적 관성하중으로 적용하는 구조해석 방법을 소개합니다. 5G·10G 조건의 응력과 변위 비교를 통해 구조적 취약점과 강성을 검토하고 동적 충격해석과의 차이를 설명합니다.",
     "published": true,
     "featured": true,
-    "relatedPortfolioUrl": "assets/portfolio/analysis/structural-analysis-20260914/portfolio.html",
+    "relatedPortfolioUrl": "/assets/portfolio/analysis/structural-analysis-20260914/portfolio.html",
     "relatedPortfolioTitle": "ABS 역설계 및 5G 구조해석",
     "image": "/blog/structural-analysis-20261125/main.png",
     "url": "/blog/structural-analysis-20261125/",

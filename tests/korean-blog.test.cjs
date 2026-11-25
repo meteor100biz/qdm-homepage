@@ -18,6 +18,20 @@ function editor(editorFile='local-admin/blog-admin.html'){
   return{run,get,files,removals,async load(){await run('useRoot(rootHandle)');}};
 }
 for(const file of ['local-admin/blog-admin.html','local-admin/ja-blog-admin.html']){
+  test(`${file}: related portfolio links resolve from the site root and survive editing`,()=>{
+    const e=editor(file);
+    e.run('state.portfolios=[{title:"Related project",url:"assets/portfolio/analysis/project/portfolio.html"}];renderPortfolios()');
+    assert.match(e.get('relatedPortfolio').innerHTML,/value="\/assets\/portfolio\/analysis\/project\/portfolio.html"/);
+    e.get('relatedPortfolio').value='/assets/portfolio/analysis/project/portfolio.html';
+    assert.equal(e.run('formData().relatedPortfolioUrl'),'/assets/portfolio/analysis/project/portfolio.html');
+    e.run('state.posts=[{title:"Post",slug:"article",url:"/blog/article/",relatedPortfolioUrl:"assets/portfolio/analysis/project/portfolio.html",sections:[]}];selectPost(0)');
+    assert.equal(e.get('relatedPortfolio').value,'/assets/portfolio/analysis/project/portfolio.html');
+    const html=e.run('buildHtml({...state.posts[0],image:"/image.png",publishedAt:"2026-11-25",modifiedAt:"2026-11-25",relatedPortfolioTitle:"Related project"})');
+    const href=html.match(/class="related-link"[\s\S]*?href="([^"]+)"/)[1];
+    assert.equal(new URL(href,'https://qdm.co.kr/blog/article/').pathname,'/assets/portfolio/analysis/project/portfolio.html');
+    assert.equal(e.run('portfolioUrl("/ja/assets/portfolio/project/portfolio.html")'),'/ja/assets/portfolio/project/portfolio.html');
+    assert.equal(e.run('portfolioUrl("https://example.com/project")'),'https://example.com/project');
+  });
   test(`${file}: examples are not input values, saved content remains editable`,()=>{
     const e=editor(file);
     for(const id of ['tags','summary','metaDescription'])assert.equal(e.get(id).value,'');
