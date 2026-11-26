@@ -83,13 +83,15 @@ function renderPortfolioList(posts,category='all'){const g=document.getElementBy
 function renderHomePortfolioPreviews(posts){
   const groups=[
     {selector:'.service-pillar.press-field .pillar-gallery',categories:['press-die','forming']},
-    {selector:'.service-pillar.product-field .pillar-gallery',categories:['mechanical','analysis']}
+    {selector:'.service-pillar.product-field .pillar-gallery',categories:['mechanical']},
+    {selector:'.service-pillar.analysis-field .pillar-gallery',categories:['analysis']}
   ];
   const sorted=publishedPortfolios(posts).sort((a,b)=>(b.order||0)-(a.order||0));
   groups.forEach(group=>{
     const gallery=document.querySelector(group.selector);
     if(!gallery)return;
-    const latest=sorted.filter(item=>group.categories.includes(item.category)).slice(0,2);
+    const limit=gallery.closest('.three-service-pillars')?1:2;
+    const latest=sorted.filter(item=>group.categories.includes(item.category)).slice(0,limit);
     const previews=latest.map(item=>{
       const image=document.createElement('img');
       image.src=/^(?:https?:)?\//.test(item.image||'')?item.image:`/${item.image||''}`;
@@ -97,7 +99,8 @@ function renderHomePortfolioPreviews(posts){
       image.loading='lazy';image.decoding='async';
       return image;
     });
-    while(previews.length<2){const empty=document.createElement('span');empty.className='portfolio-image-empty';empty.setAttribute('aria-hidden','true');previews.push(empty);}
+    if(!previews.length)return;
+    while(previews.length<limit){const empty=document.createElement('span');empty.className='portfolio-image-empty';empty.setAttribute('aria-hidden','true');previews.push(empty);}
     gallery.replaceChildren(...previews);
   });
 }
@@ -220,6 +223,7 @@ function initKoreanServiceDirectory(){
   const pillars=section?.querySelector('.service-pillars');
   if(!section||!pillars)return;
   section.id='services';
+  if(pillars.classList.contains('three-service-pillars'))return;
   const links=document.createElement('nav');
   links.id='serviceDetailLinks';
   links.className='service-detail-links';
@@ -238,13 +242,14 @@ function initKoreanServicePriority(){
   pressPath?.classList.add('press-priority');productPath?.classList.add('product-priority');
   moveFirst(businessPaths,pressPath);
   const servicePillars=document.querySelector('.service-pillars');
-  moveFirst(servicePillars,servicePillars?.querySelector('.press-field'));
+  const threeServices=servicePillars?.classList.contains('three-service-pillars');
+  if(!threeServices)moveFirst(servicePillars,servicePillars?.querySelector('.press-field'));
   const serviceTitle=document.getElementById('services-title');
-  if(serviceTitle)serviceTitle.textContent=qdmJapanese?'プレス金型設計と製品開発、実務経験で形にします':'프레스금형설계와 제품개발, 실무 경험으로 완성합니다';
+  if(serviceTitle)serviceTitle.textContent=threeServices?(qdmJapanese?'設計・解析・金型、3つの専門分野':'설계·해석·금형, 세 가지 전문 분야'):(qdmJapanese?'プレス金型設計と製品開発、実務経験で形にします':'프레스금형설계와 제품개발, 실무 경험으로 완성합니다');
   const heroTitle=document.querySelector('.hero-copy h1');
-  if(heroTitle)heroTitle.innerHTML=qdmJapanese?'プレス金型と製品開発、<br><span class="hero-subtitle">製作まで考慮したエンジニアリング</span>':'프레스금형과 제품개발,<br><span class="hero-subtitle">제작까지 고려한 엔지니어링</span>';
+  if(heroTitle)heroTitle.innerHTML=threeServices?(qdmJapanese?'設計・解析の専門エンジニアリング<br><span class="hero-subtitle">製作まで考慮し、アイデアを形にします</span>':'설계·해석 전문 엔지니어링<br><span class="hero-subtitle">제작까지 고려하여 아이디어를 완성합니다</span>'):(qdmJapanese?'プレス金型と製品開発、<br><span class="hero-subtitle">製作まで考慮したエンジニアリング</span>':'프레스금형과 제품개발,<br><span class="hero-subtitle">제작까지 고려한 엔지니어링</span>');
   const aboutTitle=document.querySelector('#about .section-title');
-  if(aboutTitle)aboutTitle.textContent=qdmJapanese?'プレス金型設計と製品開発、実際の製作まで考慮します':'프레스금형설계와 제품개발, 실제 제작까지 고려합니다';
+  if(aboutTitle)aboutTitle.textContent=threeServices?(qdmJapanese?'設計・解析から製作まで考慮します':'설계·해석부터 실제 제작까지 고려합니다'):(qdmJapanese?'プレス金型設計と製品開発、実際の製作まで考慮します':'프레스금형설계와 제품개발, 실제 제작까지 고려합니다');
   const aboutCopy=document.querySelector('#about .about-grid > div:first-child');
   const aboutHeadings=aboutCopy?[...aboutCopy.querySelectorAll('.about-domain-title')]:[];
   const productHeading=aboutHeadings.find(item=>item.textContent.includes(qdmJapanese?'製品開発':'제품개발'));

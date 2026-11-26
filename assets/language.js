@@ -33,20 +33,51 @@
   const japanesePath = alternateUrl("ja") || (articlePage ? "/ja/blog.html" : fallbackJapanesePath);
   const nav = document.querySelector(".menu");
 
+  const serviceRoot = isJapanese ? "/ja/services" : "/services";
+  const serviceFields = [
+    { slug: "product-design", label: isJapanese ? "製品・機械設計" : "제품·기계설계" },
+    { slug: "structural-analysis", label: isJapanese ? "構造・熱解析" : "구조·열해석" },
+    { slug: "press-die-design", label: isJapanese ? "プレス金型設計" : "프레스금형설계" }
+  ];
+  document.querySelectorAll(".menu-dropdown-panel").forEach((panel) => {
+    if (!panel.querySelector('a[href*="/services/press-die-design/"]')) return;
+    const portfolio = panel.querySelector(".menu-dropdown-all");
+    panel.innerHTML = serviceFields.map((field) => `<a role="menuitem" href="${serviceRoot}/${field.slug}/">${field.label}</a>`).join("");
+    if (portfolio) panel.appendChild(portfolio);
+  });
+  document.querySelectorAll(".service-nav .wrap").forEach((container) => {
+    const currentService = path.match(/\/services\/([^/]+)/)?.[1];
+    container.classList.add("three-service-nav");
+    container.innerHTML = serviceFields.map((field) => {
+      const current = currentService === field.slug;
+      const parent = currentService === "sheet-metal-forming-analysis" && field.slug === "press-die-design";
+      return `<a href="${serviceRoot}/${field.slug}/"${current ? ' aria-current="page"' : parent ? ' class="service-parent"' : ""}>${field.label}</a>`;
+    }).join("");
+  });
+  document.querySelectorAll(".service-directory-grid").forEach((container) => {
+    const links = serviceFields.map((field) => {
+      const link = container.querySelector(`a[href*="/services/${field.slug}/"]`);
+      if (link?.querySelector("strong")) link.querySelector("strong").textContent = field.label;
+      if (field.slug === "press-die-design" && link?.querySelector("span")) link.querySelector("span").textContent = isJapanese ? "金型設計・薄板成形解析 →" : "금형설계·박판성형해석 →";
+      return link;
+    }).filter(Boolean);
+    if (links.length === 3) { container.replaceChildren(...links); container.classList.add("three-service-directory"); }
+  });
+
   const groupedCopy = isJapanese ? {
     full: "プレス金型設計・薄板成形解析・構造解析・製品設計",
     legacyFull: "製品設計・構造解析・薄板成形解析・プレス金型設計",
-    mechanical: "構造解析・製品設計",
+    mechanical: "製品・機械設計・構造・熱解析",
     separator: "・",
-    press: "プレス金型設計・薄板成形解析"
+    press: "プレス金型設計"
   } : {
     full: "프레스금형설계.박판성형해석.구조해석.제품설계",
     legacyFull: "제품설계.구조해석.박판성형해석.프레스금형설계",
-    mechanical: "구조해석 . 제품설계",
+    mechanical: "제품·기계설계 . 구조·열해석",
     separator: " . ",
-    press: "프레스금형설계 . 박판성형해석"
+    press: "프레스금형설계"
   };
-  const groupedMarkup = `<span class="qdm-service-group press">${groupedCopy.press}</span><span class="qdm-service-separator">${groupedCopy.separator}</span><span class="qdm-service-group mechanical">${groupedCopy.mechanical}</span>`;
+  const groupedMarkup = `<span class="qdm-service-group mechanical">${groupedCopy.mechanical}</span><span class="qdm-service-separator">${groupedCopy.separator}</span><span class="qdm-service-group press">${groupedCopy.press}</span>`;
   document.querySelectorAll(".tagline").forEach((tagline) => {
     const firstLine = (tagline.childNodes[0]?.textContent || "").trim();
     if (firstLine !== groupedCopy.full && firstLine !== groupedCopy.legacyFull) return;
@@ -67,14 +98,14 @@
     const desktopAbout = topbarNav.querySelector(".menu > a.hide-sm");
     if (desktopAbout) desktopAbout.href = aboutRoot;
     const mobileLabels = isJapanese ? {
-      open: "メニューを開く", close: "メニューを閉じる", company: "会社案内", services: "サービス", press: "プレス金型設計", forming: "薄板成形解析", structural: "構造解析", product: "製品設計", portfolio: "全実績を見る", blog: "技術ブログ", contact: "お問い合わせ", phone: "電話する"
+      open: "メニューを開く", close: "メニューを閉じる", company: "会社案内", services: "サービス", press: "プレス金型設計", structural: "構造・熱解析", product: "製品・機械設計", portfolio: "全実績を見る", blog: "技術ブログ", contact: "お問い合わせ", phone: "電話する"
     } : {
-      open: "메뉴 열기", close: "메뉴 닫기", company: "회사소개", services: "서비스", press: "프레스금형설계", forming: "박판성형해석", structural: "구조해석", product: "제품설계", portfolio: "전체 포트폴리오 보기", blog: "기술블로그", contact: "문의하기", phone: "전화하기"
+      open: "메뉴 열기", close: "메뉴 닫기", company: "회사소개", services: "서비스", press: "프레스금형설계", structural: "구조·열해석", product: "제품·기계설계", portfolio: "전체 포트폴리오 보기", blog: "기술블로그", contact: "문의하기", phone: "전화하기"
     };
     const desktopResource = topbarNav.querySelector(".resource-menu");
     const desktopResourceTrigger = desktopResource?.closest(".menu-dropdown")?.querySelector(".menu-dropdown-trigger")?.textContent.replace("▾", "").trim();
     const mobileResources = desktopResource ? `<div class="qdm-mobile-service-group qdm-mobile-resource-group"><strong>${desktopResourceTrigger || (isJapanese ? "資料室" : "자료실")}</strong>${[...desktopResource.querySelectorAll("a")].map((link) => `<a class="${link.classList.contains("resource-subitem") ? "resource-subitem" : ""}" href="${link.getAttribute("href") || "#"}">${link.textContent.trim()}</a>`).join("")}</div>` : "";
-    mobileMenu.innerHTML = `<button class="qdm-mobile-menu-button" type="button" aria-expanded="false" aria-controls="qdm-mobile-menu-panel" aria-label="${mobileLabels.open}"><span></span><span></span><span></span></button><nav class="qdm-mobile-menu-panel" id="qdm-mobile-menu-panel" aria-label="${isJapanese ? "モバイルメニュー" : "모바일 메뉴"}"><a href="${homeRoot}#about">${mobileLabels.company}</a><div class="qdm-mobile-service-group"><strong>${mobileLabels.services}</strong><a href="${serviceRoot}/press-die-design/">${mobileLabels.press}</a><a href="${serviceRoot}/sheet-metal-forming-analysis/">${mobileLabels.forming}</a><a href="${serviceRoot}/structural-analysis/">${mobileLabels.structural}</a><a href="${serviceRoot}/product-design/">${mobileLabels.product}</a><a href="${isJapanese ? "/ja/portfolio.html" : "/portfolio.html"}">${mobileLabels.portfolio}</a></div>${mobileResources}<a href="${isJapanese ? "/ja/blog.html" : "/blog.html"}">${mobileLabels.blog}</a><a href="${homeRoot}#contact">${mobileLabels.contact}</a><a href="tel:07080646621">☎ ${mobileLabels.phone}</a><div class="qdm-mobile-language"><a href="${koreanPath}" data-language="ko">한국어</a><span aria-hidden="true">/</span><a href="${japanesePath}" data-language="ja">日本語</a></div></nav>`;
+    mobileMenu.innerHTML = `<button class="qdm-mobile-menu-button" type="button" aria-expanded="false" aria-controls="qdm-mobile-menu-panel" aria-label="${mobileLabels.open}"><span></span><span></span><span></span></button><nav class="qdm-mobile-menu-panel" id="qdm-mobile-menu-panel" aria-label="${isJapanese ? "モバイルメニュー" : "모바일 메뉴"}"><a href="${homeRoot}#about">${mobileLabels.company}</a><div class="qdm-mobile-service-group"><strong>${mobileLabels.services}</strong><a href="${serviceRoot}/product-design/">${mobileLabels.product}</a><a href="${serviceRoot}/structural-analysis/">${mobileLabels.structural}</a><a href="${serviceRoot}/press-die-design/">${mobileLabels.press}</a><a href="${isJapanese ? "/ja/portfolio.html" : "/portfolio.html"}">${mobileLabels.portfolio}</a></div>${mobileResources}<a href="${isJapanese ? "/ja/blog.html" : "/blog.html"}">${mobileLabels.blog}</a><a href="${homeRoot}#contact">${mobileLabels.contact}</a><a href="tel:07080646621">☎ ${mobileLabels.phone}</a><div class="qdm-mobile-language"><a href="${koreanPath}" data-language="ko">한국어</a><span aria-hidden="true">/</span><a href="${japanesePath}" data-language="ja">日本語</a></div></nav>`;
     mobileMenu.querySelector(".qdm-mobile-menu-panel > a")?.setAttribute("href", aboutRoot);
     const button = mobileMenu.querySelector(".qdm-mobile-menu-button");
     const panel = mobileMenu.querySelector(".qdm-mobile-menu-panel");
@@ -159,4 +190,7 @@
   const dropdownStyle = document.createElement("style");
   dropdownStyle.textContent = `.menu-dropdown.is-open .menu-dropdown-trigger{color:var(--blue2)}.menu-dropdown.is-open .menu-dropdown-trigger:after{transform:scaleX(1)}.menu-dropdown.is-open .menu-dropdown-arrow{transform:rotate(180deg)}.menu-dropdown.is-open .menu-dropdown-panel{opacity:1;visibility:visible;transform:translate(-50%,0)}.qdm-mobile-menu{display:none;position:relative;flex:0 0 auto}.qdm-mobile-menu-button{width:48px;height:48px;padding:0;border:1px solid #cbd5e1;border-radius:10px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 7px 18px rgba(15,35,68,.1);cursor:pointer}.qdm-mobile-menu-button span{width:25px;height:3px;border-radius:999px;background:var(--blue);transform-origin:center;transition:transform .2s ease,opacity .2s ease}.qdm-mobile-menu.is-open .qdm-mobile-menu-button span:nth-child(1){transform:translateY(9px) rotate(45deg)}.qdm-mobile-menu.is-open .qdm-mobile-menu-button span:nth-child(2){opacity:0}.qdm-mobile-menu.is-open .qdm-mobile-menu-button span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}.qdm-mobile-menu-panel{position:absolute;top:calc(100% + 8px);right:0;z-index:80;width:min(320px,calc(100vw - 36px));max-height:calc(100vh - 92px);padding:10px;overflow-y:auto;border:1px solid #d7e0ed;border-radius:13px;background:#fff;box-shadow:0 20px 46px rgba(15,35,68,.22);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .18s ease,visibility .18s ease,transform .18s ease}.qdm-mobile-menu.is-open .qdm-mobile-menu-panel{opacity:1;visibility:visible;transform:translateY(0)}.qdm-mobile-menu-panel>a,.qdm-mobile-service-group>a{display:block;padding:11px 12px;border-radius:8px;color:#172033;font-size:14px;font-weight:900;line-height:1.35}.qdm-mobile-menu-panel a:active,.qdm-mobile-menu-panel a:focus-visible{background:#eef5ff;outline:none}.qdm-mobile-service-group{margin:5px 0;padding:8px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc}.qdm-mobile-service-group strong{display:block;padding:3px 4px 7px;color:#64748b;font-size:12px;letter-spacing:.08em}.qdm-mobile-service-group a{padding:9px}.qdm-mobile-service-group a:is([href*="press-die-design"],[href*="sheet-metal-forming-analysis"]){color:var(--press-color)}.qdm-mobile-service-group a:is([href*="structural-analysis"],[href*="product-design"]){color:var(--product-color)}.qdm-mobile-language{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:6px;padding:11px;border-top:1px solid #e2e8f0;color:#64748b;font-size:13px;font-weight:900}.qdm-mobile-language a{color:var(--blue)}@media(max-width:720px){.topbar .nav{position:relative;align-items:center}.topbar .menu{display:none!important}.qdm-mobile-menu{display:block}.topbar .brand{max-width:calc(100% - 62px)}}`;
   document.head.appendChild(dropdownStyle);
+  const serviceStyle = document.createElement("style");
+  serviceStyle.textContent = `.service-nav .wrap.three-service-nav,.three-service-directory{grid-template-columns:repeat(3,minmax(0,1fr))}.service-nav .service-parent{background:var(--press-bg);border-radius:8px;color:var(--press-color)}@media(max-width:620px){.service-nav .wrap.three-service-nav,.three-service-directory{grid-template-columns:1fr}}`;
+  document.head.appendChild(serviceStyle);
 })();

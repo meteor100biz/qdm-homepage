@@ -1,0 +1,14 @@
+/* Keep mobile service cards readable with a title and one row of thumbnails. */
+@media(max-width:720px){
+  .services-overview .service-pillars{grid-template-columns:1fr}
+  .services-overview .service-pillar{grid-template-columns:minmax(0,1fr);padding:21px;min-height:0}
+  .services-overview .pillar-content{display:contents}
+  .services-overview .pillar-label{grid-row:1}
+  .services-overview .service-pillar h3{grid-row:2}
+  .services-overview .pillar-gallery{grid-row:3;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto;gap:12px;width:100%;max-width:292px;height:auto;padding:0;margin:6px auto 18px}
+  .services-overview .pillar-gallery img{width:100%;height:auto;aspect-ratio:4/3;object-fit:contain}
+  .services-overview .pillar-gallery .portfolio-image-empty{display:none}
+  .services-overview .service-pillar p{grid-row:4}
+  .services-overview .service-pillar ul{grid-row:5}
+  .services-overview .service-pillar .more{grid-row:6}
+}

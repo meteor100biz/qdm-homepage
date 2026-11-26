@@ -1,0 +1,14 @@
+{
+  "summary": [
+    "ko 1440px: 3 cards, 3 menu fields, images loaded, no overflow",
+    "ko 900px: 3 cards, 3 menu fields, images loaded, no overflow",
+    "ko 720px: 3 cards, 3 menu fields, images loaded, no overflow",
+    "ko 390px: 3 cards, 3 menu fields, images loaded, no overflow",
+    "ja 1440px: 3 cards, 3 menu fields, images loaded, no overflow",
+    "ja 900px: 3 cards, 3 menu fields, images loaded, no overflow",
+    "ja 720px: 3 cards, 3 menu fields, images loaded, no overflow",
+    "ja 390px: 3 cards, 3 menu fields, images loaded, no overflow"
+  ],
+  "errors": [],
+  "missing": []
+}
